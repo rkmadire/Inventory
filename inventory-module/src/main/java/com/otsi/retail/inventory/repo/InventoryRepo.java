@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.otsi.retail.inventory.model.Inventory;
 
 @Repository
-public interface InventoryRepo extends JpaRepository<Inventory, Long> {
+public interface InventoryRepo extends JpaRepository<Inventory, Integer> {
 
 	Optional<Inventory> findByInventoryId(int inventoryId);
 
