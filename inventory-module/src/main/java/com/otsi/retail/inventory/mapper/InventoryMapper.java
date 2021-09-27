@@ -16,6 +16,7 @@ public class InventoryMapper {
 		vo.setBarcode(dto.getBarcode());
 		vo.setDescription(dto.getDescription());
 		vo.setDiscontinued(dto.getDiscontinued());
+		vo.setUom(dto.getUom());
 		vo.setInventoryValue(dto.getInventoryValue());
 		vo.setQtyInStock(dto.getQtyInStock());
 		vo.setUnitPrice(dto.getUnitPrice());
@@ -43,6 +44,7 @@ public class InventoryMapper {
 		dto.setBarcode(vo.getBarcode());
 		dto.setDescription(vo.getDescription());
 		dto.setDiscontinued(vo.getDiscontinued());
+		dto.setUom(vo.getUom());
 		dto.setInventoryValue(vo.getInventoryValue());
 		dto.setQtyInStock(vo.getQtyInStock());
 		dto.setUnitPrice(vo.getUnitPrice());
