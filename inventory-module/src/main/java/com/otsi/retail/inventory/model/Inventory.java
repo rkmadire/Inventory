@@ -35,6 +35,8 @@ public class Inventory {
 	private int unitPrice;
 
 	private int qtyInStock;
+	
+	private String uom;
 
 	private int inventoryValue;
 
