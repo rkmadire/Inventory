@@ -8,7 +8,6 @@ data:
   postgres_password: Vasavi
   postgres_host: jdbc:postgresql://postgres-im:5432/inventory-module
 
-
 ---
 #apiVersion: v1
 #kind: PersistentVolumeClaim
