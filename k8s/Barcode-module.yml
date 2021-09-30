@@ -1,0 +1,137 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: default
+data:
+  postgres_user: postgres
+  postgres_password: Vasavi
+  postgres_host: jdbc:postgresql://postgres-bm:5432/barcode-module
+
+
+---
+#apiVersion: v1
+#kind: PersistentVolumeClaim
+#metadata:
+#  name: postgres-pv-claim
+#spec:
+#  accessModes:
+#    - ReadWriteOnce
+#  resources:
+#    requests:
+#      storage: 1Gi
+#---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-bm
+spec:
+  selector:
+    matchLabels:
+      app: postgres-bm
+  template:
+    metadata:
+      labels:
+        app: postgres-bm
+    spec:
+#      volumes:
+#        - name: postgres-storage
+#          persistentVolumeClaim:
+#            claimName: postgres-pv-claim
+      containers:
+        - name: postgres-bm
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: postgres_password
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+            - name: POSTGRES_DB
+              value: accounting
+          ports:
+            - containerPort: 5432
+              name: postgres-bm
+#          volumeMounts:
+#            - name: postgres-storage
+#              mountPath: /var/lib/postgresql/data
+          image: postgres  
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-bm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+  selector:
+    app: postgres-bm
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: barcode-module
+  namespace: default
+spec:
+  selector:
+    matchLabels: 
+      app: barcode-module
+  replicas: 1
+  template:
+    metadata:
+      name: barcode-module
+      labels:
+        app: barcode-module
+    spec:
+      containers:
+      - name: barcode-module
+        env:
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-config
+                key: postgres_user
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-config
+                key: postgres_password
+          - name: SPRING_DATASOURCE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-config
+                key: postgres_host
+        image: 881289302514.dkr.ecr.ap-south-1.amazonaws.com/barcode-module # repository 
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"
+          requests:
+            memory: 256Mi
+            cpu: "0.2"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: barcode-module
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 9092
+  selector:
+    app: barcode-module
