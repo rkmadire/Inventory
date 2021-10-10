@@ -1,0 +1,31 @@
+server:
+ port: 9091
+ 
+spring:
+ application:
+    name: inventory-module
+ datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/inventory-module
+    username: postgres
+    password: Vasavi
+    initializaion.mode: always
+ jpa:
+   hibernate:
+    ddl-auto: update
+   database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+   show-sql: true
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${random.int}
+    hostname: localhost
+
+
+
+springdoc:
+    packagesToScan: com.otsi.retail.inventory
