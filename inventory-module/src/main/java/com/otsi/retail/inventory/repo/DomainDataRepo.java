@@ -9,6 +9,6 @@ import com.otsi.retail.inventory.model.Domaindata;
 @Repository
 public interface DomainDataRepo extends JpaRepository<Domaindata, Long> {
 
-	Optional<Domaindata> findByDomainDataId(Long domainDataId);
+	Domaindata findByDomainDataId(Long domainDataId);
 
 }

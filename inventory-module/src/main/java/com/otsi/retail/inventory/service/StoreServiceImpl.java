@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
 import com.otsi.retail.inventory.mapper.StoreMapper;
+import com.otsi.retail.inventory.model.Domaindata;
 import com.otsi.retail.inventory.model.Store;
 import com.otsi.retail.inventory.repo.StoreRepo;
 import com.otsi.retail.inventory.vo.StoresVo;
@@ -57,6 +58,31 @@ public class StoreServiceImpl implements StoreService {
 		log.warn("we are testing is fetching all stores");
 		log.info("after fetching all stores:" + vo.toString());
 		return vo;
+	}
+
+	@Override
+	public String updateStore(StoresVo storesVo) {
+
+		Optional<Store> store = storeRepo.findById(storesVo.getStoreId());
+		if (!(store.isPresent())) {
+			throw new RecordNotFoundException("store is  not found with id: " + storesVo.getStoreId());
+		}
+		Store str = storeMapper.VoToEntity(storesVo);
+		str.setStoreId(storesVo.getStoreId());
+		str.setLastmodified(storesVo.getLastmodified());
+		storeRepo.save(str);
+		return "store updated successfully";
+	}
+
+	@Override
+	public String deleteStore(Long storeId) {
+
+		Optional<Store> store = storeRepo.findById(storeId);
+		if (!(store.isPresent())) {
+			throw new RecordNotFoundException("domain not found with id: " + storeId);
+		}
+		storeRepo.delete(store.get());
+		return "store deleted succesfully: " + storeId;
 	}
 
 }

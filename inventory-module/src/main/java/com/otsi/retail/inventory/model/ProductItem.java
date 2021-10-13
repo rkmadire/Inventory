@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -25,8 +26,7 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "product_item")
-@Data
-@NoArgsConstructor
+@Data@NoArgsConstructor
 @AllArgsConstructor
 public class ProductItem {
 
@@ -46,6 +46,8 @@ public class ProductItem {
 	private String title;
 
 	private int stock;
+	
+	private String name;
 
 	private float costPrice;
 
@@ -72,6 +74,7 @@ public class ProductItem {
 	private List<ProductImage> ProductImage;
 
 	@OneToOne(mappedBy = "productItem")
+	@JoinColumn(name="productInventoryId")
 	private ProductInventory productInventory;
 
 }

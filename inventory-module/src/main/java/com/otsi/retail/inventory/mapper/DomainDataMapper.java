@@ -3,7 +3,7 @@ package com.otsi.retail.inventory.mapper;
 import java.time.LocalDate;
 import org.springframework.stereotype.Component;
 import com.otsi.retail.inventory.model.Domaindata;
-import com.otsi.retail.inventory.vo.DomaindataVo;
+import com.otsi.retail.inventory.vo.DomainDataVo;
 
 @Component
 public class DomainDataMapper {
@@ -13,8 +13,8 @@ public class DomainDataMapper {
 	 * 
 	 */
 
-	public DomaindataVo EntityToVo(Domaindata dto) {
-		DomaindataVo vo = new DomaindataVo();
+	public DomainDataVo EntityToVo(Domaindata dto) {
+		DomainDataVo vo = new DomainDataVo();
 		vo.setDomainDataId(dto.getDomainDataId());
 		vo.setDuid(dto.getDuid());
 		vo.setDomainName(dto.getDomainName());
@@ -30,7 +30,7 @@ public class DomainDataMapper {
 	 * 
 	 */
 
-	public Domaindata VoToEntity(DomaindataVo vo) {
+	public Domaindata VoToEntity(DomainDataVo vo) {
 		Domaindata dto = new Domaindata();
 		dto.setDomainDataId(vo.getDomainDataId());
 		dto.setDuid(vo.getDuid());

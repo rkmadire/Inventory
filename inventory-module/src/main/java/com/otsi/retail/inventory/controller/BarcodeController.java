@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.model.Barcode;
 import com.otsi.retail.inventory.service.BarcodeService;
 import com.otsi.retail.inventory.vo.BarcodeVo;
+import com.otsi.retail.inventory.vo.DomainDataVo;
 
 @RestController
 public class BarcodeController {
@@ -46,15 +46,6 @@ public class BarcodeController {
 
 	}
 
-	@PutMapping("/updateBarcode")
-	public GateWayResponse<?> updateBarcode(@RequestParam("barcodeId") Long barcodeId, @RequestBody BarcodeVo barcodeVo)
-			throws Exception {
-
-		String updateBarcode = barcodeService.updateBarcode(barcodeId, barcodeVo);
-		return new GateWayResponse<>("updated barcode successfully", updateBarcode);
-
-	}
-
 	@DeleteMapping("/deleteBarcode")
 	public GateWayResponse<?> deleteBarcode(@RequestParam("barcodeId") Long barcodeId) throws Exception {
 
@@ -62,7 +53,7 @@ public class BarcodeController {
 		return new GateWayResponse<>("barcode deleted successfully", deleteBarcode);
 
 	}
-	
+
 	/*
 	 * @GetMapping("/getCatalogsFromCatalog") public GateWayResponse<?>
 	 * getCatalogsFromCatalog(Long id) { CatalogCategoriesVo vo =

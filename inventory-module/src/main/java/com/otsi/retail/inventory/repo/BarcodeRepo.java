@@ -13,6 +13,6 @@ public interface BarcodeRepo extends JpaRepository<Barcode, Long> {
 
 	Optional<Barcode> findByBarcode(String barcode);
 
-	Barcode getByBarcodeId(Long barcodeId);
+	Barcode findByBarcodeId(Long barcodeId);
 
 }

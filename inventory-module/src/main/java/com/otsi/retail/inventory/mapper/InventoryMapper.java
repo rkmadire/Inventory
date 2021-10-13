@@ -4,12 +4,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.otsi.retail.inventory.commons.ProductItemAvEnum;
 import com.otsi.retail.inventory.model.ProductImage;
 import com.otsi.retail.inventory.model.ProductInventory;
 import com.otsi.retail.inventory.model.ProductItem;
+import com.otsi.retail.inventory.model.ProductItemAv;
+import com.otsi.retail.inventory.service.BarcodeService;
+import com.otsi.retail.inventory.vo.CatalogVo;
 import com.otsi.retail.inventory.vo.ProductItemVo;
 
 @Component
@@ -23,6 +28,9 @@ public class InventoryMapper {
 
 	@Autowired
 	private BarcodeMapper barcodeeMapper;
+	
+	@Autowired
+	private BarcodeService barcodeService;
 
 	public ProductItemVo EntityToVo(ProductItem dto) {
 		ProductItemVo vo = new ProductItemVo();
@@ -35,6 +43,7 @@ public class InventoryMapper {
 		vo.setStock(dto.getStock());
 		vo.setTitle(dto.getTitle());
 		vo.setTyecode(dto.getTyecode());
+		vo.setName(dto.getName());
 		vo.setCostPrice(dto.getCostPrice());
 		vo.setUom(dto.getUom());
 		vo.setDomainData(domainDataMapper.EntityToVo(dto.getDomainData()));
@@ -58,7 +67,24 @@ public class InventoryMapper {
 		prodInv.setCreationDate(LocalDate.now());
 		prodInv.setLastModified(LocalDate.now());
 		prodInv.setStockvalue(dto.getProductInventory().getStockvalue());
-		vo.setProductInventory(prodInv );
+		vo.setProductInventory(prodInv);
+		List<ProductItemAv> productAv = dto.getProductItemAvId();
+
+		// ProductItemVo Pvo = new ProductItemVo();
+		productAv.stream().forEach(y -> {
+			if (y.getName().equalsIgnoreCase(ProductItemAvEnum.COLOR.geteName())) {
+				vo.setColor(y.getStringValue());
+			}
+			if (y.getName().equalsIgnoreCase(ProductItemAvEnum.LENGTH.geteName())) {
+				vo.setLength(y.getIntValue());
+			}
+			if (y.getName().equalsIgnoreCase(ProductItemAvEnum.PRODUCT_VALIDITY.geteName())) {
+				vo.setProductValidity(y.getDateValue());
+			}
+
+		});
+		List<CatalogVo> catalogsFromCatalog = barcodeService.getCatalogsFromCatalog(dto.getBarcode().getDefaultCategoryId());
+		vo.getBarcode().setDefaultCategoryId(catalogsFromCatalog);
 		return vo;
 
 	}
@@ -81,6 +107,7 @@ public class InventoryMapper {
 		ProductItem dto = new ProductItem();
 		dto.setProductItemId(vo.getProductItemId());
 		dto.setPuid(vo.getPuid());
+		dto.setName(vo.getName());
 		dto.setCostPrice(vo.getCostPrice());
 		dto.setDefaultImage(vo.getDefaultImage());
 		dto.setListPrice(vo.getListPrice());

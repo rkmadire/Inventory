@@ -1,6 +1,8 @@
 package com.otsi.retail.inventory.vo;
 
 import java.time.LocalDate;
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -8,7 +10,7 @@ public class BarcodeVo {
 
 	private Long barcodeId;
 	private String barcode;
-	private CatalogVo defaultCategoryId;
+	private List<CatalogVo>defaultCategoryId;
 	private String attr_1;
 	private String attr_2;
 	private String attr_3;

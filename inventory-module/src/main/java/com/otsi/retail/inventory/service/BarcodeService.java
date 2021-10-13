@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.otsi.retail.inventory.model.Barcode;
 import com.otsi.retail.inventory.vo.BarcodeVo;
+import com.otsi.retail.inventory.vo.CatalogVo;
 
 @Service
 public interface BarcodeService {
@@ -17,10 +18,8 @@ public interface BarcodeService {
 
 	List<BarcodeVo> getAllBarcodes();
 
-	String updateBarcode(Long barcodeId, BarcodeVo barcodeVo);
-
 	String deleteBarcode(Long barcodeId);
 
-	//CatalogCategoriesVo getCatalogsFromCatalog(Long id);
+	List<CatalogVo> getCatalogsFromCatalog(Long id);
 
 }
