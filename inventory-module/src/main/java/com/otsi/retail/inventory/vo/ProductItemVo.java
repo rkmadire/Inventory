@@ -24,6 +24,8 @@ public class ProductItemVo {
 	private String title;
 
 	private int stock;
+	
+	private String name;
 
 	private float costPrice;
 
@@ -35,7 +37,7 @@ public class ProductItemVo {
 
     private StoresVo store;
 
-	private DomaindataVo domainData;
+	private DomainDataVo domainData;
 
 	private Long puid;
 

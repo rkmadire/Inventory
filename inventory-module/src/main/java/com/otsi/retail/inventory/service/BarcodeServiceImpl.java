@@ -13,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.otsi.retail.inventory.config.Config;
+import com.otsi.retail.inventory.exceptions.DuplicateRecordException;
+import com.otsi.retail.inventory.exceptions.InvalidDataException;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.mapper.BarcodeMapper;
@@ -38,29 +40,37 @@ public class BarcodeServiceImpl implements BarcodeService {
 
 	@Override
 	public String createBarcode(BarcodeVo vo) {
+		if (vo.getDefaultCategoryId() == null) {
+			throw new InvalidDataException("please give valid data");
+		}
 		if (barcodeRepo.existsByBarcode(vo.getBarcode())) {
-			throw new RuntimeException("barcode is already exists:" + vo.getBarcode());
+			throw new DuplicateRecordException("barcode is already exists:" + vo.getBarcode());
 		}
-		// Barcode bar = barcodemapper.VoToEntity(vo);
+
+		List<CatalogVo> resVo = vo.getDefaultCategoryId();
+		List<CatalogVo> catalogsFromCatalog = getCatalogsFromCatalog(resVo.get(0).getId());
+		if (catalogsFromCatalog.getClass() == null) {
+			throw new RecordNotFoundException("catalog record is not found");
+
+		}
+
 		/*
-		 * CatalogCategoriesVo catalogVo = new CatalogCategoriesVo();
-		 * bar.setDefaultCategoryId(catalogVo.getId());
+		 * ResponseEntity<?> catalogResponse =
+		 * restTemplate.exchange(config.getGetCatagoriesUrl() + "?id=" + resVo.getId(),
+		 * HttpMethod.GET, null, GateWayResponse.class);
+		 * System.out.println("Received Request to getCatalog categories:" +
+		 * catalogResponse); ObjectMapper mapper = new ObjectMapper();
+		 * GateWayResponse<?> gatewayResponse =
+		 * mapper.convertValue(catalogResponse.getBody(), GateWayResponse.class);
+		 * 
+		 * CatalogVo[] catalogVo = mapper.convertValue(gatewayResponse.getResult(),
+		 * CatalogVo[].class);
+		 * 
+		 * if (catalogVo.getClass() == null) { throw new
+		 * RecordNotFoundException("catalog category id is not found"); }
 		 */
-
-		CatalogVo resVo = vo.getDefaultCategoryId();
-		ResponseEntity<?> catalogResponse = restTemplate.exchange(config.getGetCatagoriesUrl() + "?id=" + resVo.getId(),
-				HttpMethod.GET, null, GateWayResponse.class);
-		System.out.println("Received Request to getCatalog categories:" + catalogResponse);
-		ObjectMapper mapper = new ObjectMapper();
-		GateWayResponse<?> gatewayResponse = mapper.convertValue(catalogResponse.getBody(), GateWayResponse.class);
-
-		CatalogVo[] catalogVo = mapper.convertValue(gatewayResponse.getResult(), CatalogVo[].class);
-
-		if (catalogVo.getClass() == null) {
-			throw new RecordNotFoundException("catalog category id is not found");
-		}
 		Barcode barcode = new Barcode();
-		barcode.setDefaultCategoryId(resVo.getId());
+		barcode.setDefaultCategoryId(resVo.get(0).getId());
 		barcode.setBarcode(vo.getBarcode());
 		barcodeRepo.save(barcode);
 		// BarcodeVo barCreate=barcodemapper.EntityToVo();
@@ -85,20 +95,9 @@ public class BarcodeServiceImpl implements BarcodeService {
 			BarcodeVo barcodeVo = barcodemapper.EntityToVo(barcode);
 			barcodeVos.add(barcodeVo);
 		});
+
 		return barcodeVos;
 
-	}
-
-	@Override
-	public String updateBarcode(Long barcodeId, BarcodeVo barcodeVo) {
-		Barcode bar = barcodeRepo.getByBarcodeId(barcodeId);
-		if (bar == null) {
-			throw new RuntimeException("barcode not found with id: " + barcodeId);
-		}
-		Barcode barcode = barcodemapper.VoToEntity(barcodeVo);
-		barcodeRepo.save(barcode);
-		BarcodeVo barcodeUpdate = barcodemapper.EntityToVo(barcode);
-		return "barcode updated successfully";
 	}
 
 	@Override
@@ -111,14 +110,16 @@ public class BarcodeServiceImpl implements BarcodeService {
 		return "barcode deleted succesfully: " + barcodeId;
 	}
 
-	/*
-	 * @Override public CatalogCategoriesVo getCatalogsFromCatalog(Long id) {
-	 * ResponseEntity<?> catalogResponse =
-	 * restTemplate.exchange(config.getGetCatagoriesUrl() + "?id=" + id,
-	 * HttpMethod.GET, null, GateWayResponse.class); ObjectMapper mapper = new
-	 * ObjectMapper(); GateWayResponse<?> gatewayResponse =
-	 * mapper.convertValue(catalogResponse.getBody(), GateWayResponse.class);
-	 * CatalogCategoriesVo vo = mapper.convertValue(gatewayResponse.getResult(), new
-	 * TypeReference<CatalogCategoriesVo>() { }); return vo; }
-	 */
+	@Override
+	public List<CatalogVo> getCatalogsFromCatalog(Long id) {
+
+		ResponseEntity<?> catalogResponse = restTemplate.exchange(config.getGetCatagoriesUrl() + "?id=" + id,
+				HttpMethod.GET, null, GateWayResponse.class);
+		ObjectMapper mapper = new ObjectMapper();
+		GateWayResponse<?> gatewayResponse = mapper.convertValue(catalogResponse.getBody(), GateWayResponse.class);
+		List<CatalogVo> vo = mapper.convertValue(gatewayResponse.getResult(), new TypeReference<List<CatalogVo>>() {
+		});
+		return vo;
+	}
+
 }

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import lombok.Data;
 
 @Data
-public class DomaindataVo {
+public class DomainDataVo {
 	
 	private Long domainDataId;
 

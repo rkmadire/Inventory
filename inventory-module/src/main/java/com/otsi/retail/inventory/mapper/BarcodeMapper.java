@@ -1,11 +1,13 @@
 package com.otsi.retail.inventory.mapper;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import com.otsi.retail.inventory.model.Barcode;
 import com.otsi.retail.inventory.vo.BarcodeVo;
+import com.otsi.retail.inventory.vo.CatalogVo;
 
 @Component
 public class BarcodeMapper {
@@ -18,7 +20,11 @@ public class BarcodeMapper {
 		BarcodeVo vo = new BarcodeVo();
 		vo.setBarcodeId(dto.getBarcodeId());
 		vo.setBarcode(dto.getBarcode());
-		//vo.setDefaultCategoryId(dto.getDefaultCategoryId());
+		
+		CatalogVo catalog = new CatalogVo();
+		catalog.setId(dto.getDefaultCategoryId());
+		vo.setDefaultCategoryId(Arrays.asList(catalog));
+		
 		vo.setAttr_1(dto.getAttr_1());
 		vo.setAttr_2(dto.getAttr_2());
 		vo.setAttr_3(dto.getAttr_3());
@@ -63,7 +69,7 @@ public class BarcodeMapper {
 		Barcode dto = new Barcode();
 		dto.setBarcodeId(vo.getBarcodeId());
 		dto.setBarcode(vo.getBarcode());
-		//dto.setDefaultCategoryId(vo.getDefaultCategoryId());
+		// dto.setDefaultCategoryId(vo.getDefaultCategoryId());
 		dto.setAttr_1(vo.getAttr_1());
 		dto.setAttr_2(vo.getAttr_2());
 		dto.setAttr_3(vo.getAttr_3());

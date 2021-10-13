@@ -5,8 +5,10 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.model.Store;
 import com.otsi.retail.inventory.service.StoreService;
+import com.otsi.retail.inventory.vo.DomainDataVo;
 import com.otsi.retail.inventory.vo.StoresVo;
 
 @RestController
@@ -33,7 +36,7 @@ public class StoreController {
 
 	}
 
-	@GetMapping("/getInventoryId")
+	@GetMapping("/getStoreId")
 	public GateWayResponse<?> getStoreById(@RequestParam Long storeId) {
 		log.info("Received Request to getStoreById:" + storeId);
 		Optional<Store> inventory = storeService.getStore(storeId);
@@ -47,4 +50,21 @@ public class StoreController {
 		return new GateWayResponse<>("fetching all stores  sucessfully", allStores);
 
 	}
+
+	@PutMapping("/updateStore")
+	public GateWayResponse<?> updateStore(@RequestBody StoresVo storesVo) throws Exception {
+		
+		String updateStore = storeService.updateStore(storesVo);
+		return new GateWayResponse<>("updated store successfully", updateStore);
+
+	}
+
+	@DeleteMapping("/deleteStore")
+	public GateWayResponse<?> deleteStore(@RequestParam("storeId") Long storeId) throws Exception {
+
+		String deleteStore = storeService.deleteStore(storeId);
+		return new GateWayResponse<>("store deleted successfully", deleteStore);
+
+	}
+
 }

@@ -15,4 +15,10 @@ public interface StoreService {
 
 	List<Store> getAllStores();
 
+	String updateStore(StoresVo storesVo);
+
+	String deleteStore(Long storeId);
+
+	
+
 }
