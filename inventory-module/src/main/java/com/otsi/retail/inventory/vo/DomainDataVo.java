@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class DomainDataVo {
-	
+
 	private Long domainDataId;
 
 	private String domainName;

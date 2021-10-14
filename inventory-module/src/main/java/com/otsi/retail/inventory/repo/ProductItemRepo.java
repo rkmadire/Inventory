@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.otsi.retail.inventory.model.ProductItem;
 
 @Repository
-public interface InventoryRepo extends JpaRepository<ProductItem, Long> {
+public interface ProductItemRepo extends JpaRepository<ProductItem, Long> {
 
 	Optional<ProductItem> findByProductItemId(Long productItemId);
 

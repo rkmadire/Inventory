@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,8 @@ import com.otsi.retail.inventory.vo.CatalogVo;
 @Component
 public class BarcodeServiceImpl implements BarcodeService {
 
+	private Logger log = LoggerFactory.getLogger(BarcodeServiceImpl.class);
+
 	@Autowired
 	private BarcodeRepo barcodeRepo;
 
@@ -40,6 +44,8 @@ public class BarcodeServiceImpl implements BarcodeService {
 
 	@Override
 	public String createBarcode(BarcodeVo vo) {
+		log.debug("debugging createBarcode:" + vo);
+		// Barcode bar=barcodemapper.VoToEntity(vo);
 		if (vo.getDefaultCategoryId() == null) {
 			throw new InvalidDataException("please give valid data");
 		}
@@ -73,40 +79,49 @@ public class BarcodeServiceImpl implements BarcodeService {
 		barcode.setDefaultCategoryId(resVo.get(0).getId());
 		barcode.setBarcode(vo.getBarcode());
 		barcodeRepo.save(barcode);
-		// BarcodeVo barCreate=barcodemapper.EntityToVo();
+
+		log.warn("we are testing if barcode is saved...");
+		log.info("after saving barcode details:" + barcode);
 		return "barcode created successfully:" + barcode;
 	}
 
 	@Override
 	public Optional<Barcode> getBarcode(String barcode) {
+		log.debug("debugging getBarcode:" + barcode);
 		Optional<Barcode> vo = barcodeRepo.findByBarcode(barcode);
 		if (!(vo.isPresent())) {
 			throw new RecordNotFoundException("barcode record is not found");
 		}
-
+		log.warn("we are testing if barcode is fetching...");
+		log.info("after fetching barcode details:" + vo.toString());
 		return vo;
 	}
 
 	@Override
 	public List<BarcodeVo> getAllBarcodes() {
+		log.debug("debugging getAllBarcodes");
 		List<BarcodeVo> barcodeVos = new ArrayList<>();
 		List<Barcode> barcodes = barcodeRepo.findAll();
 		barcodes.stream().forEach(barcode -> {
 			BarcodeVo barcodeVo = barcodemapper.EntityToVo(barcode);
 			barcodeVos.add(barcodeVo);
 		});
-
+		log.warn("we are testing if all barcodes are fetching...");
+		log.info("after fetching all barcode details:" + barcodeVos.toString());
 		return barcodeVos;
 
 	}
 
 	@Override
 	public String deleteBarcode(Long barcodeId) {
+		log.debug("debugging deleteBarcode:" + barcodeId);
 		Optional<Barcode> barcode = barcodeRepo.findById(barcodeId);
 		if (!(barcode.isPresent())) {
 			throw new RuntimeException("barcode not found with id: " + barcodeId);
 		}
 		barcodeRepo.delete(barcode.get());
+		log.warn("we are testing if barcode is deleted...");
+		log.info("after deleting  barcode details:" + barcodeId);
 		return "barcode deleted succesfully: " + barcodeId;
 	}
 

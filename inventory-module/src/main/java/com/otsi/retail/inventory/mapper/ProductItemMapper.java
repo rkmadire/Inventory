@@ -18,7 +18,7 @@ import com.otsi.retail.inventory.vo.CatalogVo;
 import com.otsi.retail.inventory.vo.ProductItemVo;
 
 @Component
-public class InventoryMapper {
+public class ProductItemMapper {
 
 	@Autowired
 	private DomainDataMapper domainDataMapper;

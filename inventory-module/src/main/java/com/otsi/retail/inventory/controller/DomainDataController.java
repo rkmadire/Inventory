@@ -44,7 +44,7 @@ public class DomainDataController {
 
 	@GetMapping("/getAllDomainData")
 	public GateWayResponse<?> getAllDomainData() {
-
+		log.info("Recieved request to getAllDomainData");
 		List<DomainDataVo> allDomains = domainDataService.getAllDomainData();
 		return new GateWayResponse<>("fetching all domain data details sucessfully", allDomains);
 
@@ -52,7 +52,7 @@ public class DomainDataController {
 
 	@PutMapping("/updateDomaindata")
 	public GateWayResponse<?> updateDomaindata(@RequestBody DomainDataVo domainVo) throws Exception {
-
+		log.info("Recieved request to updateDomaindata:" + domainVo);
 		String updateDomain = domainDataService.updateDomainData(domainVo);
 		return new GateWayResponse<>("updated domain data successfully", updateDomain);
 
@@ -60,7 +60,7 @@ public class DomainDataController {
 
 	@DeleteMapping("/deleteDomainData")
 	public GateWayResponse<?> deleteDomainData(@RequestParam("domainDataId") Long domainDataId) throws Exception {
-
+		log.info("Recieved request to deleteDomainData:" + domainDataId);
 		String deleteDomain = domainDataService.deleteDomain(domainDataId);
 		return new GateWayResponse<>("domain data deleted successfully", deleteDomain);
 

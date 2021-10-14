@@ -51,18 +51,22 @@ public class DomaindataServiceImpl implements DomainDataService {
 
 	@Override
 	public List<DomainDataVo> getAllDomainData() {
+		log.debug("debugging getAllDomainData");
 		List<DomainDataVo> domainVos = new ArrayList<>();
 		List<Domaindata> domainDatas = domainDataRepo.findAll();
 		domainDatas.stream().forEach(barcode -> {
 			DomainDataVo domainVo = domainMapper.EntityToVo(barcode);
 			domainVos.add(domainVo);
 		});
+		log.warn("we are checking if all domains are fetching...");
+		log.info("after fetching all domain details:" + domainVos.toString());
 		return domainVos;
 
 	}
 
 	@Override
-	public String updateDomainData( DomainDataVo domainDataVo) {
+	public String updateDomainData(DomainDataVo domainDataVo) {
+		log.debug("debugging updateDomainData:" + domainDataVo);
 		Domaindata domain = domainDataRepo.findByDomainDataId(domainDataVo.getDomainDataId());
 		if (domain == null) {
 			throw new RecordNotFoundException("domain data is  not found with id: " + domainDataVo.getDomainDataId());
@@ -70,18 +74,23 @@ public class DomaindataServiceImpl implements DomainDataService {
 		Domaindata domainData = domainMapper.VoToEntity(domainDataVo);
 		domainData.setDomainDataId(domainDataVo.getDomainDataId());
 		domainData.setLastmodified(domainDataVo.getLastmodified());
-		domainDataRepo.save(domainData);
+		Domaindata domainUpdate = domainDataRepo.save(domainData);
 		// DomainDataVo domainUpdate = domainMapper.EntityToVo(domainData);
+		log.warn("we are checking if domain is updated...");
+		log.info("after updating domain details:" + domainUpdate);
 		return "domain data updated successfully";
 	}
 
 	@Override
 	public String deleteDomain(Long domainDataId) {
+		log.debug("debugging deleteDomain:" + domainDataId);
 		Optional<Domaindata> domain = domainDataRepo.findById(domainDataId);
 		if (!(domain.isPresent())) {
 			throw new RecordNotFoundException("domain not found with id: " + domainDataId);
 		}
 		domainDataRepo.delete(domain.get());
+		log.warn("we are checking if domain is deleted...");
+		log.info("after deleting domain details:" + domainDataId);
 		return "domain data deleted succesfully: " + domainDataId;
 	}
 
