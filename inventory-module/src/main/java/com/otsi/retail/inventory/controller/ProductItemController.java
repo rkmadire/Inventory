@@ -21,7 +21,7 @@ public class ProductItemController {
 	private Logger log = LoggerFactory.getLogger(ProductItemController.class);
 
 	@Autowired
-	private  ProductItemService productItemService;
+	private ProductItemService productItemService;
 
 	@PostMapping("/createProduct")
 	public GateWayResponse<?> createInventory(@RequestBody ProductItemVo vo) {
@@ -32,17 +32,25 @@ public class ProductItemController {
 	}
 
 	@GetMapping("/getProductId")
-	public GateWayResponse<?> getProductId(@RequestParam Long productItemId) {
+	public GateWayResponse<?> getProductId(@RequestParam("productItemId") Long productItemId) {
 		log.info("Recieved request to getProductId:" + productItemId);
 		ProductItemVo inventory = productItemService.getProductByProductId(productItemId);
-		return new GateWayResponse<>("fetching inventory details successfully with inventoryId", inventory);
+		return new GateWayResponse<>("fetching inventory details successfully with productId", inventory);
+	}
+
+	@GetMapping("/getProductName")
+	public GateWayResponse<?> getProductByName(@RequestParam("name") String name) {
+		log.info("Recieved request to getProductByName:" + name);
+		ProductItemVo inventoryName = productItemService.getProductByName(name);
+		return new GateWayResponse<>("fetching product details successfully with product name", inventoryName);
+
 	}
 
 	@GetMapping("/getAllProducts")
 	public GateWayResponse<?> getAllProducts() {
 		log.info("Recieved request to getAllProducts");
 		List<ProductItemVo> allProducts = productItemService.getAllProducts();
-		return new GateWayResponse<>("fetching all barcode details sucessfully", allProducts);
+		return new GateWayResponse<>("fetching all product details sucessfully", allProducts);
 
 	}
 

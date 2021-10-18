@@ -13,4 +13,6 @@ public interface ProductItemService {
 
 	List<ProductItemVo> getAllProducts();
 
+	ProductItemVo getProductByName(String name);
+
 }

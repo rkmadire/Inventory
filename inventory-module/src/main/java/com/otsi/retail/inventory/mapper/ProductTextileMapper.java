@@ -12,6 +12,9 @@ public class ProductTextileMapper {
 	@Autowired
 	private StoreMapper storeMapper;
 
+	@Autowired
+	private BarcodeTextileMapper barcodeTextileMapper;
+
 	/*
 	 * EntityToVo converts dto to vo
 	 * 
@@ -24,6 +27,7 @@ public class ProductTextileMapper {
 		vo.setHsnMasterId(0);
 		vo.setCreateForLocation(0);
 		vo.setValueAdditionCp(0);
+		vo.setBarcodeTextile(barcodeTextileMapper.EntityToVo(dto.getBarcodeTextile()));
 		vo.setStore(storeMapper.EntityToVo(dto.getStore()));
 		return vo;
 
@@ -41,6 +45,7 @@ public class ProductTextileMapper {
 		dto.setHsnMasterId(0);
 		dto.setCreateForLocation(0);
 		dto.setValueAdditionCp(0);
+		dto.setBarcodeTextile(barcodeTextileMapper.VoToEntity(vo.getBarcodeTextile()));
 		dto.setStore(storeMapper.VoToEntity(vo.getStore()));
 		return dto;
 

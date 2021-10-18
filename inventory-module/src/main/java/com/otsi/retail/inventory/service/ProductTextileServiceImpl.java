@@ -9,9 +9,13 @@ import org.springframework.stereotype.Component;
 
 import com.otsi.retail.inventory.exceptions.InvalidDataException;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
+import com.otsi.retail.inventory.mapper.BarcodeTextileMapper;
 import com.otsi.retail.inventory.mapper.ProductTextileMapper;
+import com.otsi.retail.inventory.model.BarcodeTextile;
 import com.otsi.retail.inventory.model.ProductTextile;
+import com.otsi.retail.inventory.repo.BarcodeTextileRepo;
 import com.otsi.retail.inventory.repo.ProductTextileRepo;
+import com.otsi.retail.inventory.vo.BarcodeTextileVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
 
 @Component
@@ -25,10 +29,16 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	@Autowired
 	private ProductTextileRepo productTextileRepo;
 
+	@Autowired
+	private BarcodeTextileRepo barcodeTextileRepo;
+
+	@Autowired
+	private BarcodeTextileMapper barcodeTextileMapper;
+
 	@Override
 	public String saveProductTextile(ProductTextileVo textileVo) {
 		log.debug("debugging saveProductTextile:" + textileVo);
-		if (textileVo.getStore() == null) {
+		if (textileVo.getStore() == null || textileVo.getBarcodeTextile() == null) {
 			throw new InvalidDataException("please give valid data");
 		}
 		ProductTextile textile = productTextileMapper.VoToEntity(textileVo);
@@ -48,6 +58,16 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		log.warn("we are checking if textile is fetching...");
 		log.info("after fetching textile details:" + id);
 		return textile;
+	}
+
+	@Override
+	public String saveBarcodeTextile(BarcodeTextileVo barcodeTextileVo) {
+		log.debug("debugging saveBarcodeTextile:" + barcodeTextileVo);
+		BarcodeTextile textile = barcodeTextileMapper.VoToEntity(barcodeTextileVo);
+		BarcodeTextile textileSave = barcodeTextileRepo.save(textile);
+		log.warn("we are checking if textile is saved...");
+		log.info("after saving textile details:" + textileSave.toString());
+		return "textile saved successfully:" + textileSave;
 	}
 
 }

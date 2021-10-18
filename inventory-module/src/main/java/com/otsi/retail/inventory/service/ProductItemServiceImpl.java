@@ -4,20 +4,20 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.otsi.retail.inventory.commons.ProductItemAvEnum;
 import com.otsi.retail.inventory.exceptions.InvalidDataException;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
 import com.otsi.retail.inventory.mapper.ProductItemMapper;
+import com.otsi.retail.inventory.model.Barcode;
 import com.otsi.retail.inventory.model.ProductImage;
 import com.otsi.retail.inventory.model.ProductInventory;
 import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.model.ProductItemAv;
+import com.otsi.retail.inventory.repo.BarcodeRepo;
 import com.otsi.retail.inventory.repo.ProductImageRepo;
 import com.otsi.retail.inventory.repo.ProductInventoryRepo;
 import com.otsi.retail.inventory.repo.ProductItemAvRepo;
@@ -45,7 +45,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 	private ProductItemMapper productItemMapper;
 
 	@Autowired
-	private BarcodeService barcodeService;
+	private BarcodeRepo barcodeRepo;
 
 	@Override
 	public String createInventory(ProductItemVo vo) {
@@ -54,10 +54,30 @@ public class ProductItemServiceImpl implements ProductItemService {
 			throw new InvalidDataException("please enter valid data");
 		}
 
-		ProductItem productItem = productItemMapper.VoToEntity(vo);
+		/*
+		 * ProductItem productItem = productItemMapper.VoToEntity(vo); ProductItem item3
+		 * = new ProductItem(); System.out.println(".........." + vo.toString());
+		 * 
+		 * Optional<ProductItem> item1 = inventoryRepo.findById(vo.getProductItemId());
+		 * if (item1.isPresent()) { item3 = item1.get(); } Barcode bar =
+		 * item3.getBarcode(); System.out.println("." + bar.toString()); if
+		 * (bar.getAttr1().equals(vo.getBarcode().getAttr1()) &&
+		 * bar.getAttr2().equals(vo.getBarcode().getAttr2()) &&
+		 * bar.getAttr3().equals(vo.getBarcode().getAttr3())) {
+		 * 
+		 * if (item3 != null) { ProductInventory prodInv = item3.getProductInventory();
+		 * 
+		 * // int ValuIncrease = item.getProductInventory().getStockvalue() + 1;
+		 * prodInv.setProductInventoryId(item3.getProductInventory().
+		 * getProductInventoryId());
+		 * prodInv.setStockvalue(item3.getProductInventory().getStockvalue() + 1);
+		 * prodInv.setLastModified(LocalDate.now()); productInventoryRepo.save(prodInv);
+		 * } }
+		 */
 
 		ProductItem item = inventoryRepo.findByNameAndUomAndCostPriceAndListPrice(vo.getName(), vo.getUom(),
 				vo.getCostPrice(), vo.getListPrice());
+
 		if (item != null) {
 			ProductInventory prodInv = item.getProductInventory();
 
@@ -68,6 +88,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 			productInventoryRepo.save(prodInv);
 
 		} else {
+
 			ProductItem saveProductItem = inventoryRepo.save(productItem);
 			ProductInventory prodInv = vo.getProductInventory();
 			prodInv.setProductItem(saveProductItem);
@@ -189,6 +210,22 @@ public class ProductItemServiceImpl implements ProductItemService {
 		log.warn("we are checking if product item is fetching...");
 		log.info("after fetching all product item  details:" + productList.toString());
 		return productList;
+	}
+
+	@Override
+	public ProductItemVo getProductByName(String name) {
+		log.debug("debugging getProductByProductId:" + name);
+		Optional<ProductItem> productItemName = inventoryRepo.findByName(name);
+		if (!(productItemName.isPresent())) {
+			throw new RecordNotFoundException("product record is not found");
+
+		} else {
+
+			ProductItemVo vo = productItemMapper.EntityToVo(productItemName.get());
+			log.warn("we are checking if product item is fetching...");
+			log.info("after fetching product item detailswith name:" + name);
+			return vo;
+		}
 	}
 
 }

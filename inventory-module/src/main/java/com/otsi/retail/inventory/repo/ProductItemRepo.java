@@ -1,8 +1,8 @@
 package com.otsi.retail.inventory.repo;
 
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.otsi.retail.inventory.model.ProductItem;
 
@@ -13,7 +13,11 @@ public interface ProductItemRepo extends JpaRepository<ProductItem, Long> {
 
 	boolean findByBarcodeBarcode(String barcode);
 
-
 	ProductItem findByNameAndUomAndCostPriceAndListPrice(String name, String uom, float costPrice, float listPrice);
+
+	Optional<ProductItem> findByName(String name);
+   
+	//ProductItem findByAttr1AndAttr2AndAttr3(String attr1, String attr2, String attr3);
+
 
 }

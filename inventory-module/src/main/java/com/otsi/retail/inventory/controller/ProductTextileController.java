@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.model.ProductTextile;
 import com.otsi.retail.inventory.service.ProductTextileService;
+import com.otsi.retail.inventory.vo.BarcodeTextileVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
 
 @RestController
 @RequestMapping("/productTextile")
 public class ProductTextileController {
-	
+
 	private Logger log = LoggerFactory.getLogger(ProductTextileController.class);
 
 	@Autowired
@@ -33,11 +34,18 @@ public class ProductTextileController {
 	}
 
 	@GetMapping("/getProductTextile")
-	public GateWayResponse<?> getProductTextile(@RequestParam Long id) {
+	public GateWayResponse<?> getProductTextileById(@RequestParam("id") Long id) {
 		log.info("Recieved request to getProductTextile:" + id);
 		Optional<ProductTextile> textile = productTextileService.getProductTextile(id);
 		return new GateWayResponse<>("fetching product textile details successfully with id", textile);
 	}
 
+	
+	@PostMapping("/saveBarcodeTextile")
+	public GateWayResponse<?> saveBarcodeTextile(@RequestBody BarcodeTextileVo barcodeTextileVo) {
+		log.info("Recieved request to saveBarcodeTextile:" + barcodeTextileVo);
+		String textileSave = productTextileService.saveBarcodeTextile(barcodeTextileVo);
+		return new GateWayResponse<>("barcode textile saved successfully", textileSave);
 
+	}
 }
