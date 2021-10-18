@@ -4,29 +4,30 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.otsi.retail.inventory.commons.ProductItemAvEnum;
 import com.otsi.retail.inventory.exceptions.InvalidDataException;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
-import com.otsi.retail.inventory.mapper.InventoryMapper;
+import com.otsi.retail.inventory.mapper.ProductItemMapper;
+import com.otsi.retail.inventory.model.Barcode;
 import com.otsi.retail.inventory.model.ProductImage;
 import com.otsi.retail.inventory.model.ProductInventory;
 import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.model.ProductItemAv;
 import com.otsi.retail.inventory.repo.BarcodeRepo;
-import com.otsi.retail.inventory.repo.InventoryRepo;
 import com.otsi.retail.inventory.repo.ProductImageRepo;
 import com.otsi.retail.inventory.repo.ProductInventoryRepo;
 import com.otsi.retail.inventory.repo.ProductItemAvRepo;
-import com.otsi.retail.inventory.vo.CatalogVo;
-import com.otsi.retail.inventory.vo.ProductItemAvVo;
+import com.otsi.retail.inventory.repo.ProductItemRepo;
 import com.otsi.retail.inventory.vo.ProductItemVo;
 
 @Component
-public class InventoryServiceImpl implements InventoryService {
+public class ProductItemServiceImpl implements ProductItemService {
+
+	private Logger log = LoggerFactory.getLogger(ProductItemServiceImpl.class);
 
 	@Autowired
 	private ProductImageRepo productImageRepo;
@@ -35,26 +36,48 @@ public class InventoryServiceImpl implements InventoryService {
 	private ProductItemAvRepo productItemAvRepo;
 
 	@Autowired
-	private InventoryRepo inventoryRepo;
+	private ProductItemRepo inventoryRepo;
 
 	@Autowired
 	private ProductInventoryRepo productInventoryRepo;
 
 	@Autowired
-	private InventoryMapper inventoryMapper;
+	private ProductItemMapper productItemMapper;
 
 	@Autowired
-	private BarcodeService barcodeService;
+	private BarcodeRepo barcodeRepo;
 
 	@Override
 	public String createInventory(ProductItemVo vo) {
-		if (vo.getBarcode() == null&&vo.getStore()==null&&vo.getDomainData()==null) {
+		log.debug("debugging createInventory:" + vo);
+		if (vo.getBarcode() == null && vo.getStore() == null && vo.getDomainData() == null) {
 			throw new InvalidDataException("please enter valid data");
+		}
 
-		ProductItem productItem = inventoryMapper.VoToEntity(vo);
+		/*
+		 * ProductItem productItem = productItemMapper.VoToEntity(vo); ProductItem item3
+		 * = new ProductItem(); System.out.println(".........." + vo.toString());
+		 * 
+		 * Optional<ProductItem> item1 = inventoryRepo.findById(vo.getProductItemId());
+		 * if (item1.isPresent()) { item3 = item1.get(); } Barcode bar =
+		 * item3.getBarcode(); System.out.println("." + bar.toString()); if
+		 * (bar.getAttr1().equals(vo.getBarcode().getAttr1()) &&
+		 * bar.getAttr2().equals(vo.getBarcode().getAttr2()) &&
+		 * bar.getAttr3().equals(vo.getBarcode().getAttr3())) {
+		 * 
+		 * if (item3 != null) { ProductInventory prodInv = item3.getProductInventory();
+		 * 
+		 * // int ValuIncrease = item.getProductInventory().getStockvalue() + 1;
+		 * prodInv.setProductInventoryId(item3.getProductInventory().
+		 * getProductInventoryId());
+		 * prodInv.setStockvalue(item3.getProductInventory().getStockvalue() + 1);
+		 * prodInv.setLastModified(LocalDate.now()); productInventoryRepo.save(prodInv);
+		 * } }
+		 */
 
 		ProductItem item = inventoryRepo.findByNameAndUomAndCostPriceAndListPrice(vo.getName(), vo.getUom(),
 				vo.getCostPrice(), vo.getListPrice());
+
 		if (item != null) {
 			ProductInventory prodInv = item.getProductInventory();
 
@@ -65,6 +88,7 @@ public class InventoryServiceImpl implements InventoryService {
 			productInventoryRepo.save(prodInv);
 
 		} else {
+
 			ProductItem saveProductItem = inventoryRepo.save(productItem);
 			ProductInventory prodInv = vo.getProductInventory();
 			prodInv.setProductItem(saveProductItem);
@@ -104,6 +128,8 @@ public class InventoryServiceImpl implements InventoryService {
 		 * 
 		 * // inventoryRepo.save(productItem);
 		 */
+		log.warn("we are checking if product item is saved...");
+		log.info("after saving product item  details:" + productItem.toString());
 		return "created inventory successfully";
 	}
 
@@ -147,21 +173,15 @@ public class InventoryServiceImpl implements InventoryService {
 
 	@Override
 	public ProductItemVo getProductByProductId(Long productItemId) {
-
+		log.debug("debugging getProductByProductId:" + productItemId);
 		Optional<ProductItem> productItem = inventoryRepo.findByProductItemId(productItemId);
 		if (!(productItem.isPresent())) {
 			throw new RecordNotFoundException("product record is not found");
 
 		} else {
 
-			ProductItemVo vo = inventoryMapper.EntityToVo(productItem.get());
-			// vo.getBarcode().setDefaultCategoryId(barcodeService.getCatalogsFromCatalog(productItem.get().getBarcode().getDefaultCategoryId()));
-			/*
-			 * List<CatalogVo> catalogsFromCatalog =
-			 * barcodeService.getCatalogsFromCatalog(productItem.get().getBarcode().
-			 * getDefaultCategoryId());
-			 * vo.getBarcode().setDefaultCategoryId(catalogsFromCatalog);
-			 */
+			ProductItemVo vo = productItemMapper.EntityToVo(productItem.get());
+
 			/*
 			 * if (productItem.isPresent()) { ProductItem productItem1 = productItem.get();
 			 * 
@@ -175,7 +195,8 @@ public class InventoryServiceImpl implements InventoryService {
 			 * 
 			 * }); }
 			 */
-
+			log.warn("we are checking if product item is fetching...");
+			log.info("after fetching product item details:" + productItemId);
 			return vo;
 		}
 
@@ -183,32 +204,28 @@ public class InventoryServiceImpl implements InventoryService {
 
 	@Override
 	public List<ProductItemVo> getAllProducts() {
+		log.debug("debugging getAllProducts()");
 		List<ProductItem> productItem = inventoryRepo.findAll();
-		List<ProductItemVo> productList = inventoryMapper.EntityToVo(productItem);
-
-		/*
-		 * productItem.stream().forEach(x -> {
-		 * 
-		 * List<ProductItemAv> listOfAv = x.getProductItemAvId();
-		 * 
-		 * listOfAv.stream().forEach(y -> { if
-		 * (x.getName().equalsIgnoreCase(ProductItemAvEnum.COLOR.geteName())) {
-		 * ((ProductItemVo) productList).setColor(y.getStringValue()); } if
-		 * (x.getName().equalsIgnoreCase(ProductItemAvEnum.LENGTH.geteName())) {
-		 * x.setLength(y.getIntValue()); } if
-		 * (x.getName().equalsIgnoreCase(ProductItemAvEnum.PRODUCT_VALIDITY.geteName()))
-		 * { x.setProductValidity(y.getDateValue()); }
-		 * 
-		 * });
-		 * 
-		 * vo.setName(y.getName()); vo.setColor(y.getStringValue());
-		 * vo.setProductValidity(y.getDateValue());
-		 * 
-		 * 
-		 * });
-		 */
-
+		List<ProductItemVo> productList = productItemMapper.EntityToVo(productItem);
+		log.warn("we are checking if product item is fetching...");
+		log.info("after fetching all product item  details:" + productList.toString());
 		return productList;
+	}
+
+	@Override
+	public ProductItemVo getProductByName(String name) {
+		log.debug("debugging getProductByProductId:" + name);
+		Optional<ProductItem> productItemName = inventoryRepo.findByName(name);
+		if (!(productItemName.isPresent())) {
+			throw new RecordNotFoundException("product record is not found");
+
+		} else {
+
+			ProductItemVo vo = productItemMapper.EntityToVo(productItemName.get());
+			log.warn("we are checking if product item is fetching...");
+			log.info("after fetching product item detailswith name:" + name);
+			return vo;
+		}
 	}
 
 }

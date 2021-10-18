@@ -2,6 +2,7 @@ package com.otsi.retail.inventory.controller;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.model.Store;
 import com.otsi.retail.inventory.service.StoreService;
-import com.otsi.retail.inventory.vo.DomainDataVo;
 import com.otsi.retail.inventory.vo.StoresVo;
 
 @RestController
@@ -53,7 +54,7 @@ public class StoreController {
 
 	@PutMapping("/updateStore")
 	public GateWayResponse<?> updateStore(@RequestBody StoresVo storesVo) throws Exception {
-		
+		log.info("Recieved request to updateStore:" + storesVo);
 		String updateStore = storeService.updateStore(storesVo);
 		return new GateWayResponse<>("updated store successfully", updateStore);
 
@@ -61,7 +62,7 @@ public class StoreController {
 
 	@DeleteMapping("/deleteStore")
 	public GateWayResponse<?> deleteStore(@RequestParam("storeId") Long storeId) throws Exception {
-
+		log.info("Recieved request to deleteStore:" + storeId);
 		String deleteStore = storeService.deleteStore(storeId);
 		return new GateWayResponse<>("store deleted successfully", deleteStore);
 
