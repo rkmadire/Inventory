@@ -54,8 +54,9 @@ public class ProductItemServiceImpl implements ProductItemService {
 			throw new InvalidDataException("please enter valid data");
 		}
 
-		/*
-		 * ProductItem productItem = productItemMapper.VoToEntity(vo); ProductItem item3
+		
+		  ProductItem productItem = productItemMapper.VoToEntity(vo); 
+		 /* ProductItem item3
 		 * = new ProductItem(); System.out.println(".........." + vo.toString());
 		 * 
 		 * Optional<ProductItem> item1 = inventoryRepo.findById(vo.getProductItemId());
