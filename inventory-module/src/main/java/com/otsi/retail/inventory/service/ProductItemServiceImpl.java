@@ -54,30 +54,11 @@ public class ProductItemServiceImpl implements ProductItemService {
 			throw new InvalidDataException("please enter valid data");
 		}
 
-		
-		  ProductItem productItem = productItemMapper.VoToEntity(vo); 
-		 /* ProductItem item3
-		 * = new ProductItem(); System.out.println(".........." + vo.toString());
-		 * 
-		 * Optional<ProductItem> item1 = inventoryRepo.findById(vo.getProductItemId());
-		 * if (item1.isPresent()) { item3 = item1.get(); } Barcode bar =
-		 * item3.getBarcode(); System.out.println("." + bar.toString()); if
-		 * (bar.getAttr1().equals(vo.getBarcode().getAttr1()) &&
-		 * bar.getAttr2().equals(vo.getBarcode().getAttr2()) &&
-		 * bar.getAttr3().equals(vo.getBarcode().getAttr3())) {
-		 * 
-		 * if (item3 != null) { ProductInventory prodInv = item3.getProductInventory();
-		 * 
-		 * // int ValuIncrease = item.getProductInventory().getStockvalue() + 1;
-		 * prodInv.setProductInventoryId(item3.getProductInventory().
-		 * getProductInventoryId());
-		 * prodInv.setStockvalue(item3.getProductInventory().getStockvalue() + 1);
-		 * prodInv.setLastModified(LocalDate.now()); productInventoryRepo.save(prodInv);
-		 * } }
-		 */
-
+		ProductItem productItem = productItemMapper.VoToEntity(vo);
 		ProductItem item = inventoryRepo.findByNameAndUomAndCostPriceAndListPrice(vo.getName(), vo.getUom(),
 				vo.getCostPrice(), vo.getListPrice());
+		Optional<Barcode> item1 = barcodeRepo.findByAttr1AndAttr2AndAttr3(vo.getBarcode().getAttr1(),
+				vo.getBarcode().getAttr2(), vo.getBarcode().getAttr3());
 
 		if (item != null) {
 			ProductInventory prodInv = item.getProductInventory();
@@ -88,13 +69,24 @@ public class ProductItemServiceImpl implements ProductItemService {
 			prodInv.setLastModified(LocalDate.now());
 			productInventoryRepo.save(prodInv);
 
+		} else if (item1.isPresent()) {
+			Optional<ProductItem> prodItem = inventoryRepo.findByBarcodeBarcodeId(vo.getBarcode().getBarcodeId());
+			if (prodItem.isPresent()) {
+				ProductInventory prodInv = prodItem.get().getProductInventory();
+
+				// int ValuIncrease = item.getProductInventory().getStockvalue() + 1;
+				prodInv.setProductInventoryId(prodInv.getProductInventoryId());
+				prodInv.setStockvalue(prodItem.get().getProductInventory().getStockvalue() + 1);
+				prodInv.setLastModified(LocalDate.now());
+				productInventoryRepo.save(prodInv);
+
+			}
 		} else {
 
 			ProductItem saveProductItem = inventoryRepo.save(productItem);
 			ProductInventory prodInv = vo.getProductInventory();
 			prodInv.setProductItem(saveProductItem);
 			saveAVValues(vo, saveProductItem);
-
 			List<ProductImage> listImages = new ArrayList<>();
 			List<ProductImage> productImage = vo.getProductImage();
 			productImage.forEach(x -> {
@@ -119,18 +111,8 @@ public class ProductItemServiceImpl implements ProductItemService {
 
 		}
 
-		/*
-		 * ProductInventory prodInvSave = productInventoryRepo.save(prodInv);
-		 * productItem.setProductInventory(prodInvSave);
-		 * 
-		 * /* // ProductItem saveProductItem1 = inventoryRepo.save(productItem);
-		 * 
-		 * // productItem.setProductInventory(prodInvSave);
-		 * 
-		 * // inventoryRepo.save(productItem);
-		 */
 		log.warn("we are checking if product item is saved...");
-		log.info("after saving product item  details:" + productItem.toString());
+		log.info("saving product item  details");
 		return "created inventory successfully";
 	}
 
