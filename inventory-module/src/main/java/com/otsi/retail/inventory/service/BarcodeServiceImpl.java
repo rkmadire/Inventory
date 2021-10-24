@@ -1,5 +1,6 @@
 package com.otsi.retail.inventory.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +21,11 @@ import com.otsi.retail.inventory.exceptions.InvalidDataException;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.mapper.BarcodeMapper;
+import com.otsi.retail.inventory.mapper.ProductItemMapper;
 import com.otsi.retail.inventory.model.Barcode;
+import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.repo.BarcodeRepo;
+import com.otsi.retail.inventory.repo.ProductItemRepo;
 import com.otsi.retail.inventory.vo.BarcodeVo;
 import com.otsi.retail.inventory.vo.CatalogVo;
 
@@ -38,6 +42,12 @@ public class BarcodeServiceImpl implements BarcodeService {
 
 	@Autowired
 	private RestTemplate restTemplate;
+
+	@Autowired
+	private ProductItemRepo productItemRepo;
+
+	@Autowired
+	private ProductItemMapper productItemMapper;
 
 	@Autowired
 	private Config config;
@@ -78,6 +88,11 @@ public class BarcodeServiceImpl implements BarcodeService {
 		Barcode barcode = new Barcode();
 		barcode.setDefaultCategoryId(resVo.get(0).getId());
 		barcode.setBarcode(vo.getBarcode());
+		barcode.setAttr1(vo.getAttr1());
+		barcode.setAttr2(vo.getAttr2());
+		barcode.setAttr3(vo.getAttr3());
+		barcode.setCreationDate(LocalDate.now());
+		barcode.setLastModified(LocalDate.now());
 		barcodeRepo.save(barcode);
 
 		log.warn("we are testing if barcode is saved...");
@@ -86,14 +101,17 @@ public class BarcodeServiceImpl implements BarcodeService {
 	}
 
 	@Override
-	public Optional<Barcode> getBarcode(String barcode) {
+	public BarcodeVo getBarcode(String barcode) {
 		log.debug("debugging getBarcode:" + barcode);
-		Optional<Barcode> vo = barcodeRepo.findByBarcode(barcode);
-		if (!(vo.isPresent())) {
+		Optional<Barcode> dto = barcodeRepo.findByBarcode(barcode);
+		if (!(dto.isPresent())) {
 			throw new RecordNotFoundException("barcode record is not found");
 		}
+
+		BarcodeVo vo = barcodemapper.EntityToVo(dto.get());
+		vo.setProductItem(productItemMapper.EntityToVo(dto.get().getProductItem()));
 		log.warn("we are testing if barcode is fetching...");
-		log.info("after fetching barcode details:" + vo.toString());
+		log.info("after fetching barcode details:");
 		return vo;
 	}
 
@@ -104,8 +122,15 @@ public class BarcodeServiceImpl implements BarcodeService {
 		List<Barcode> barcodes = barcodeRepo.findAll();
 		barcodes.stream().forEach(barcode -> {
 			BarcodeVo barcodeVo = barcodemapper.EntityToVo(barcode);
+			List<CatalogVo> catalogsFromCatalog = getCatalogsFromCatalog(barcodes.get(0).getDefaultCategoryId());
+			barcodeVo.setDefaultCategoryId(catalogsFromCatalog);
+			barcodeVo.setAttr1(barcodes.get(0).getAttr1());
+			barcodeVo.setAttr2(barcodes.get(0).getAttr2());
+			barcodeVo.setAttr3(barcodes.get(0).getAttr3());
+			barcodeVo.setProductItem(productItemMapper.EntityToVo(barcodes.get(0).getProductItem()));
 			barcodeVos.add(barcodeVo);
 		});
+
 		log.warn("we are testing if all barcodes are fetching...");
 		log.info("after fetching all barcode details:" + barcodeVos.toString());
 		return barcodeVos;

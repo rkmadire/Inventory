@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -27,7 +28,7 @@ import lombok.NoArgsConstructor;
 public class ProductInventory {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long productInventoryId;
 
 	@OneToOne(cascade = { CascadeType.ALL })

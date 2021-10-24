@@ -3,13 +3,17 @@ package com.otsi.retail.inventory.mapper;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.otsi.retail.inventory.model.BarcodeTextile;
+import com.otsi.retail.inventory.service.ProductTextileService;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
+import com.otsi.retail.inventory.vo.ProductTextileVo;
 
 @Component
 public class BarcodeTextileMapper {
 
+	
 	/*
 	 * EntityToVo converts dto to vo
 	 * 
@@ -17,7 +21,7 @@ public class BarcodeTextileMapper {
 
 	public BarcodeTextileVo EntityToVo(BarcodeTextile dto) {
 		BarcodeTextileVo vo = new BarcodeTextileVo();
-		vo.setBarcodeId(dto.getBarcodeId());
+		vo.setBarcodeTextileId(dto.getBarcodeTextileId());
 		vo.setBarcode(dto.getBarcode());
 		vo.setAttr_1(dto.getAttr_1());
 		vo.setAttr_2(dto.getAttr_2());
@@ -41,6 +45,7 @@ public class BarcodeTextileMapper {
 		vo.setAttr_20(dto.getAttr_20());
 		vo.setCreationDate(LocalDate.now());
 		vo.setLastModified(LocalDate.now());
+		//vo.setProductTextile(productTextileMapper.EntityToVo(dto.getProductTextile()));
 		return vo;
 
 	}
@@ -61,7 +66,7 @@ public class BarcodeTextileMapper {
 
 	public BarcodeTextile VoToEntity(BarcodeTextileVo vo) {
 		BarcodeTextile dto = new BarcodeTextile();
-		dto.setBarcodeId(vo.getBarcodeId());
+		dto.setBarcodeTextileId(vo.getBarcodeTextileId());
 		dto.setBarcode(vo.getBarcode());
 		dto.setAttr_1(vo.getAttr_1());
 		dto.setAttr_2(vo.getAttr_2());
@@ -85,6 +90,7 @@ public class BarcodeTextileMapper {
 		dto.setAttr_20(vo.getAttr_20());
 		dto.setCreationDate(LocalDate.now());
 		dto.setLastModified(LocalDate.now());
+
 		return dto;
 
 	}

@@ -1,11 +1,19 @@
 package com.otsi.retail.inventory.model;
 
 import java.time.LocalDate;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,8 +26,8 @@ import lombok.NoArgsConstructor;
 public class BarcodeTextile {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long barcodeId;
+	@GeneratedValue
+	private Long barcodeTextileId;
 	private String barcode;
 	private String attr_1;
 	private String attr_2;
@@ -43,4 +51,7 @@ public class BarcodeTextile {
 	private String attr_20;
 	private LocalDate creationDate;
 	private LocalDate lastModified;
+	@OneToOne(mappedBy = "barcodeTextile")
+	private ProductTextile productTextile;
+	
 }

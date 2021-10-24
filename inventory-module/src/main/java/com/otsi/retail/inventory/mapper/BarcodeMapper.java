@@ -1,16 +1,19 @@
 package com.otsi.retail.inventory.mapper;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.otsi.retail.inventory.model.Barcode;
+import com.otsi.retail.inventory.service.ProductItemService;
 import com.otsi.retail.inventory.vo.BarcodeVo;
-import com.otsi.retail.inventory.vo.CatalogVo;
+import com.otsi.retail.inventory.vo.ProductItemVo;
 
 @Component
 public class BarcodeMapper {
+
+	
 	/*
 	 * EntityToVo converts dto to vo
 	 * 
@@ -20,14 +23,12 @@ public class BarcodeMapper {
 		BarcodeVo vo = new BarcodeVo();
 		vo.setBarcodeId(dto.getBarcodeId());
 		vo.setBarcode(dto.getBarcode());
-		CatalogVo catalog = new CatalogVo();
-		catalog.setId(dto.getDefaultCategoryId());
-		vo.setDefaultCategoryId(Arrays.asList(catalog));
 		vo.setAttr1(dto.getAttr1());
 		vo.setAttr2(dto.getAttr2());
 		vo.setAttr3(dto.getAttr3());
 		vo.setCreationDate(LocalDate.now());
 		vo.setLastModified(LocalDate.now());
+		//vo.setProductItem(productItemMapper.EntityToVo(dto.getProductItem()));
 		return vo;
 
 	}
@@ -50,7 +51,7 @@ public class BarcodeMapper {
 		Barcode dto = new Barcode();
 		dto.setBarcodeId(vo.getBarcodeId());
 		dto.setBarcode(vo.getBarcode());
-		// dto.setDefaultCategoryId(vo.getDefaultCategoryId());
+	   // dto.setDefaultCategoryId(vo.getDefaultCategoryId());
 		dto.setAttr1(vo.getAttr1());
 		dto.setAttr2(vo.getAttr2());
 		dto.setAttr3(vo.getAttr3());

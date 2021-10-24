@@ -5,6 +5,7 @@ package com.otsi.retail.inventory.model;
 
 import java.time.LocalDate;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,7 +27,8 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "product_item")
-@Data@NoArgsConstructor
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class ProductItem {
 
@@ -34,8 +36,8 @@ public class ProductItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long productItemId;
 
-	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
-	private Barcode barcode;
+	@OneToMany(mappedBy = "productItem",fetch = FetchType.EAGER ,cascade = CascadeType.ALL,targetEntity = Barcode.class)
+	private List<Barcode> barcode;
 
 	private String tyecode;
 
@@ -46,7 +48,7 @@ public class ProductItem {
 	private String title;
 
 	private int stock;
-	
+
 	private String name;
 
 	private float costPrice;
@@ -74,7 +76,6 @@ public class ProductItem {
 	private List<ProductImage> ProductImage;
 
 	@OneToOne(mappedBy = "productItem")
-	@JoinColumn(name="productInventoryId")
 	private ProductInventory productInventory;
 
 }

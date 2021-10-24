@@ -11,8 +11,6 @@ public interface ProductTextileService {
 
 	String saveProductTextile(ProductTextileVo textileVo);
 
-	Optional<ProductTextile> getProductTextile(Long id);
-
-	String saveBarcodeTextile(BarcodeTextileVo barcodeTextileVo);
+	ProductTextileVo getProductTextile(Long productTextileId);
 
 }
