@@ -34,18 +34,9 @@ public class ProductTextileController {
 	}
 
 	@GetMapping("/getProductTextile")
-	public GateWayResponse<?> getProductTextileById(@RequestParam("id") Long id) {
-		log.info("Recieved request to getProductTextile:" + id);
-		Optional<ProductTextile> textile = productTextileService.getProductTextile(id);
+	public GateWayResponse<?> getProductTextileById(@RequestParam("productTextileId") Long productTextileId) {
+		log.info("Recieved request to getProductTextile:" + productTextileId);
+		ProductTextileVo textile = productTextileService.getProductTextile(productTextileId);
 		return new GateWayResponse<>("fetching product textile details successfully with id", textile);
-	}
-
-	
-	@PostMapping("/saveBarcodeTextile")
-	public GateWayResponse<?> saveBarcodeTextile(@RequestBody BarcodeTextileVo barcodeTextileVo) {
-		log.info("Recieved request to saveBarcodeTextile:" + barcodeTextileVo);
-		String textileSave = productTextileService.saveBarcodeTextile(barcodeTextileVo);
-		return new GateWayResponse<>("barcode textile saved successfully", textileSave);
-
 	}
 }

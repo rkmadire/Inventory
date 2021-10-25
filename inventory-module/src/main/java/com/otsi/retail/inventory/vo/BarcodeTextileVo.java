@@ -1,12 +1,14 @@
 package com.otsi.retail.inventory.vo;
 
 import java.time.LocalDate;
+import javax.persistence.OneToOne;
+import com.otsi.retail.inventory.model.ProductTextile;
 import lombok.Data;
 
 @Data
 public class BarcodeTextileVo {
-	
-	private Long barcodeId;
+
+	private Long barcodeTextileId;
 	private String barcode;
 	private String attr_1;
 	private String attr_2;
@@ -30,5 +32,6 @@ public class BarcodeTextileVo {
 	private String attr_20;
 	private LocalDate creationDate;
 	private LocalDate lastModified;
-
+	
+   private ProductTextileVo productTextile;
 }

@@ -9,12 +9,11 @@ import com.otsi.retail.inventory.model.ProductInventory;
 
 import lombok.Data;
 
-
 @Data
 public class ProductItemVo {
-	
+
 	private Long productItemId;
-	
+
 	private String tyecode;
 
 	private String defaultImage;
@@ -24,18 +23,18 @@ public class ProductItemVo {
 	private String title;
 
 	private int stock;
-	
+
 	private String name;
 
 	private float costPrice;
 
 	private float listPrice;
 
-    private String uom;
-    
-    private BarcodeVo barcode;
+	private String uom;
 
-    private StoresVo store;
+	private List<BarcodeVo> barcode;
+
+	private StoresVo store;
 
 	private DomainDataVo domainData;
 
@@ -46,9 +45,9 @@ public class ProductItemVo {
 	private int length;
 
 	private LocalDate productValidity;
-	
+
 	private List<ProductImage> ProductImage;
-	
+
 	private ProductInventory productInventory;
 
 }

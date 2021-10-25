@@ -1,5 +1,6 @@
 package com.otsi.retail.inventory.repo;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,13 @@ public interface BarcodeRepo extends JpaRepository<Barcode, Long> {
 
 	Barcode findByBarcodeId(Long barcodeId);
 
+	//Optional<Barcode> findByAttr1AndAttr2AndAttr3(String attr1, String attr2, String attr3);
+
+	List<Barcode> findByBarcodeIn(List<String> barcodeList);
+
 	Optional<Barcode> findByAttr1AndAttr2AndAttr3(String attr1, String attr2, String attr3);
+
+	// Optional<Barcode> findByAttr1AndAttr2AndAttr3(String attr1, String attr2,
+	// String attr3);
 
 }

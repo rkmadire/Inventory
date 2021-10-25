@@ -14,7 +14,7 @@ public interface BarcodeService {
 
 	String createBarcode(BarcodeVo vo);
 
-	Optional<Barcode> getBarcode(String barcode);
+	BarcodeVo getBarcode(String barcode);
 
 	List<BarcodeVo> getAllBarcodes();
 

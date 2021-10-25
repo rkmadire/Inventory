@@ -1,5 +1,6 @@
 package com.otsi.retail.inventory.service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
 import com.otsi.retail.inventory.mapper.BarcodeTextileMapper;
 import com.otsi.retail.inventory.mapper.ProductTextileMapper;
 import com.otsi.retail.inventory.model.BarcodeTextile;
+import com.otsi.retail.inventory.model.ProductInventory;
 import com.otsi.retail.inventory.model.ProductTextile;
 import com.otsi.retail.inventory.repo.BarcodeTextileRepo;
 import com.otsi.retail.inventory.repo.ProductTextileRepo;
@@ -29,11 +31,6 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	@Autowired
 	private ProductTextileRepo productTextileRepo;
 
-	@Autowired
-	private BarcodeTextileRepo barcodeTextileRepo;
-
-	@Autowired
-	private BarcodeTextileMapper barcodeTextileMapper;
 
 	@Override
 	public String saveProductTextile(ProductTextileVo textileVo) {
@@ -43,31 +40,24 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		}
 		ProductTextile textile = productTextileMapper.VoToEntity(textileVo);
 		ProductTextile textileSave = productTextileRepo.save(textile);
+		ProductTextileVo prod=productTextileMapper.EntityToVo(textileSave);
+
 		log.warn("we are checking if textile is saved...");
-		log.info("after saving textile details:" + textileSave.toString());
-		return "textile saved successfully:" + textileSave;
+		log.info("after saving textile details");
+		return "textile saved successfully";
 	}
 
 	@Override
-	public Optional<ProductTextile> getProductTextile(Long id) {
-		log.debug("debugging createInventory:" + id);
-		Optional<ProductTextile> textile = productTextileRepo.findById(id);
+	public ProductTextileVo getProductTextile(Long productTextileId) {
+		log.debug("debugging createInventory:" + productTextileId);
+		Optional<ProductTextile> textile = productTextileRepo.findById(productTextileId);
 		if (!(textile.isPresent())) {
 			throw new RecordNotFoundException("domain record is not found");
 		}
+		ProductTextileVo vo = productTextileMapper.EntityToVo(textile.get());
 		log.warn("we are checking if textile is fetching...");
-		log.info("after fetching textile details:" + id);
-		return textile;
-	}
-
-	@Override
-	public String saveBarcodeTextile(BarcodeTextileVo barcodeTextileVo) {
-		log.debug("debugging saveBarcodeTextile:" + barcodeTextileVo);
-		BarcodeTextile textile = barcodeTextileMapper.VoToEntity(barcodeTextileVo);
-		BarcodeTextile textileSave = barcodeTextileRepo.save(textile);
-		log.warn("we are checking if textile is saved...");
-		log.info("after saving textile details:" + textileSave.toString());
-		return "textile saved successfully:" + textileSave;
+		log.info("after fetching textile details:" + productTextileId);
+		return vo;
 	}
 
 }

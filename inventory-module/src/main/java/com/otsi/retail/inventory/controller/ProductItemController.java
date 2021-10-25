@@ -32,7 +32,7 @@ public class ProductItemController {
 	}
 
 	@GetMapping("/getProductId")
-	public GateWayResponse<?> getProductId(@RequestParam("productItemId") Long productItemId) {
+	public GateWayResponse<?> getProductItemId(@RequestParam("productItemId") Long productItemId) {
 		log.info("Recieved request to getProductId:" + productItemId);
 		ProductItemVo inventory = productItemService.getProductByProductId(productItemId);
 		return new GateWayResponse<>("fetching inventory details successfully with productId", inventory);

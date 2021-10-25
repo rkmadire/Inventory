@@ -37,7 +37,7 @@ public class BarcodeController {
 	@GetMapping("/getBarcode")
 	public GateWayResponse<?> getBarcode(@RequestParam String barcode) {
 		log.info("Recieved request to getBarcode:" + barcode);
-		Optional<Barcode> fetchBarcode = barcodeService.getBarcode(barcode);
+		BarcodeVo fetchBarcode = barcodeService.getBarcode(barcode);
 		return new GateWayResponse<>("fetching Barcode details successfully with barcode", fetchBarcode);
 	}
 

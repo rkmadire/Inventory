@@ -18,8 +18,5 @@ public interface ProductItemRepo extends JpaRepository<ProductItem, Long> {
 	Optional<ProductItem> findByName(String name);
 
 	Optional<ProductItem> findByBarcodeBarcodeId(Long barcodeId);
-   
-	//ProductItem findByAttr1AndAttr2AndAttr3(String attr1, String attr2, String attr3);
-
 
 }
