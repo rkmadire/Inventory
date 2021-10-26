@@ -46,10 +46,10 @@ public class ProductItemController {
 
 	}
 
-	@GetMapping("/getAllProducts")
-	public GateWayResponse<?> getAllProducts() {
+	@PostMapping("/getAllProducts")
+	public GateWayResponse<?> getAllProducts(@RequestBody ProductItemVo vo) {
 		log.info("Recieved request to getAllProducts");
-		List<ProductItemVo> allProducts = productItemService.getAllProducts();
+		List<ProductItemVo> allProducts = productItemService.getAllProducts(vo);
 		return new GateWayResponse<>("fetching all product details sucessfully", allProducts);
 
 	}

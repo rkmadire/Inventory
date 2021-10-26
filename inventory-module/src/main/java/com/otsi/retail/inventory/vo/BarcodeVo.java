@@ -17,8 +17,8 @@ public class BarcodeVo {
 	private String attr1;
 	private String attr2;
 	private String attr3;
-	private LocalDate creationDate;
-	private LocalDate lastModified;
-    private ProductItemVo productItem;
+	private LocalDate fromDate;
+	private LocalDate toDate;
+    private List<ProductItemVo> productItem;
 	
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 import com.otsi.retail.inventory.errors.ErrorResponse;
 
 @ControllerAdvice
@@ -34,4 +35,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		log.error("error response is:" + error);
 		return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
 	}
+
+	@ExceptionHandler(value = ServiceDownException.class)
+	public ResponseEntity<Object> serviceDownException(ServiceDownException serviceDownException) {
+		ErrorResponse<?> error = new ErrorResponse<>(406, "Internal calling service is down");
+		log.error("error response is:" + error);
+		return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
+	}
+
 }

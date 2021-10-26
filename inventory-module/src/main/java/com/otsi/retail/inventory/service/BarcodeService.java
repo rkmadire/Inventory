@@ -16,10 +16,12 @@ public interface BarcodeService {
 
 	BarcodeVo getBarcode(String barcode);
 
-	List<BarcodeVo> getAllBarcodes();
+	/* List<BarcodeVo> getAllBarcodes(); */
 
 	String deleteBarcode(Long barcodeId);
 
 	List<CatalogVo> getCatalogsFromCatalog(Long id);
+
+	List<BarcodeVo> getAllBarcodes(BarcodeVo vo);
 
 }

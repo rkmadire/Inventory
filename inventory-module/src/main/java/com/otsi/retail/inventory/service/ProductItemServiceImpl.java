@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import com.otsi.retail.inventory.repo.ProductImageRepo;
 import com.otsi.retail.inventory.repo.ProductInventoryRepo;
 import com.otsi.retail.inventory.repo.ProductItemAvRepo;
 import com.otsi.retail.inventory.repo.ProductItemRepo;
-import com.otsi.retail.inventory.vo.BarcodeVo;
 import com.otsi.retail.inventory.vo.ProductItemVo;
 
 @Component
@@ -56,17 +54,18 @@ public class ProductItemServiceImpl implements ProductItemService {
 	@Override
 	public String createInventory(ProductItemVo vo) {
 		log.debug("debugging createInventory");
-		if (vo.getBarcode() == null && vo.getStore() == null && vo.getDomainData() == null) {
-			throw new InvalidDataException("please enter valid data");
+		if(vo.getProductImage()==null) {
+			throw new InvalidDataException("please give valid data");
 		}
-
 		ProductItem productItem = productItemMapper.VoToEntity(vo);
 
 		ProductItem item = inventoryRepo.findByNameAndUomAndCostPriceAndListPrice(vo.getName(), vo.getUom(),
 				vo.getCostPrice(), vo.getListPrice());
-
-		Optional<Barcode> item1 = barcodeRepo.findByAttr1AndAttr2AndAttr3(vo.getBarcode().get(0).getAttr1(),
-				vo.getBarcode().get(0).getAttr2(), vo.getBarcode().get(0).getAttr3());
+		/*
+		 * Optional<Barcode> item1 =
+		 * barcodeRepo.findByAttr1AndAttr2AndAttr3(vo.getBarcode().get(0).getAttr1(),
+		 * vo.getBarcode().get(0).getAttr2(), vo.getBarcode().get(0).getAttr3());
+		 */
 
 		if (item != null) {
 			ProductInventory prodIn = item.getProductInventory();
@@ -77,20 +76,24 @@ public class ProductItemServiceImpl implements ProductItemService {
 			prodIn.setLastModified(LocalDate.now());
 			productInventoryRepo.save(prodIn);
 
-		} else if (item1.isPresent()) {
-
-			Optional<ProductItem> prodItem = inventoryRepo.findByBarcodeBarcodeId(item1.get().getBarcodeId());
-			if (prodItem.isPresent()) {
-				ProductInventory prodInv = prodItem.get().getProductInventory();
-
-				// int ValuIncrease = item.getProductInventory().getStockvalue() + 1;
-				prodInv.setProductInventoryId(prodItem.get().getProductInventory().getProductInventoryId());
-				prodInv.setStockvalue(prodItem.get().getProductInventory().getStockvalue() + 1);
-				prodInv.setLastModified(LocalDate.now());
-				productInventoryRepo.save(prodInv);
-			}
-
-		} else {
+		} /*
+			 * else if (item1.isPresent()) {
+			 * 
+			 * Optional<ProductItem> prodItem =
+			 * inventoryRepo.findByBarcodeBarcodeId(item1.get().getBarcodeId()); if
+			 * (prodItem.isPresent()) { ProductInventory prodInv =
+			 * prodItem.get().getProductInventory();
+			 * 
+			 * // int ValuIncrease = item.getProductInventory().getStockvalue() + 1;
+			 * prodInv.setProductInventoryId(prodItem.get().getProductInventory().
+			 * getProductInventoryId());
+			 * prodInv.setStockvalue(prodItem.get().getProductInventory().getStockvalue() +
+			 * 1); prodInv.setLastModified(LocalDate.now());
+			 * productInventoryRepo.save(prodInv); }
+			 * 
+			 * }
+			 */
+		else {
 			ProductItem saveProductItem = inventoryRepo.save(productItem);
 			saveAVValues(vo, saveProductItem);
 			List<ProductImage> listImages = new ArrayList<>();
@@ -108,24 +111,12 @@ public class ProductItemServiceImpl implements ProductItemService {
 			List<ProductImage> s = productImageRepo.saveAll(listImages);
 			productItem.setProductImage(s);
 
-			ProductInventory prodInv = vo.getProductInventory();
+			ProductInventory prodInv = new ProductInventory();
 			prodInv.setProductItem(saveProductItem);
-			prodInv.setProductInventoryId(vo.getProductInventory().getProductInventoryId());
 			prodInv.setCreationDate(LocalDate.now());
 			prodInv.setLastModified(LocalDate.now());
-			prodInv.setStockvalue(vo.getProductInventory().getStockvalue());
+			prodInv.setStockvalue(vo.getStockValue());
 			ProductInventory prodInvSave = productInventoryRepo.save(prodInv);
-
-			List<BarcodeVo> barVo = vo.getBarcode();
-			List<String> barList = barVo.stream().map(b -> b.getBarcode()).collect(Collectors.toList());
-			List<Barcode> barcode = barcodeRepo.findByBarcodeIn(barList);
-			barcode.stream().forEach(b -> {
-
-				b.setProductItem(saveProductItem);
-
-				barcodeRepo.save(b);
-
-			});
 
 		}
 
@@ -203,10 +194,40 @@ public class ProductItemServiceImpl implements ProductItemService {
 	}
 
 	@Override
-	public List<ProductItemVo> getAllProducts() {
+	public List<ProductItemVo> getAllProducts(ProductItemVo vo) {
 		log.debug("debugging getAllProducts()");
-		List<ProductItem> productItem = inventoryRepo.findAll();
-		List<ProductItemVo> productList = productItemMapper.EntityToVo(productItem);
+		List<ProductItem> prodItemDetails = new ArrayList<>();
+		// List<ProductItem> prodItemDetails = inventoryRepo.findAll();
+
+		/*
+		 * using dates
+		 */
+		if (vo.getFromDate() != null && vo.getToDate() != null && vo.getProductItemId() == null) {
+			prodItemDetails = inventoryRepo.findByCreationDateBetweenOrderByLastModifiedDateAsc(vo.getFromDate(),
+					vo.getToDate());
+
+			if (prodItemDetails.isEmpty()) {
+				log.error("No record found with given information");
+				throw new RecordNotFoundException("No record found with given information");
+			}
+		}
+
+		/*
+		 * using dates and productItemId
+		 */
+		else if (vo.getFromDate() != null && vo.getToDate() != null && vo.getProductItemId() != null) {
+			Optional<ProductItem> prodOpt = inventoryRepo.findByProductItemId(vo.getProductItemId());
+			if (prodOpt.isPresent()) {
+				prodItemDetails = inventoryRepo.findByCreationDateBetweenAndProductItemIdOrderByLastModifiedDateAsc(
+						vo.getFromDate(), vo.getToDate(), vo.getProductItemId());
+			} else {
+				log.error("No record found with given productItemId");
+				throw new RecordNotFoundException("No record found with given productItemId");
+			}
+
+		}
+
+		List<ProductItemVo> productList = productItemMapper.EntityToVo(prodItemDetails);
 		log.warn("we are checking if product item is fetching...");
 		log.info("after fetching all product item  details:" + productList.toString());
 		return productList;

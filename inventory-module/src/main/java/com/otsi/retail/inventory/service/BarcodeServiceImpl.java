@@ -19,15 +19,17 @@ import com.otsi.retail.inventory.config.Config;
 import com.otsi.retail.inventory.exceptions.DuplicateRecordException;
 import com.otsi.retail.inventory.exceptions.InvalidDataException;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
+import com.otsi.retail.inventory.exceptions.ServiceDownException;
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.mapper.BarcodeMapper;
 import com.otsi.retail.inventory.mapper.ProductItemMapper;
 import com.otsi.retail.inventory.model.Barcode;
-import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.repo.BarcodeRepo;
 import com.otsi.retail.inventory.repo.ProductItemRepo;
 import com.otsi.retail.inventory.vo.BarcodeVo;
 import com.otsi.retail.inventory.vo.CatalogVo;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @Component
 public class BarcodeServiceImpl implements BarcodeService {
@@ -53,9 +55,9 @@ public class BarcodeServiceImpl implements BarcodeService {
 	private Config config;
 
 	@Override
+	//@CircuitBreaker(name = "catalog", fallbackMethod = "getCatalogsFromCatalog")
 	public String createBarcode(BarcodeVo vo) {
 		log.debug("debugging createBarcode:" + vo);
-		// Barcode bar=barcodemapper.VoToEntity(vo);
 		if (vo.getDefaultCategoryId() == null) {
 			throw new InvalidDataException("please give valid data");
 		}
@@ -65,7 +67,7 @@ public class BarcodeServiceImpl implements BarcodeService {
 
 		List<CatalogVo> resVo = vo.getDefaultCategoryId();
 		List<CatalogVo> catalogsFromCatalog = getCatalogsFromCatalog(resVo.get(0).getId());
-		if (catalogsFromCatalog.getClass() == null) {
+		if (catalogsFromCatalog == null) {
 			throw new RecordNotFoundException("catalog record is not found");
 
 		}
@@ -99,41 +101,70 @@ public class BarcodeServiceImpl implements BarcodeService {
 		log.info("after saving barcode details:" + barcode);
 		return "barcode created successfully:" + barcode;
 	}
+	
+	public List<CatalogVo> getCatalogsFromCatalog(List<CatalogVo> vo) {
+		log.error("Invocie details service down");
+		throw new ServiceDownException("Catalog details are down");
+	}
 
 	@Override
 	public BarcodeVo getBarcode(String barcode) {
 		log.debug("debugging getBarcode:" + barcode);
-		Optional<Barcode> dto = barcodeRepo.findByBarcode(barcode);
-		if (!(dto.isPresent())) {
+		Barcode dto = barcodeRepo.findByBarcode(barcode);
+		if (dto == null) {
 			throw new RecordNotFoundException("barcode record is not found");
 		}
 
-		BarcodeVo vo = barcodemapper.EntityToVo(dto.get());
-		vo.setProductItem(productItemMapper.EntityToVo(dto.get().getProductItem()));
+		BarcodeVo vo = barcodemapper.EntityToVo(dto);
+
+		/*
+		 * List<CatalogVo> catalogsFromCatalog =
+		 * getCatalogsFromCatalog(vo.getDefaultCategoryId().get(0).getId());
+		 * vo.setDefaultCategoryId(catalogsFromCatalog);
+		 */
+
 		log.warn("we are testing if barcode is fetching...");
 		log.info("after fetching barcode details:");
 		return vo;
 	}
 
 	@Override
-	public List<BarcodeVo> getAllBarcodes() {
+	public List<BarcodeVo> getAllBarcodes(BarcodeVo vo) {
 		log.debug("debugging getAllBarcodes");
-		List<BarcodeVo> barcodeVos = new ArrayList<>();
-		List<Barcode> barcodes = barcodeRepo.findAll();
-		barcodes.stream().forEach(barcode -> {
-			BarcodeVo barcodeVo = barcodemapper.EntityToVo(barcode);
-			List<CatalogVo> catalogsFromCatalog = getCatalogsFromCatalog(barcodes.get(0).getDefaultCategoryId());
-			barcodeVo.setDefaultCategoryId(catalogsFromCatalog);
-			barcodeVo.setAttr1(barcodes.get(0).getAttr1());
-			barcodeVo.setAttr2(barcodes.get(0).getAttr2());
-			barcodeVo.setAttr3(barcodes.get(0).getAttr3());
-			barcodeVo.setProductItem(productItemMapper.EntityToVo(barcodes.get(0).getProductItem()));
-			barcodeVos.add(barcodeVo);
-		});
+		List<Barcode> barcodeDetails = new ArrayList<>();
 
+		/*
+		 * using dates
+		 */
+		if (vo.getFromDate() != null && vo.getToDate() != null && vo.getBarcodeId() == null) {
+			barcodeDetails = barcodeRepo.findByCreationDateBetweenOrderByLastModifiedAsc(vo.getFromDate(),
+					vo.getToDate());
+
+			if (barcodeDetails.isEmpty()) {
+				log.error("No record found with given information");
+				throw new RecordNotFoundException("No record found with given information");
+			}
+		}
+
+		/*
+		 * using dates and barcodeId
+		 */
+		else if (vo.getFromDate() != null && vo.getToDate() != null && vo.getBarcodeId() != null) {
+			Optional<Barcode> barOpt = barcodeRepo.findByBarcodeId(vo.getBarcodeId());
+			if (barOpt.isPresent()) {
+				barcodeDetails = barcodeRepo.findByCreationDateBetweenAndBarcodeIdOrderByLastModifiedAsc(
+						vo.getFromDate(), vo.getToDate(), vo.getBarcodeId());
+			} else {
+				log.error("No record found with given BarcodeId");
+				throw new RecordNotFoundException("No record found with given BarcodeId");
+			}
+
+		}
+
+		List<BarcodeVo> barcodeList = barcodemapper.EntityToVo(barcodeDetails);
 		log.warn("we are testing if all barcodes are fetching...");
-		log.info("after fetching all barcode details:" + barcodeVos.toString());
-		return barcodeVos;
+		log.info("after fetching all barcode details:");
+		return barcodeList;
 
 	}
 
@@ -142,7 +173,7 @@ public class BarcodeServiceImpl implements BarcodeService {
 		log.debug("debugging deleteBarcode:" + barcodeId);
 		Optional<Barcode> barcode = barcodeRepo.findById(barcodeId);
 		if (!(barcode.isPresent())) {
-			throw new RuntimeException("barcode not found with id: " + barcodeId);
+			throw new RecordNotFoundException("barcode not found with id: " + barcodeId);
 		}
 		barcodeRepo.delete(barcode.get());
 		log.warn("we are testing if barcode is deleted...");
