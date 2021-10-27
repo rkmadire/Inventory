@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.otsi.retail.inventory.commons.ProductItemAvEnum;
 import com.otsi.retail.inventory.model.Barcode;
+import com.otsi.retail.inventory.model.Domaindata;
 import com.otsi.retail.inventory.model.ProductImage;
 import com.otsi.retail.inventory.model.ProductInventory;
 import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.model.ProductItemAv;
+import com.otsi.retail.inventory.model.Store;
 import com.otsi.retail.inventory.service.BarcodeService;
 import com.otsi.retail.inventory.vo.BarcodeVo;
 import com.otsi.retail.inventory.vo.CatalogVo;
@@ -29,14 +31,12 @@ public class ProductItemMapper {
 	@Autowired
 	private BarcodeMapper barcodeeMapper;
 
-	@Autowired
-	private BarcodeService barcodeService;
-
 	public ProductItemVo EntityToVo(ProductItem dto) {
 		ProductItemVo vo = new ProductItemVo();
 		vo.setProductItemId(dto.getProductItemId());
-		vo.setPuid(dto.getPuid());
 		vo.setCostPrice(dto.getCostPrice());
+		vo.setFromDate(dto.getCreationDate());
+		vo.setToDate(dto.getLastModifiedDate());
 		vo.setDefaultImage(dto.getDefaultImage());
 		vo.setListPrice(dto.getListPrice());
 		vo.setStatus(dto.getStatus());
@@ -46,9 +46,9 @@ public class ProductItemMapper {
 		vo.setName(dto.getName());
 		vo.setCostPrice(dto.getCostPrice());
 		vo.setUom(dto.getUom());
-		vo.setDomainData(domainDataMapper.EntityToVo(dto.getDomainData()));
-		vo.setStore(storeMapper.EntityToVo(dto.getStore()));
-		vo.setBarcode(barcodeeMapper.EntityToVo(dto.getBarcode()));
+		vo.setDomainDataId(domainDataMapper.EntityToVo(dto.getDomainData()).getDomainDataId());
+		vo.setStoreId(storeMapper.EntityToVo(dto.getStore()).getStoreId());
+		vo.setBarcodeId(barcodeeMapper.EntityToVo(dto.getBarcode()).getBarcodeId());
 		List<ProductImage> listImages = new ArrayList<>();
 		List<ProductImage> productImage = dto.getProductImage();
 		productImage.forEach(x -> {
@@ -62,12 +62,9 @@ public class ProductItemMapper {
 
 		});
 		vo.setProductImage(listImages);
-		ProductInventory prodInv = new ProductInventory();
-		prodInv.setProductInventoryId(dto.getProductInventory().getProductInventoryId());
-		prodInv.setCreationDate(LocalDate.now());
-		prodInv.setLastModified(LocalDate.now());
+		ProductInventory prodInv = new ProductInventory();	
 		prodInv.setStockvalue(dto.getProductInventory().getStockvalue());
-		vo.setProductInventory(prodInv);
+		vo.setStockValue(prodInv.getStockvalue());
 		List<ProductItemAv> productAv = dto.getProductItemAvId();
 
 		// ProductItemVo Pvo = new ProductItemVo();
@@ -83,28 +80,7 @@ public class ProductItemMapper {
 			}
 
 		});
-		List<Barcode> barEnt = dto.getBarcode();
-
-		List<BarcodeVo> listBarVo = new ArrayList<>();
-
-		barEnt.stream().forEach(x -> {
-			BarcodeVo barvo = new BarcodeVo();
-			barvo.setBarcode(x.getBarcode());
-			barvo.setAttr1(x.getAttr1());
-			barvo.setAttr2(x.getAttr2());
-			barvo.setAttr3(x.getAttr3());
-			barvo.setBarcodeId(x.getBarcodeId());
-			barvo.setCreationDate(LocalDate.now());
-			barvo.setLastModified(LocalDate.now());
-
-			List<CatalogVo> catalogsFromCatalog = barcodeService
-					.getCatalogsFromCatalog(dto.getBarcode().get(0).getDefaultCategoryId());
-			// vo.getBarcode().get(0).setDefaultCategoryId(catalogsFromCatalog);
-			barvo.setDefaultCategoryId(catalogsFromCatalog);
-			listBarVo.add(barvo);
-		});
-		vo.setBarcode(listBarVo);
-
+		vo.setBarcodeId(barcodeeMapper.EntityToVo(dto.getBarcode()).getBarcodeId());
 		return vo;
 
 	}
@@ -126,18 +102,27 @@ public class ProductItemMapper {
 	public ProductItem VoToEntity(ProductItemVo vo) {
 		ProductItem dto = new ProductItem();
 		dto.setProductItemId(vo.getProductItemId());
-		dto.setPuid(vo.getPuid());
 		dto.setName(vo.getName());
 		dto.setCostPrice(vo.getCostPrice());
+		dto.setCreationDate(LocalDate.now());
+		dto.setLastModifiedDate(LocalDate.now());
 		dto.setDefaultImage(vo.getDefaultImage());
 		dto.setListPrice(vo.getListPrice());
 		dto.setStatus(vo.getStatus());
 		dto.setStock(vo.getStock());
 		dto.setTitle(vo.getTitle());
 		dto.setTyecode(vo.getTyecode());
-		dto.setDomainData(domainDataMapper.VoToEntity(vo.getDomainData()));
-		// dto.setBarcode(barcodeeMapper.VoToEntity(vo.getBarcode()));
-		dto.setStore(storeMapper.VoToEntity(vo.getStore()));
+		Domaindata data = new Domaindata();
+		data.setDomainDataId(vo.getDomainDataId());
+		dto.setDomainData(data);
+
+		Store store = new Store();
+		store.setStoreId(vo.getStoreId());
+		dto.setStore(store);
+
+		Barcode bar = new Barcode();
+		bar.setBarcodeId(vo.getBarcodeId());
+		dto.setBarcode(bar);
 		dto.setUom(vo.getUom());
 		return dto;
 

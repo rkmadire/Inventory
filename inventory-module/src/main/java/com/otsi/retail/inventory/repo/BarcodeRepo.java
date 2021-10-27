@@ -1,5 +1,6 @@
 package com.otsi.retail.inventory.repo;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,17 +14,19 @@ public interface BarcodeRepo extends JpaRepository<Barcode, Long> {
 
 	boolean existsByBarcode(String barcode);
 
-	Optional<Barcode> findByBarcode(String barcode);
+	Barcode findByBarcode(String barcode);
 
-	Barcode findByBarcodeId(Long barcodeId);
-
-	//Optional<Barcode> findByAttr1AndAttr2AndAttr3(String attr1, String attr2, String attr3);
+	Optional<Barcode> findByBarcodeId(Long barcodeId);
 
 	List<Barcode> findByBarcodeIn(List<String> barcodeList);
 
-	Optional<Barcode> findByAttr1AndAttr2AndAttr3(String attr1, String attr2, String attr3);
-
 	// Optional<Barcode> findByAttr1AndAttr2AndAttr3(String attr1, String attr2,
 	// String attr3);
+
+	List<Barcode> findByCreationDateBetweenOrderByLastModifiedAsc(LocalDate fromDate, LocalDate toDate);
+
+	List<Barcode> findByCreationDateBetweenAndBarcodeIdOrderByLastModifiedAsc(LocalDate fromDate, LocalDate toDate,
+			Long barcodeId);
+
 
 }

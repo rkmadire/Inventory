@@ -24,6 +24,10 @@ public class ProductItemVo {
 
 	private int stock;
 
+	private LocalDate fromDate;
+
+	private LocalDate toDate;
+
 	private String name;
 
 	private float costPrice;
@@ -32,13 +36,11 @@ public class ProductItemVo {
 
 	private String uom;
 
-	private List<BarcodeVo> barcode;
+	private Long barcodeId;
 
-	private StoresVo store;
+	private Long storeId;
 
-	private DomainDataVo domainData;
-
-	private Long puid;
+	private Long domainDataId;
 
 	private String color;
 
@@ -48,6 +50,6 @@ public class ProductItemVo {
 
 	private List<ProductImage> ProductImage;
 
-	private ProductInventory productInventory;
+	private int stockValue;
 
 }

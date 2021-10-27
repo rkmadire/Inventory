@@ -13,9 +13,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,8 +40,10 @@ public class ProductItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long productItemId;
 
-	@OneToMany(mappedBy = "productItem",fetch = FetchType.EAGER ,cascade = CascadeType.ALL,targetEntity = Barcode.class)
-	private List<Barcode> barcode;
+	@ManyToOne
+	@JsonBackReference
+	@JoinColumn(name = "barcodeId")
+	private Barcode barcode;
 
 	private String tyecode;
 
@@ -70,9 +76,11 @@ public class ProductItem {
 	private LocalDate lastModifiedDate;
 
 	@OneToMany(mappedBy = "productItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonManagedReference
 	private List<ProductItemAv> productItemAvId;
 
 	@OneToMany(mappedBy = "productItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonManagedReference
 	private List<ProductImage> ProductImage;
 
 	@OneToOne(mappedBy = "productItem")

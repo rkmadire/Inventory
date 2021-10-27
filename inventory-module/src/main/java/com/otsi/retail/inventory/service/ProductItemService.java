@@ -11,8 +11,8 @@ public interface ProductItemService {
 
 	ProductItemVo getProductByProductId(Long productItemId);
 
-	List<ProductItemVo> getAllProducts();
-
 	ProductItemVo getProductByName(String name);
+
+	List<ProductItemVo> getAllProducts(ProductItemVo vo);
 
 }
