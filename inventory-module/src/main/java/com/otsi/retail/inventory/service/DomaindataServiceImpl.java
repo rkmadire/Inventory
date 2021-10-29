@@ -54,8 +54,8 @@ public class DomaindataServiceImpl implements DomainDataService {
 		log.debug("debugging getAllDomainData");
 		List<DomainDataVo> domainVos = new ArrayList<>();
 		List<Domaindata> domainDatas = domainDataRepo.findAll();
-		domainDatas.stream().forEach(barcode -> {
-			DomainDataVo domainVo = domainMapper.EntityToVo(barcode);
+		domainDatas.stream().forEach(domain -> {
+			DomainDataVo domainVo = domainMapper.EntityToVo(domain);
 			domainVos.add(domainVo);
 		});
 		log.warn("we are checking if all domains are fetching...");

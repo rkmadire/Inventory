@@ -1,23 +1,15 @@
 package com.otsi.retail.inventory.service;
 
-import java.time.LocalDate;
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.otsi.retail.inventory.exceptions.InvalidDataException;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
-import com.otsi.retail.inventory.mapper.BarcodeTextileMapper;
 import com.otsi.retail.inventory.mapper.ProductTextileMapper;
-import com.otsi.retail.inventory.model.BarcodeTextile;
-import com.otsi.retail.inventory.model.ProductInventory;
 import com.otsi.retail.inventory.model.ProductTextile;
-import com.otsi.retail.inventory.repo.BarcodeTextileRepo;
 import com.otsi.retail.inventory.repo.ProductTextileRepo;
-import com.otsi.retail.inventory.vo.BarcodeTextileVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
 
 @Component

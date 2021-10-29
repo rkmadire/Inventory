@@ -6,7 +6,7 @@ spring:
     name: inventory-service
  datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5432/inven-module
+    url: jdbc:postgresql://localhost:5432/inventory-module
     username: postgres
     password: Vasavi
     initializaion.mode: always
@@ -31,30 +31,3 @@ logging:
     level:
      com.otsi.retail.inventory.service: DEBUG   
 
-springdoc:
-    packagesToScan: com.otsi.retail.inventory
-resilience4j:
-  circuitbreaker:
-    instances:
-      newSale:
-        registerHealthIndicator: true
-        eventConsumerBufferSize: 10
-        automaticTransitionFromOpenToHalfOpenEnabled: true
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        permittedNumberOfCallsInHalfOpenState: 3
-        slidingWindowSize: 10
-        waitDurationInOpenState: 5s
-        slidingWindowType: COUNT_BASED
-
-management:
-  health:
-    circuitbreakers:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: health
-  endpoint:
-    health:
-      show-details: always

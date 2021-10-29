@@ -4,19 +4,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.otsi.retail.inventory.commons.ProductItemAvEnum;
-import com.otsi.retail.inventory.model.Barcode;
 import com.otsi.retail.inventory.model.Domaindata;
 import com.otsi.retail.inventory.model.ProductImage;
 import com.otsi.retail.inventory.model.ProductInventory;
 import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.model.ProductItemAv;
 import com.otsi.retail.inventory.model.Store;
-import com.otsi.retail.inventory.service.BarcodeService;
-import com.otsi.retail.inventory.vo.BarcodeVo;
-import com.otsi.retail.inventory.vo.CatalogVo;
 import com.otsi.retail.inventory.vo.ProductItemVo;
 
 @Component
@@ -27,9 +25,6 @@ public class ProductItemMapper {
 
 	@Autowired
 	private StoreMapper storeMapper;
-
-	@Autowired
-	private BarcodeMapper barcodeeMapper;
 
 	public ProductItemVo EntityToVo(ProductItem dto) {
 		ProductItemVo vo = new ProductItemVo();
@@ -48,7 +43,7 @@ public class ProductItemMapper {
 		vo.setUom(dto.getUom());
 		vo.setDomainDataId(domainDataMapper.EntityToVo(dto.getDomainData()).getDomainDataId());
 		vo.setStoreId(storeMapper.EntityToVo(dto.getStore()).getStoreId());
-		vo.setBarcodeId(barcodeeMapper.EntityToVo(dto.getBarcode()).getBarcodeId());
+		vo.setBarcodeId(dto.getBarcodeId());
 		List<ProductImage> listImages = new ArrayList<>();
 		List<ProductImage> productImage = dto.getProductImage();
 		productImage.forEach(x -> {
@@ -62,12 +57,10 @@ public class ProductItemMapper {
 
 		});
 		vo.setProductImage(listImages);
-		ProductInventory prodInv = new ProductInventory();	
+		ProductInventory prodInv = new ProductInventory();
 		prodInv.setStockvalue(dto.getProductInventory().getStockvalue());
 		vo.setStockValue(prodInv.getStockvalue());
 		List<ProductItemAv> productAv = dto.getProductItemAvId();
-
-		// ProductItemVo Pvo = new ProductItemVo();
 		productAv.stream().forEach(y -> {
 			if (y.getName().equalsIgnoreCase(ProductItemAvEnum.COLOR.geteName())) {
 				vo.setColor(y.getStringValue());
@@ -80,7 +73,6 @@ public class ProductItemMapper {
 			}
 
 		});
-		vo.setBarcodeId(barcodeeMapper.EntityToVo(dto.getBarcode()).getBarcodeId());
 		return vo;
 
 	}
@@ -112,6 +104,8 @@ public class ProductItemMapper {
 		dto.setStock(vo.getStock());
 		dto.setTitle(vo.getTitle());
 		dto.setTyecode(vo.getTyecode());
+		dto.setBarcodeId(vo.getBarcodeId());
+		dto.setUom(vo.getUom());
 		Domaindata data = new Domaindata();
 		data.setDomainDataId(vo.getDomainDataId());
 		dto.setDomainData(data);
@@ -119,11 +113,6 @@ public class ProductItemMapper {
 		Store store = new Store();
 		store.setStoreId(vo.getStoreId());
 		dto.setStore(store);
-
-		Barcode bar = new Barcode();
-		bar.setBarcodeId(vo.getBarcodeId());
-		dto.setBarcode(bar);
-		dto.setUom(vo.getUom());
 		return dto;
 
 	}

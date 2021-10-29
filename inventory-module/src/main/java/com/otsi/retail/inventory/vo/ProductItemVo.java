@@ -3,9 +3,7 @@ package com.otsi.retail.inventory.vo;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.otsi.retail.inventory.model.Barcode;
 import com.otsi.retail.inventory.model.ProductImage;
-import com.otsi.retail.inventory.model.ProductInventory;
 
 import lombok.Data;
 

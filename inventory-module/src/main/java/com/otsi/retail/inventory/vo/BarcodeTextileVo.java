@@ -1,8 +1,6 @@
 package com.otsi.retail.inventory.vo;
 
 import java.time.LocalDate;
-import javax.persistence.OneToOne;
-import com.otsi.retail.inventory.model.ProductTextile;
 import lombok.Data;
 
 @Data

@@ -3,12 +3,11 @@ package com.otsi.retail.inventory.mapper;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
+
 import com.otsi.retail.inventory.model.BarcodeTextile;
-import com.otsi.retail.inventory.service.ProductTextileService;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
-import com.otsi.retail.inventory.vo.ProductTextileVo;
 
 @Component
 public class BarcodeTextileMapper {

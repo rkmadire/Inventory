@@ -11,11 +11,8 @@ import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
 import com.otsi.retail.inventory.mapper.BarcodeTextileMapper;
 import com.otsi.retail.inventory.mapper.ProductTextileMapper;
 import com.otsi.retail.inventory.model.BarcodeTextile;
-import com.otsi.retail.inventory.model.ProductTextile;
 import com.otsi.retail.inventory.repo.BarcodeTextileRepo;
-import com.otsi.retail.inventory.repo.ProductTextileRepo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
-import com.otsi.retail.inventory.vo.BarcodeVo;
 
 @Component
 public class BarcodeTextileServiceImpl implements BarcodeTextileService {
