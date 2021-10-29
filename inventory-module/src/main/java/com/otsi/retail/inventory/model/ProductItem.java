@@ -40,10 +40,7 @@ public class ProductItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long productItemId;
 
-	@ManyToOne
-	@JsonBackReference
-	@JoinColumn(name = "barcodeId")
-	private Barcode barcode;
+	private Long barcodeId;
 
 	private String tyecode;
 

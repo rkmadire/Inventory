@@ -1,7 +1,5 @@
 package com.otsi.retail.inventory.controller;
 
-import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
-import com.otsi.retail.inventory.model.BarcodeTextile;
 import com.otsi.retail.inventory.service.BarcodeTextileService;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
 

@@ -34,7 +34,7 @@ public class ProductImage {
 	private Long productImageId;
 	@ManyToOne
 	@JsonBackReference
-	@JoinColumn(name = "puid")
+	@JoinColumn(name = "productItemId")
 	private ProductItem productItem;
 	private String image; 
 	private Long pIUID;

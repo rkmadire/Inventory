@@ -1,13 +1,6 @@
 package com.otsi.retail.inventory.vo;
 
 import java.time.LocalDate;
-
-import javax.persistence.CascadeType;
-import javax.persistence.OneToOne;
-
-import com.otsi.retail.inventory.model.BarcodeTextile;
-import com.otsi.retail.inventory.model.Store;
-
 import lombok.Data;
 
 @Data

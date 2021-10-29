@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,18 +25,24 @@ public class ProductItemController {
 	private ProductItemService productItemService;
 
 	@PostMapping("/createProduct")
-	public GateWayResponse<?> createInventory(@RequestBody ProductItemVo vo) {
+	public GateWayResponse<?> createProduct(@RequestBody ProductItemVo vo) {
 		log.info("Recieved request to createInventory:" + vo);
-		String inventorySave = productItemService.createInventory(vo);
+		String inventorySave = productItemService.createProduct(vo);
 		return new GateWayResponse<>("inventory created successfully", inventorySave);
-
 	}
 
 	@GetMapping("/getProductId")
 	public GateWayResponse<?> getProductItemId(@RequestParam("productItemId") Long productItemId) {
 		log.info("Recieved request to getProductId:" + productItemId);
 		ProductItemVo inventory = productItemService.getProductByProductId(productItemId);
-		return new GateWayResponse<>("fetching inventory details successfully with productId", inventory);
+		return new GateWayResponse<>("fetching product details successfully with productId", inventory);
+	}
+
+	@PutMapping("/updateProduct")
+	public GateWayResponse<?> updateProduct(@RequestBody ProductItemVo vo) {
+		log.info("Recieved request to updateProduct:" + vo);
+		String inventory = productItemService.updateProduct(vo);
+		return new GateWayResponse<>("updating product details successfully", inventory);
 	}
 
 	@GetMapping("/getProductName")
@@ -43,7 +50,6 @@ public class ProductItemController {
 		log.info("Recieved request to getProductByName:" + name);
 		ProductItemVo inventoryName = productItemService.getProductByName(name);
 		return new GateWayResponse<>("fetching product details successfully with product name", inventoryName);
-
 	}
 
 	@PostMapping("/getAllProducts")
@@ -51,7 +57,20 @@ public class ProductItemController {
 		log.info("Recieved request to getAllProducts");
 		List<ProductItemVo> allProducts = productItemService.getAllProducts(vo);
 		return new GateWayResponse<>("fetching all product details sucessfully", allProducts);
+	}
 
+	@GetMapping("/getBarcodeId")
+	public GateWayResponse<?> getBarcodeId(@RequestParam("barcodeId") Long barcodeId) {
+		log.info("Recieved request to getBarcodeId:" + barcodeId);
+		ProductItemVo inventory = productItemService.getBarcodeId(barcodeId);
+		return new GateWayResponse<>("fetching barcode details successfully with barcodeId", inventory);
+	}
+
+	@PostMapping("/getAllBarcodes")
+	public GateWayResponse<?> getAllBarcodes(@RequestBody ProductItemVo vo) {
+		log.info("Recieved request to getAllBarcodes");
+		List<ProductItemVo> allBarcodes = productItemService.getAllBarcodes(vo);
+		return new GateWayResponse<>("fetching all barcode details sucessfully", allBarcodes);
 	}
 
 }
