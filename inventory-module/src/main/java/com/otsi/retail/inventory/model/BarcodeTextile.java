@@ -1,14 +1,9 @@
 package com.otsi.retail.inventory.model;
 
 import java.time.LocalDate;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -52,6 +47,7 @@ public class BarcodeTextile {
 	private LocalDate creationDate;
 	private LocalDate lastModified;
 	@OneToOne(mappedBy = "barcodeTextile")
+	@JsonBackReference
 	private ProductTextile productTextile;
 	
 }

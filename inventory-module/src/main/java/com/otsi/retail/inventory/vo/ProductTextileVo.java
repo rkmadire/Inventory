@@ -7,12 +7,13 @@ import lombok.Data;
 public class ProductTextileVo {
 
 	private Long productTextileId;
-	private BarcodeTextileVo barcodeTextile;
+	private Long barcodeTextileId;
 	private String parentBarcode;
 	private float costPrice;
 	private float itemMrp;
 	private float itemRsp;
 	private StoresVo store;
+	private Long empId;
 	private String promoLabel;
 	private LocalDate createdAt;
 	private LocalDate updatedAt;
@@ -29,6 +30,5 @@ public class ProductTextileVo {
 	private String attr_23;
 	private String attr_24;
 	private String attr_25;
-	
-	
+
 }

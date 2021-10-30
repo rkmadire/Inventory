@@ -40,7 +40,9 @@ public class ProductItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long productItemId;
 
-	private Long barcodeId;
+	private int barcodeId;
+
+	private Long empId;
 
 	private String tyecode;
 

@@ -1,17 +1,15 @@
 package com.otsi.retail.inventory.model;
 
 import java.time.LocalDate;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
@@ -30,12 +28,13 @@ public class ProductTextile {
 
 	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
 	@JoinColumn(name = "barcodeTextileId")
-    //@JsonManagedReference
+	@JsonManagedReference
 	private BarcodeTextile barcodeTextile;
 	private String parentBarcode;
 	private float costPrice;
 	private float itemMrp;
 	private float itemRsp;
+	private Long empId;
 	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
 	private Store store;
 	private String promoLabel;

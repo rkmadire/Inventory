@@ -17,7 +17,7 @@ public interface ProductItemService {
 
 	List<ProductItemVo> getAllBarcodes(ProductItemVo vo);
 
-	ProductItemVo getBarcodeId(Long barcodeId);
+	ProductItemVo getBarcodeId(int barcodeId);
 
 	String updateProduct(ProductItemVo vo);
 

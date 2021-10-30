@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.otsi.retail.inventory.commons.ProductItemAvEnum;
+import com.otsi.retail.inventory.exceptions.DuplicateRecordException;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
 import com.otsi.retail.inventory.mapper.ProductItemMapper;
 import com.otsi.retail.inventory.model.ProductImage;
@@ -46,6 +47,9 @@ public class ProductItemServiceImpl implements ProductItemService {
 	@Override
 	public String createProduct(ProductItemVo vo) {
 		log.debug("debugging createInventory");
+		if(productItemRepo.existsByName(vo.getName())) {
+			throw new DuplicateRecordException("product name is already exists:");
+		}
 		ProductItem productItem = productItemMapper.VoToEntity(vo);
 		ProductItem saveProductItem = productItemRepo.save(productItem);
 		saveAVValues(vo, saveProductItem);
@@ -189,7 +193,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 	}
 
 	@Override
-	public ProductItemVo getBarcodeId(Long barcodeId) {
+	public ProductItemVo getBarcodeId(int barcodeId) {
 		log.debug("debugging getProductByProductId:" + barcodeId);
 		Optional<ProductItem> barOpt = productItemRepo.findByBarcodeId(barcodeId);
 		if (!(barOpt.isPresent())) {
@@ -212,7 +216,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		/*
 		 * using dates
 		 */
-		if (vo.getFromDate() != null && vo.getToDate() != null && vo.getBarcodeId() == null) {
+		if (vo.getFromDate() != null && vo.getToDate() != null && vo.getBarcodeId() == 0) {
 			barcodeDetails = productItemRepo.findByCreationDateBetweenOrderByLastModifiedDateAsc(vo.getFromDate(),
 					vo.getToDate());
 
@@ -225,7 +229,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		/*
 		 * using dates and barcodeId
 		 */
-		else if (vo.getFromDate() != null && vo.getToDate() != null && vo.getBarcodeId() != null) {
+		else if (vo.getFromDate() != null && vo.getToDate() != null && vo.getBarcodeId() != 0) {
 			Optional<ProductItem> barOpt = productItemRepo.findByBarcodeId(vo.getBarcodeId());
 			if (barOpt.isPresent()) {
 				barcodeDetails = productItemRepo.findByCreationDateBetweenAndBarcodeIdOrderByLastModifiedDateAsc(
