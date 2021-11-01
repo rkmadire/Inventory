@@ -60,7 +60,7 @@ public class ProductItemController {
 	}
 
 	@GetMapping("/getBarcodeId")
-	public GateWayResponse<?> getBarcodeId(@RequestParam("barcodeId") Long barcodeId) {
+	public GateWayResponse<?> getBarcodeId(@RequestParam("barcodeId") int barcodeId) {
 		log.info("Recieved request to getBarcodeId:" + barcodeId);
 		ProductItemVo inventory = productItemService.getBarcodeId(barcodeId);
 		return new GateWayResponse<>("fetching barcode details successfully with barcodeId", inventory);

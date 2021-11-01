@@ -16,6 +16,8 @@ public class ProductItemVo {
 
 	private String defaultImage;
 
+	private Long empId;
+
 	private int status;
 
 	private String title;
@@ -34,7 +36,7 @@ public class ProductItemVo {
 
 	private String uom;
 
-	private Long barcodeId;
+	private int barcodeId;
 
 	private Long storeId;
 

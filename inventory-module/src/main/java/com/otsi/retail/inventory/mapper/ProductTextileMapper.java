@@ -1,8 +1,12 @@
 package com.otsi.retail.inventory.mapper;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.otsi.retail.inventory.model.BarcodeTextile;
 import com.otsi.retail.inventory.model.ProductTextile;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
 
@@ -27,7 +31,9 @@ public class ProductTextileMapper {
 		vo.setHsnMasterId(0);
 		vo.setCreateForLocation(0);
 		vo.setValueAdditionCp(0);
-		vo.setBarcodeTextile(barcodeTextileMapper.EntityToVo(dto.getBarcodeTextile()));
+		vo.setCreatedAt(dto.getCreatedAt());
+		vo.setUpdatedAt(dto.getUpdatedAt());
+		vo.setOriginalBarcodeCreatedAt(dto.getOriginalBarcodeCreatedAt());
 		vo.setStore(storeMapper.EntityToVo(dto.getStore()));
 		return vo;
 
@@ -45,7 +51,12 @@ public class ProductTextileMapper {
 		dto.setHsnMasterId(0);
 		dto.setCreateForLocation(0);
 		dto.setValueAdditionCp(0);
-		dto.setBarcodeTextile(barcodeTextileMapper.VoToEntity(vo.getBarcodeTextile()));
+		dto.setCreatedAt(LocalDate.now());
+		dto.setUpdatedAt(LocalDate.now());
+		dto.setOriginalBarcodeCreatedAt(LocalDate.now());
+		BarcodeTextile bt = new BarcodeTextile();
+		bt.setBarcodeTextileId(vo.getBarcodeTextileId());
+		dto.setBarcodeTextile(bt);
 		dto.setStore(storeMapper.VoToEntity(vo.getStore()));
 		return dto;
 

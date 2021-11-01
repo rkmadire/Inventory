@@ -28,8 +28,8 @@ public class BarcodeTextileVo {
 	private String attr_18;
 	private String attr_19;
 	private String attr_20;
-	private LocalDate creationDate;
-	private LocalDate lastModified;
+	private LocalDate fromDate;
+	private LocalDate toDate;
 	
    private ProductTextileVo productTextile;
 }

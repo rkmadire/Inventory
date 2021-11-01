@@ -3,6 +3,7 @@ package com.otsi.retail.inventory.mapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ public class ProductItemMapper {
 		vo.setTitle(dto.getTitle());
 		vo.setTyecode(dto.getTyecode());
 		vo.setName(dto.getName());
+		vo.setEmpId(dto.getEmpId());
 		vo.setCostPrice(dto.getCostPrice());
 		vo.setUom(dto.getUom());
 		vo.setDomainDataId(domainDataMapper.EntityToVo(dto.getDomainData()).getDomainDataId());
@@ -92,6 +94,8 @@ public class ProductItemMapper {
 	 */
 
 	public ProductItem VoToEntity(ProductItemVo vo) {
+
+		Random rand = new Random();
 		ProductItem dto = new ProductItem();
 		dto.setProductItemId(vo.getProductItemId());
 		dto.setName(vo.getName());
@@ -102,9 +106,10 @@ public class ProductItemMapper {
 		dto.setListPrice(vo.getListPrice());
 		dto.setStatus(vo.getStatus());
 		dto.setStock(vo.getStock());
+		dto.setEmpId(vo.getEmpId());
 		dto.setTitle(vo.getTitle());
 		dto.setTyecode(vo.getTyecode());
-		dto.setBarcodeId(vo.getBarcodeId());
+		dto.setBarcodeId(rand.nextInt());
 		dto.setUom(vo.getUom());
 		Domaindata data = new Domaindata();
 		data.setDomainDataId(vo.getDomainDataId());

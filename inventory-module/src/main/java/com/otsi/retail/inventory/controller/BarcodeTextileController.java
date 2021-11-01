@@ -1,5 +1,7 @@
 package com.otsi.retail.inventory.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.service.BarcodeTextileService;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
+import com.otsi.retail.inventory.vo.ProductItemVo;
 
 @RestController
 @RequestMapping("/barcodeTextile")
@@ -34,7 +37,15 @@ public class BarcodeTextileController {
 	public GateWayResponse<?> getBarcodeTextile(@RequestParam("barcode") String barcode) {
 		log.info("Recieved request to getProductTextile:" + barcode);
 		BarcodeTextileVo textile = barcodeTextileService.getBarcodeTextile(barcode);
-		return new GateWayResponse<>("fetching barcode textile details successfully with id", textile);
+		return new GateWayResponse<>("fetching barcode textile details successfully with barcode", textile);
+	}
+	
+
+	@PostMapping("/getAllBarcodeTextiles")
+	public GateWayResponse<?> getAllBarcodes(@RequestBody BarcodeTextileVo vo) {
+		log.info("Recieved request to getAllBarcodes");
+		List<BarcodeTextileVo> allBarcodes = barcodeTextileService.getAllBarcodes(vo);
+		return new GateWayResponse<>("fetching all barcode textile details sucessfully", allBarcodes);
 	}
 
 }
