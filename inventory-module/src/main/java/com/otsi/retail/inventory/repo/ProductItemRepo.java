@@ -30,4 +30,6 @@ public interface ProductItemRepo extends JpaRepository<ProductItem, Long> {
 
 	boolean existsByName(String name);
 
+	boolean existsByBarcodeId(int barcodeId);
+
 }

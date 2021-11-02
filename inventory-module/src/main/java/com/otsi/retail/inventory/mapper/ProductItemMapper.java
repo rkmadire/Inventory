@@ -95,7 +95,6 @@ public class ProductItemMapper {
 
 	public ProductItem VoToEntity(ProductItemVo vo) {
 
-		Random rand = new Random();
 		ProductItem dto = new ProductItem();
 		dto.setProductItemId(vo.getProductItemId());
 		dto.setName(vo.getName());
@@ -109,7 +108,7 @@ public class ProductItemMapper {
 		dto.setEmpId(vo.getEmpId());
 		dto.setTitle(vo.getTitle());
 		dto.setTyecode(vo.getTyecode());
-		dto.setBarcodeId(rand.nextInt());
+		dto.setBarcodeId(vo.getBarcodeId());
 		dto.setUom(vo.getUom());
 		Domaindata data = new Domaindata();
 		data.setDomainDataId(vo.getDomainDataId());
