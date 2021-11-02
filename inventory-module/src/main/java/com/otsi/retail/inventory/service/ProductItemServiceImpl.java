@@ -48,7 +48,10 @@ public class ProductItemServiceImpl implements ProductItemService {
 	public String createProduct(ProductItemVo vo) {
 		log.debug("debugging createInventory");
 		if (productItemRepo.existsByName(vo.getName())) {
-			throw new DuplicateRecordException("product name is already exists:");
+			throw new DuplicateRecordException("product name is already exists:" + vo.getName());
+		}
+		if (productItemRepo.existsByBarcodeId(vo.getBarcodeId())) {
+			throw new DuplicateRecordException("barcode id is already exists:" + vo.getBarcodeId());
 		}
 		ProductItem productItem = productItemMapper.VoToEntity(vo);
 		ProductItem saveProductItem = productItemRepo.save(productItem);
@@ -242,8 +245,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 				throw new RecordNotFoundException("No record found with given barcodeId");
 			}
 
-		}
-		else {
+		} else {
 			List<ProductItem> barcodeDetails1 = productItemRepo.findAll();
 			List<ProductItemVo> barcodeList = productItemMapper.EntityToVo(barcodeDetails1);
 			return barcodeList;
