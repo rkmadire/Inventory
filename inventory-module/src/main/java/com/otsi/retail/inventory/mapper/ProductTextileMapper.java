@@ -54,9 +54,10 @@ public class ProductTextileMapper {
 		dto.setCreatedAt(LocalDate.now());
 		dto.setUpdatedAt(LocalDate.now());
 		dto.setOriginalBarcodeCreatedAt(LocalDate.now());
-		BarcodeTextile bt = new BarcodeTextile();
-		bt.setBarcodeTextileId(vo.getBarcodeTextileId());
-		dto.setBarcodeTextile(bt);
+		/*
+		 * BarcodeTextile bt = new BarcodeTextile();
+		 * bt.setBarcodeTextileId(vo.getBarcodeTextileId()); dto.setBarcodeTextile(bt);
+		 */
 		dto.setStore(storeMapper.VoToEntity(vo.getStore()));
 		return dto;
 

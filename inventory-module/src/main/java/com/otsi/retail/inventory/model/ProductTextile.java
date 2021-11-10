@@ -35,6 +35,7 @@ public class ProductTextile {
 	private float itemMrp;
 	private float itemRsp;
 	private Long empId;
+	private int qty;
 	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
 	private Store store;
 	private String promoLabel;
