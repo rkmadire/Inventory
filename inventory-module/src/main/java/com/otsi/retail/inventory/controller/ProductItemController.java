@@ -4,6 +4,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +16,10 @@ import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.service.ProductItemService;
 import com.otsi.retail.inventory.vo.ProductItemVo;
 
+/**
+ * @author vasavi
+ *
+ */
 @RestController
 @RequestMapping("/inventory")
 public class ProductItemController {
@@ -24,11 +29,11 @@ public class ProductItemController {
 	@Autowired
 	private ProductItemService productItemService;
 
-	@PostMapping("/createProduct")
-	public GateWayResponse<?> createProduct(@RequestBody ProductItemVo vo) {
-		log.info("Recieved request to createInventory:" + vo);
-		String inventorySave = productItemService.createProduct(vo);
-		return new GateWayResponse<>("inventory created successfully", inventorySave);
+	@PostMapping("/createBarcode")
+	public GateWayResponse<?> createBarcode(@RequestBody ProductItemVo vo) {
+		log.info("Recieved request to createBarcode:" + vo);
+		String inventorySave = productItemService.createBarcode(vo);
+		return new GateWayResponse<>("Barcode created successfully", inventorySave);
 	}
 
 	@GetMapping("/getProductId")
@@ -38,11 +43,26 @@ public class ProductItemController {
 		return new GateWayResponse<>("fetching product details successfully with productId", inventory);
 	}
 
-	@PutMapping("/updateProduct")
-	public GateWayResponse<?> updateProduct(@RequestBody ProductItemVo vo) {
+	@PutMapping(value = "/updateBarcode")
+	public GateWayResponse<?> updateBarcode(@RequestBody ProductItemVo vo) {
+		log.info("Received Request to updateBarcode :" + vo.toString());
+		String updateBarcode = productItemService.updateBarcode(vo);
+		return new GateWayResponse<>("Barcode updated successfully", updateBarcode);
+	}
+
+	@DeleteMapping("/deleteBarcode")
+	public GateWayResponse<?> deleteBarcode(@RequestParam("barcodeId") int barcodeId) {
+		log.info("Received Request to deleteBarcode :" + barcodeId);
+		String deleteBarcode = productItemService.deleteBarcode(barcodeId);
+		return new GateWayResponse<>("Barcode deleted successfully", deleteBarcode);
+
+	}
+
+	@PutMapping("/addInventory")
+	public GateWayResponse<?> addInventory(@RequestBody ProductItemVo vo) {
 		log.info("Recieved request to updateProduct:" + vo);
-		String inventory = productItemService.updateProduct(vo);
-		return new GateWayResponse<>("updating product details successfully", inventory);
+		String inventory = productItemService.addInventory(vo);
+		return new GateWayResponse<>("updating inventory details successfully", inventory);
 	}
 
 	@GetMapping("/getProductName")

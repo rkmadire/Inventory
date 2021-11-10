@@ -7,7 +7,7 @@ import com.otsi.retail.inventory.vo.ProductItemVo;
 @Service
 public interface ProductItemService {
 
-	String createProduct(ProductItemVo vo);
+	String createBarcode(ProductItemVo vo);
 
 	ProductItemVo getProductByProductId(Long productItemId);
 
@@ -19,6 +19,10 @@ public interface ProductItemService {
 
 	ProductItemVo getBarcodeId(int barcodeId);
 
-	String updateProduct(ProductItemVo vo);
+	String addInventory(ProductItemVo vo);
+
+	String updateBarcode(ProductItemVo vo);
+
+	String deleteBarcode(int barcodeId);
 
 }

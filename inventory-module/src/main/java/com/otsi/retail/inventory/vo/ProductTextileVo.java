@@ -14,6 +14,7 @@ public class ProductTextileVo {
 	private float itemRsp;
 	private StoresVo store;
 	private Long empId;
+	private int qty;
 	private String promoLabel;
 	private LocalDate createdAt;
 	private LocalDate updatedAt;
