@@ -42,7 +42,7 @@ public class ProductItem {
 
 	private int barcodeId;
 
-	private Long empId;
+	private String empId;
 
 	private String tyecode;
 

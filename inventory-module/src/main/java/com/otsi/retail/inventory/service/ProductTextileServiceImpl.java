@@ -5,25 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.otsi.retail.inventory.exceptions.DuplicateRecordException;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
 import com.otsi.retail.inventory.mapper.BarcodeTextileMapper;
 import com.otsi.retail.inventory.mapper.ProductTextileMapper;
 import com.otsi.retail.inventory.mapper.StoreMapper;
 import com.otsi.retail.inventory.model.BarcodeTextile;
-import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.model.ProductTextile;
+import com.otsi.retail.inventory.model.Store;
 import com.otsi.retail.inventory.repo.BarcodeTextileRepo;
 import com.otsi.retail.inventory.repo.ProductTextileRepo;
+import com.otsi.retail.inventory.repo.StoreRepo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
-import com.otsi.retail.inventory.vo.ProductItemVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
+import com.otsi.retail.inventory.vo.SearchFilterVo;
 
 @Component
 public class ProductTextileServiceImpl implements ProductTextileService {
@@ -45,13 +46,16 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	@Autowired
 	private BarcodeTextileRepo barcodeTextileRepo;
 
+	@Autowired
+	private StoreRepo storeRepo;
+
 	@Override
 	public String addBarcodeTextile(BarcodeTextileVo textileVo) {
 		log.debug("debugging saveProductTextile:" + textileVo);
-		Random ran=new Random();
+		Random ran = new Random();
 		BarcodeTextile barTextile = new BarcodeTextile();
 		barTextile.setBarcodeTextileId(textileVo.getBarcodeTextileId());
-		barTextile.setBarcode("BAR"+ran.nextInt());
+		barTextile.setBarcode("BAR" + ran.nextInt());
 		barTextile.setCreationDate(LocalDate.now());
 		barTextile.setLastModified(LocalDate.now());
 		BarcodeTextile barTextileSave = barcodeTextileRepo.save(barTextile);
@@ -61,6 +65,8 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		textile.setCostPrice(textileVo.getProductTextile().getCostPrice());
 		textile.setUom("units");
 		textile.setHsnMasterId(0);
+		textile.setEmpId(textileVo.getProductTextile().getEmpId());
+		textile.setItemMrp(textileVo.getProductTextile().getItemMrp());
 		textile.setItemCode(textileVo.getProductTextile().getItemCode());
 		textile.setCreateForLocation(0);
 		textile.setValueAdditionCp(0);
@@ -72,8 +78,8 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		ProductTextile textileSave = productTextileRepo.save(textile);
 		log.warn("we are checking if textile is saved...");
 		log.info("after saving textile details");
-		return "barcode textile saved successfully:"+barTextileSave.getBarcodeTextileId();
-	
+		return "barcode textile saved successfully:" + barTextileSave.getBarcodeTextileId();
+
 	}
 
 	@Override
@@ -112,6 +118,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		textile.setUom("units");
 		textile.setHsnMasterId(0);
 		textile.setCreateForLocation(0);
+		textile.setItemMrp(vo.getProductTextile().getItemMrp());
 		textile.setItemCode(vo.getProductTextile().getItemCode());
 		textile.setCostPrice(vo.getProductTextile().getCostPrice());
 		textile.setEmpId(vo.getProductTextile().getEmpId());
@@ -121,7 +128,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		textile.setUpdatedAt(LocalDate.now());
 		textile.setOriginalBarcodeCreatedAt(LocalDate.now());
 		ProductTextile textileSave = productTextileRepo.save(textile);
-		return "barcode textile updated successfully:"+barTextileSave.getBarcodeTextileId();
+		return "barcode textile updated successfully:" + barTextileSave.getBarcodeTextileId();
 	}
 
 	@Override
@@ -162,7 +169,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	}
 
 	@Override
-	public List<BarcodeTextileVo> getAllBarcodes(BarcodeTextileVo vo) {
+	public List<BarcodeTextileVo> getAllBarcodes(SearchFilterVo vo) {
 		log.debug("debugging getAllBarcodes()");
 		List<BarcodeTextile> barcodeDetails = new ArrayList<>();
 
@@ -182,6 +189,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		/*
 		 * using dates and barcodeTextileId
 		 */
+
 		else if (vo.getFromDate() != null && vo.getToDate() != null && vo.getBarcodeTextileId() != null) {
 			Optional<BarcodeTextile> barOpt = barcodeTextileRepo.findByBarcodeTextileId(vo.getBarcodeTextileId());
 			if (barOpt.isPresent()) {
@@ -195,36 +203,47 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		}
 
 		/*
-		 * using dates and barcode
-		 */
-		else if (vo.getFromDate() != null && vo.getToDate() != null && vo.getBarcode() != null) {
-			BarcodeTextile barOpt = barcodeTextileRepo.findByBarcode(vo.getBarcode());
-			if (barOpt != null) {
-				barcodeDetails = barcodeTextileRepo.findByCreationDateBetweenAndBarcodeOrderByLastModifiedAsc(
-						vo.getFromDate(), vo.getToDate(), vo.getBarcode());
-			} else {
-				log.error("No record found with given barcodeTextileId");
-				throw new RecordNotFoundException("No record found with given barcodeTextileId");
-			}
-
-		}
-		/*
 		 * using empId
 		 */
-		else if (vo.getProductTextile().getEmpId() != null) {
+		else if (vo.getEmpId() != null) {
 
-			Optional<ProductTextile> prodOpt = productTextileRepo.findByEmpId(vo.getProductTextile().getEmpId());
-			if (prodOpt != null) {
-				barcodeDetails = barcodeTextileRepo.findByProductTextileEmpId(vo.getProductTextile().getEmpId());
+			Optional<ProductTextile> prodOpt = productTextileRepo.findByEmpId(vo.getEmpId());
+			if (prodOpt.isPresent()) {
+				barcodeDetails = barcodeTextileRepo.findByProductTextileEmpId(prodOpt.get().getEmpId());
 			} else {
 				log.error("No record found with given empId");
 				throw new RecordNotFoundException("No record found with given empId");
 			}
 
-		} else {
-			List<BarcodeTextile> barcodeDetails1 = barcodeTextileRepo.findAll();
-			List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeDetails1);
-			return barcodeList;
+		}
+		/*
+		 * using itemMrp< and itemMrp>
+		 */
+		if (vo.getItemMrpLessThan() != 0 && vo.getItemMrpGreaterThan() != 0) {
+			List<ProductTextile> prodOpt = productTextileRepo.findByItemMrpBetween(vo.getItemMrpLessThan(),
+					vo.getItemMrpGreaterThan());
+			List<Long> bars = prodOpt.stream().map(s -> s.getBarcodeTextile().getBarcodeTextileId())
+					.collect(Collectors.toList());
+
+			barcodeDetails = barcodeTextileRepo.findByBarcodeTextileIdIn(bars);
+
+			if (barcodeDetails.isEmpty()) {
+				log.error("No record found with given information");
+				throw new RecordNotFoundException("No record found with given information");
+			}
+		}
+
+		/*
+		 * using barcodeStore(storeName)
+		 */
+		if (vo.getStoreName() != null) {
+			Store store = storeRepo.findByStoreName(vo.getStoreName());
+			if (store != null) {
+				barcodeDetails = barcodeTextileRepo.findByProductTextileStoreStoreName(vo.getStoreName());
+			} else {
+				log.error("No record found with given information");
+				throw new RecordNotFoundException("No record found with given information");
+			}
 		}
 
 		List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeDetails);

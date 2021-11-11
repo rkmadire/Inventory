@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
+import com.otsi.retail.inventory.vo.SearchFilterVo;
 
 @Service
 public interface ProductTextileService {
@@ -20,6 +21,6 @@ public interface ProductTextileService {
 	
 	BarcodeTextileVo getBarcodeTextile(String barcode);
 
-	List<BarcodeTextileVo> getAllBarcodes(BarcodeTextileVo vo);
+	List<BarcodeTextileVo> getAllBarcodes(SearchFilterVo vo);
 
 }

@@ -34,7 +34,7 @@ public class ProductTextile {
 	private float costPrice;
 	private float itemMrp;
 	private float itemRsp;
-	private Long empId;
+	private String empId;
 	private int qty;
 	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
 	private Store store;

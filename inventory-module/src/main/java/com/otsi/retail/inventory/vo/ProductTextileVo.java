@@ -13,7 +13,7 @@ public class ProductTextileVo {
 	private float itemMrp;
 	private float itemRsp;
 	private StoresVo store;
-	private Long empId;
+	private String empId;
 	private int qty;
 	private String promoLabel;
 	private LocalDate createdAt;
