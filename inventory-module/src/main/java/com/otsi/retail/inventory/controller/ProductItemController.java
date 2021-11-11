@@ -21,7 +21,7 @@ import com.otsi.retail.inventory.vo.ProductItemVo;
  *
  */
 @RestController
-@RequestMapping("/inventory")
+@RequestMapping("/inventoryRetail")
 public class ProductItemController {
 
 	private Logger log = LoggerFactory.getLogger(ProductItemController.class);

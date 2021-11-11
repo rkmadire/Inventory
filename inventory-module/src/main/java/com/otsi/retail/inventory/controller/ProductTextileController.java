@@ -17,12 +17,13 @@ import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.service.ProductTextileService;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
+import com.otsi.retail.inventory.vo.SearchFilterVo;
 /**
  * @author vasavi
  *
  */
 @RestController
-@RequestMapping("/productTextile")
+@RequestMapping("/inventoryTextile")
 public class ProductTextileController {
 
 	private Logger log = LoggerFactory.getLogger(ProductTextileController.class);
@@ -70,7 +71,7 @@ public class ProductTextileController {
 	
 
 	@PostMapping("/getAllBarcodeTextiles")
-	public GateWayResponse<?> getAllBarcodes(@RequestBody BarcodeTextileVo vo) {
+	public GateWayResponse<?> getAllBarcodes(@RequestBody SearchFilterVo vo) {
 		log.info("Recieved request to getAllBarcodes");
 		List<BarcodeTextileVo> allBarcodes = productTextileService.getAllBarcodes(vo);
 		return new GateWayResponse<>("fetching all barcode textile details sucessfully", allBarcodes);

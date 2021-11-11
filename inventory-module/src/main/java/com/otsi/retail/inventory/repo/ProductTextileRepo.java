@@ -1,5 +1,6 @@
 package com.otsi.retail.inventory.repo;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +13,11 @@ public interface ProductTextileRepo extends JpaRepository<ProductTextile, Long> 
 
 	 Optional<ProductTextile> findByProductTextileId(Long productTextileId);
 
-	Optional<ProductTextile> findByEmpId(Long empId);
+	Optional<ProductTextile> findByEmpId(String empId);
+
+	List<ProductTextile> findByItemMrpBetween(float itemMrpLessThan, float itemMrpGreaterThan);
+
+	
 
 	
 }

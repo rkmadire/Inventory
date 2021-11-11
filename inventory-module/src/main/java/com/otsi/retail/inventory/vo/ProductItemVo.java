@@ -16,7 +16,7 @@ public class ProductItemVo {
 
 	private String defaultImage;
 
-	private Long empId;
+	private String empId;
 
 	private int status;
 

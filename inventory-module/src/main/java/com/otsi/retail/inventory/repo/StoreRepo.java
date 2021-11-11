@@ -11,4 +11,6 @@ import com.otsi.retail.inventory.model.Store;
 public interface StoreRepo extends JpaRepository<Store, Long> {
 
 	Optional<Store> findByStoreId(Long storeId);
+
+	Store findByStoreName(String storeName);
 }
