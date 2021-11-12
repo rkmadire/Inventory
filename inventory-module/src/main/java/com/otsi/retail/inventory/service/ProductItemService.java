@@ -19,7 +19,7 @@ public interface ProductItemService {
 
 	ProductItemVo getBarcodeId(int barcodeId);
 
-	String addInventory(ProductItemVo vo);
+	String updateInventory(ProductItemVo vo);
 
 	String updateBarcode(ProductItemVo vo);
 

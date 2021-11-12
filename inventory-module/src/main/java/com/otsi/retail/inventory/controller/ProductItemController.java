@@ -58,10 +58,10 @@ public class ProductItemController {
 
 	}
 
-	@PutMapping("/addInventory")
-	public GateWayResponse<?> addInventory(@RequestBody ProductItemVo vo) {
+	@PutMapping("/updateInventory")
+	public GateWayResponse<?> updateInventory(@RequestBody ProductItemVo vo) {
 		log.info("Recieved request to updateProduct:" + vo);
-		String inventory = productItemService.addInventory(vo);
+		String inventory = productItemService.updateInventory(vo);
 		return new GateWayResponse<>("updating inventory details successfully", inventory);
 	}
 

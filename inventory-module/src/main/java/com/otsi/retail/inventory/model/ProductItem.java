@@ -51,6 +51,8 @@ public class ProductItem {
 	private int status;
 
 	private String title;
+	
+	private String hsnCode;
 
 	private int stock;
 
@@ -61,6 +63,8 @@ public class ProductItem {
 	private float listPrice;
 
 	private String uom;
+	
+	private String discontinued;
 
 	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
 	private Store store;

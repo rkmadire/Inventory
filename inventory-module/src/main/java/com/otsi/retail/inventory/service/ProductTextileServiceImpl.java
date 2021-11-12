@@ -23,6 +23,7 @@ import com.otsi.retail.inventory.repo.BarcodeTextileRepo;
 import com.otsi.retail.inventory.repo.ProductTextileRepo;
 import com.otsi.retail.inventory.repo.StoreRepo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
+import com.otsi.retail.inventory.vo.ProductItemVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
 
@@ -53,9 +54,10 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	public String addBarcodeTextile(BarcodeTextileVo textileVo) {
 		log.debug("debugging saveProductTextile:" + textileVo);
 		Random ran = new Random();
+		int qty = textileVo.getProductTextile().getQty();
 		BarcodeTextile barTextile = new BarcodeTextile();
 		barTextile.setBarcodeTextileId(textileVo.getBarcodeTextileId());
-		barTextile.setBarcode("BAR" + ran.nextInt());
+		barTextile.setBarcode("BAR"+ran.nextInt());
 		barTextile.setCreationDate(LocalDate.now());
 		barTextile.setLastModified(LocalDate.now());
 		BarcodeTextile barTextileSave = barcodeTextileRepo.save(barTextile);
@@ -70,16 +72,24 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		textile.setItemCode(textileVo.getProductTextile().getItemCode());
 		textile.setCreateForLocation(0);
 		textile.setValueAdditionCp(0);
-		textile.setQty(textileVo.getProductTextile().getQty());
 		textile.setStore(storeMapper.VoToEntity(textileVo.getProductTextile().getStore()));
 		textile.setCreatedAt(LocalDate.now());
 		textile.setUpdatedAt(LocalDate.now());
 		textile.setOriginalBarcodeCreatedAt(LocalDate.now());
 		ProductTextile textileSave = productTextileRepo.save(textile);
+		
 		log.warn("we are checking if textile is saved...");
 		log.info("after saving textile details");
 		return "barcode textile saved successfully:" + barTextileSave.getBarcodeTextileId();
+		}
 
+	@Override
+	public String incrementQty(BarcodeTextileVo vo) {
+		int qty = vo.getProductTextile().getQty();
+		for (int i = 1; i <= qty; i++) {
+			addBarcodeTextile(vo);
+		}
+		return "barcode textile saved successfully";
 	}
 
 	@Override
