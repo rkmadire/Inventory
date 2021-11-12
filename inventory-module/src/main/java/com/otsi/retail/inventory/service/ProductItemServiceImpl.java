@@ -2,10 +2,8 @@ package com.otsi.retail.inventory.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +22,6 @@ import com.otsi.retail.inventory.repo.ProductImageRepo;
 import com.otsi.retail.inventory.repo.ProductInventoryRepo;
 import com.otsi.retail.inventory.repo.ProductItemAvRepo;
 import com.otsi.retail.inventory.repo.ProductItemRepo;
-import com.otsi.retail.inventory.vo.ProductInventoryVo;
 import com.otsi.retail.inventory.vo.ProductItemVo;
 
 @Component
@@ -84,7 +81,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 
 		log.warn("we are checking if barcode  is saved...");
 		log.info("saving barcode details");
-		return "barcode saved successfully:"+vo.getBarcodeId();
+		return "barcode saved successfully:"+prodInvSave.getProductItem().getBarcodeId();
 
 	}
 
@@ -261,12 +258,13 @@ public class ProductItemServiceImpl implements ProductItemService {
 	}
 
 	@Override
-	public String addInventory(ProductItemVo vo) {
+	public String updateInventory(ProductItemVo vo) {
 
-		Optional<ProductItem> prodOpt = productItemRepo.findByProductItemId(vo.getProductItemId());
-		if (!prodOpt.isPresent()) {
-			throw new RecordNotFoundException("product item id is not found");
+		Optional<ProductItem> barOpt = productItemRepo.findByBarcodeId(vo.getBarcodeId());
+		if (!barOpt.isPresent()) {
+			throw new RecordNotFoundException("barcode id is not found");
 		}
+		Optional<ProductItem> prodOpt=productItemRepo.findByProductItemId(barOpt.get().getProductItemId());
 		ProductInventory item = prodOpt.get().getProductInventory();
 		if (item == null) {
 			throw new RecordNotFoundException("product inventory is not found");
@@ -278,7 +276,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		prodInventory.setLastModified(LocalDate.now());
 		prodInventory.setProductItem(item.getProductItem());
 		productInventoryRepo.save(prodInventory);
-		return "updated inventory successfully";
+		return "updated inventory successfully:"+vo.getBarcodeId();
 	}
 
 	@Override

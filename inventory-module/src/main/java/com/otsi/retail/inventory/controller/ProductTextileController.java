@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.service.ProductTextileService;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
+import com.otsi.retail.inventory.vo.ProductItemVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
+
 /**
  * @author vasavi
  *
@@ -34,7 +36,7 @@ public class ProductTextileController {
 	@PostMapping("/addBarcode_Textile")
 	public GateWayResponse<?> addBarcodeTextile(@RequestBody BarcodeTextileVo textileVo) {
 		log.info("Recieved request to saveTextile:" + textileVo);
-		String textileSave = productTextileService.addBarcodeTextile(textileVo);
+		String textileSave = productTextileService.incrementQty(textileVo);
 		return new GateWayResponse<>("barcode textile saved successfully", textileSave);
 
 	}
@@ -45,7 +47,7 @@ public class ProductTextileController {
 		ProductTextileVo textile = productTextileService.getProductTextile(productTextileId);
 		return new GateWayResponse<>("fetching product textile details successfully with id", textile);
 	}
-	
+
 	@PutMapping(value = "/updateBarcode_Textile")
 	public GateWayResponse<?> updateBarcodeTextile(@RequestBody BarcodeTextileVo vo) {
 		log.info("Received Request to updateBarcodeTextile :" + vo.toString());
@@ -53,7 +55,6 @@ public class ProductTextileController {
 		return new GateWayResponse<>("Barcode textile updated successfully", updateBarcode);
 	}
 
-	
 	@DeleteMapping("/deleteBarcode_Textile")
 	public GateWayResponse<?> deleteBarcodeTextile(@RequestParam("barcodeTextileId") Long barcodeTextileId) {
 		log.info("Received Request to deleteBarcodeTextile:" + barcodeTextileId);
@@ -61,14 +62,13 @@ public class ProductTextileController {
 		return new GateWayResponse<>("Barcode textile deleted successfully", deleteBarcode);
 
 	}
-	
+
 	@GetMapping("/getBarcodeTextile")
 	public GateWayResponse<?> getBarcodeTextile(@RequestParam("barcode") String barcode) {
 		log.info("Recieved request to getProductTextile:" + barcode);
 		BarcodeTextileVo textile = productTextileService.getBarcodeTextile(barcode);
 		return new GateWayResponse<>("fetching barcode textile details successfully with barcode", textile);
 	}
-	
 
 	@PostMapping("/getAllBarcodeTextiles")
 	public GateWayResponse<?> getAllBarcodes(@RequestBody SearchFilterVo vo) {

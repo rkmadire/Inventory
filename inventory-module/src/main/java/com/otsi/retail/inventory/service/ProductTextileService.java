@@ -23,4 +23,6 @@ public interface ProductTextileService {
 
 	List<BarcodeTextileVo> getAllBarcodes(SearchFilterVo vo);
 
+	String incrementQty(BarcodeTextileVo vo);
+
 }

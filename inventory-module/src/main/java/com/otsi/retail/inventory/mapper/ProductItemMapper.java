@@ -34,14 +34,17 @@ public class ProductItemMapper {
 		vo.setFromDate(dto.getCreationDate());
 		vo.setToDate(dto.getLastModifiedDate());
 		vo.setDefaultImage(dto.getDefaultImage());
-		vo.setListPrice(dto.getListPrice());
 		vo.setStatus(dto.getStatus());
 		vo.setStock(dto.getStock());
 		vo.setTitle(dto.getTitle());
+		vo.setHsnCode(dto.getHsnCode());
+		vo.setDiscontinued(dto.getDiscontinued());
 		vo.setTyecode(dto.getTyecode());
 		vo.setName(dto.getName());
 		vo.setEmpId(dto.getEmpId());
 		vo.setCostPrice(dto.getCostPrice());
+		float listPrice=dto.getProductInventory().getStockvalue()*dto.getCostPrice();
+		vo.setListPrice(listPrice);
 		vo.setUom(dto.getUom());
 		vo.setDomainDataId(domainDataMapper.EntityToVo(dto.getDomainData()).getDomainDataId());
 		vo.setStoreId(storeMapper.EntityToVo(dto.getStore()).getStoreId());
@@ -96,6 +99,7 @@ public class ProductItemMapper {
 	public ProductItem VoToEntity(ProductItemVo vo) {
 
 		ProductItem dto = new ProductItem();
+		Random ran=new Random();
 		dto.setProductItemId(vo.getProductItemId());
 		dto.setName(vo.getName());
 		dto.setCostPrice(vo.getCostPrice());
@@ -107,8 +111,10 @@ public class ProductItemMapper {
 		dto.setStock(vo.getStock());
 		dto.setEmpId(vo.getEmpId());
 		dto.setTitle(vo.getTitle());
+		dto.setDiscontinued(vo.getDiscontinued());
 		dto.setTyecode(vo.getTyecode());
-		dto.setBarcodeId(vo.getBarcodeId());
+		dto.setHsnCode(vo.getHsnCode());
+		dto.setBarcodeId(ran.nextInt());
 		dto.setUom(vo.getUom());
 		Domaindata data = new Domaindata();
 		data.setDomainDataId(vo.getDomainDataId());

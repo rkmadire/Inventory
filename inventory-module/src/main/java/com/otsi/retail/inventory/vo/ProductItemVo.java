@@ -21,8 +21,12 @@ public class ProductItemVo {
 	private int status;
 
 	private String title;
+	
+	private String hsnCode;
 
 	private int stock;
+	
+	private String discontinued;
 
 	private LocalDate fromDate;
 
