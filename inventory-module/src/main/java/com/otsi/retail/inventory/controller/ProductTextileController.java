@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.service.ProductTextileService;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
-import com.otsi.retail.inventory.vo.ProductItemVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
 
@@ -75,6 +75,13 @@ public class ProductTextileController {
 		log.info("Recieved request to getAllBarcodes");
 		List<BarcodeTextileVo> allBarcodes = productTextileService.getAllBarcodes(vo);
 		return new GateWayResponse<>("fetching all barcode textile details sucessfully", allBarcodes);
+	}
+
+	@PostMapping("/fromNewsaleForTextile")
+	public GateWayResponse<?> fromNewsaleForTextile(@RequestBody List<String> barCode) {
+		List<BarcodeTextileVo> barcodeDetails = productTextileService.getAllBarcodes(barCode);
+		return new GateWayResponse<>("fetching barcode details fromk newsale", barcodeDetails);
+
 	}
 
 }

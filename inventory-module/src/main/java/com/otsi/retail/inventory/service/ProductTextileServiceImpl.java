@@ -23,7 +23,6 @@ import com.otsi.retail.inventory.repo.BarcodeTextileRepo;
 import com.otsi.retail.inventory.repo.ProductTextileRepo;
 import com.otsi.retail.inventory.repo.StoreRepo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
-import com.otsi.retail.inventory.vo.ProductItemVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
 
@@ -54,10 +53,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	public String addBarcodeTextile(BarcodeTextileVo textileVo) {
 		log.debug("debugging saveProductTextile:" + textileVo);
 		Random ran = new Random();
-		int qty = textileVo.getProductTextile().getQty();
 		BarcodeTextile barTextile = new BarcodeTextile();
 		barTextile.setBarcodeTextileId(textileVo.getBarcodeTextileId());
-		barTextile.setBarcode("BAR"+ran.nextInt());
+		barTextile.setBarcode("BAR" + ran.nextInt());
 		barTextile.setCreationDate(LocalDate.now());
 		barTextile.setLastModified(LocalDate.now());
 		BarcodeTextile barTextileSave = barcodeTextileRepo.save(barTextile);
@@ -65,6 +63,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		textile.setProductTextileId(textileVo.getProductTextile().getProductTextileId());
 		textile.setBarcodeTextile(barTextileSave);
 		textile.setCostPrice(textileVo.getProductTextile().getCostPrice());
+		textile.setQty(1);
 		textile.setUom("units");
 		textile.setHsnMasterId(0);
 		textile.setEmpId(textileVo.getProductTextile().getEmpId());
@@ -77,11 +76,11 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		textile.setUpdatedAt(LocalDate.now());
 		textile.setOriginalBarcodeCreatedAt(LocalDate.now());
 		ProductTextile textileSave = productTextileRepo.save(textile);
-		
+
 		log.warn("we are checking if textile is saved...");
 		log.info("after saving textile details");
 		return "barcode textile saved successfully:" + barTextileSave.getBarcodeTextileId();
-		}
+	}
 
 	@Override
 	public String incrementQty(BarcodeTextileVo vo) {
@@ -262,4 +261,16 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		return barcodeList;
 	}
 
+	@Override
+	public List<BarcodeTextileVo> getAllBarcodes(List<String> barcode) {
+		List<BarcodeTextile> barcodeDetails=barcodeTextileRepo.findByBarcodeIn(barcode);
+		
+		if (barcodeDetails.isEmpty()) {
+	       throw new RecordNotFoundException("Barcode with number " + barcode + " is not exists");
+		} else {
+			List<BarcodeTextileVo> vo = barcodeTextileMapper.EntityToVo(barcodeDetails);
+			return vo;
+		}
+	}
+	
 }

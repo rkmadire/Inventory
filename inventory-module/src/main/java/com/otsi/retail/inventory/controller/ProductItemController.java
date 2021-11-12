@@ -1,6 +1,8 @@
 package com.otsi.retail.inventory.controller;
 
 import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.service.ProductItemService;
 import com.otsi.retail.inventory.vo.ProductItemVo;
@@ -91,6 +94,13 @@ public class ProductItemController {
 		log.info("Recieved request to getAllBarcodes");
 		List<ProductItemVo> allBarcodes = productItemService.getAllBarcodes(vo);
 		return new GateWayResponse<>("fetching all barcode details sucessfully", allBarcodes);
+	}
+
+	@PostMapping("/fromNewsaleForRetail")
+	public GateWayResponse<?> fromNewsaleForRetail(@RequestBody Map<String,Integer> map){
+		String allBars = productItemService.fromNewSale(map);
+
+		return new GateWayResponse<>("fetching all barcode details sucessfully", allBars);
 	}
 
 }

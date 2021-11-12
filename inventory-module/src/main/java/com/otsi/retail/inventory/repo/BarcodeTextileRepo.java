@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.otsi.retail.inventory.model.BarcodeTextile;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
+import com.otsi.retail.inventory.vo.ProductItemVo;
 
 @Repository
 public interface BarcodeTextileRepo extends JpaRepository<BarcodeTextile, Long> {
@@ -35,5 +36,7 @@ public interface BarcodeTextileRepo extends JpaRepository<BarcodeTextile, Long> 
 	List<BarcodeTextile> findByProductTextileStoreStoreName(String storeName);
 
 	List<BarcodeTextile> findByBarcodeTextileIdIn(List<Long> bars);
+
+	List<BarcodeTextile> findByBarcodeIn(List<String> barcode);
 
 }
