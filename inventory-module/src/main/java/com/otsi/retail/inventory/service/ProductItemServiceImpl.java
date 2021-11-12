@@ -3,7 +3,9 @@ package com.otsi.retail.inventory.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,10 +52,14 @@ public class ProductItemServiceImpl implements ProductItemService {
 		if (productItemRepo.existsByName(vo.getName())) {
 			throw new DuplicateRecordException("product name is already exists:" + vo.getName());
 		}
-		if (productItemRepo.existsByBarcodeId(vo.getBarcodeId())) {
-			throw new DuplicateRecordException("barcode id is already exists:" + vo.getBarcodeId());
+		if(productItemRepo.existsByBarcodeId(vo.getBarcodeId())) {
+			throw new DuplicateRecordException("barcodeId is already exists:" + vo.getBarcodeId());
 		}
 		ProductItem productItem = productItemMapper.VoToEntity(vo);
+		if(!vo.getIsBarcode()) {
+			Random ran=new Random();
+			productItem.setBarcodeId(ran.nextInt());
+		}
 		ProductItem saveProductItem = productItemRepo.save(productItem);
 		saveAVValues(vo, saveProductItem);
 		List<ProductImage> listImages = new ArrayList<>();
@@ -81,7 +87,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 
 		log.warn("we are checking if barcode  is saved...");
 		log.info("saving barcode details");
-		return "barcode saved successfully:"+prodInvSave.getProductItem().getBarcodeId();
+		return "barcode saved successfully:" + prodInvSave.getProductItem().getBarcodeId();
 
 	}
 
@@ -264,7 +270,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		if (!barOpt.isPresent()) {
 			throw new RecordNotFoundException("barcode id is not found");
 		}
-		Optional<ProductItem> prodOpt=productItemRepo.findByProductItemId(barOpt.get().getProductItemId());
+		Optional<ProductItem> prodOpt = productItemRepo.findByProductItemId(barOpt.get().getProductItemId());
 		ProductInventory item = prodOpt.get().getProductInventory();
 		if (item == null) {
 			throw new RecordNotFoundException("product inventory is not found");
@@ -276,7 +282,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		prodInventory.setLastModified(LocalDate.now());
 		prodInventory.setProductItem(item.getProductItem());
 		productInventoryRepo.save(prodInventory);
-		return "updated inventory successfully:"+vo.getBarcodeId();
+		return "updated inventory successfully:" + vo.getBarcodeId();
 	}
 
 	@Override
@@ -345,8 +351,8 @@ public class ProductItemServiceImpl implements ProductItemService {
 	@Override
 	public String deleteBarcode(int barcodeId) {
 		log.debug(" debugging deleteBarcode:" + barcodeId);
-		Optional<ProductItem> barOpt=productItemRepo.findByBarcodeId(barcodeId);
-		if(!barOpt.isPresent()) {
+		Optional<ProductItem> barOpt = productItemRepo.findByBarcodeId(barcodeId);
+		if (!barOpt.isPresent()) {
 			throw new RecordNotFoundException("barcode details not found with id: " + barcodeId);
 		}
 		Optional<ProductItem> prodOpt = productItemRepo.findByProductItemId(barOpt.get().getProductItemId());
@@ -361,5 +367,39 @@ public class ProductItemServiceImpl implements ProductItemService {
 			log.info("barcode deleted succesfully:" + barcodeId);
 			return "barcode deleted successfully with id:" + barcodeId;
 		}
+	}
+
+	@Override
+	public String fromNewSale(Map<String, Integer> map) {
+		int barcodeId = 0;
+		int qty = 0;
+		for (Map.Entry<String, Integer> entry : map.entrySet()) {
+			if (entry.getKey().equalsIgnoreCase("barcode")) {
+				barcodeId = entry.getValue();
+
+			}
+			if (entry.getKey().equalsIgnoreCase("qty")) {
+				qty = entry.getValue();
+
+			}
+		}
+		Optional<ProductItem> barOpt = productItemRepo.findByBarcodeId(barcodeId);
+		if (!barOpt.isPresent()) {
+			throw new RecordNotFoundException("barcode id is not found");
+		}
+		Optional<ProductItem> prodOpt = productItemRepo.findByProductItemId(barOpt.get().getProductItemId());
+		ProductInventory item = prodOpt.get().getProductInventory();
+		if (item == null) {
+			throw new RecordNotFoundException("product inventory is not found");
+		}
+		ProductInventory prodInventory = new ProductInventory();
+		prodInventory.setProductInventoryId(item.getProductInventoryId());
+		prodInventory.setStockvalue(Math.abs(qty - barOpt.get().getProductInventory().getStockvalue()));
+		prodInventory.setLastModified(LocalDate.now());
+		prodInventory.setProductItem(item.getProductItem());
+		productInventoryRepo.save(prodInventory);
+
+		return "stock updated successfully";
+
 	}
 }

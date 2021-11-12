@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
+import com.otsi.retail.inventory.vo.ProductItemVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
 
@@ -24,5 +25,7 @@ public interface ProductTextileService {
 	List<BarcodeTextileVo> getAllBarcodes(SearchFilterVo vo);
 
 	String incrementQty(BarcodeTextileVo vo);
+
+	List<BarcodeTextileVo> getAllBarcodes(List<String> barCode);
 
 }

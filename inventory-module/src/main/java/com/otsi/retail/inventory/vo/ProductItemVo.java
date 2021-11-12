@@ -42,7 +42,7 @@ public class ProductItemVo {
 
 	private int barcodeId;
 
-	private Long storeId;
+	private StoresVo store;
 
 	private Long domainDataId;
 
@@ -55,5 +55,7 @@ public class ProductItemVo {
 	private List<ProductImage> ProductImage;
 
 	private int stockValue;
+	
+	private Boolean isBarcode;
 
 }
