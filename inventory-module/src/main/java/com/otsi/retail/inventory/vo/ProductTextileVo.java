@@ -12,7 +12,7 @@ public class ProductTextileVo {
 	private float costPrice;
 	private float itemMrp;
 	private float itemRsp;
-	private StoresVo store;
+	private Long storeId;
 	private String empId;
 	private int qty;
 	private String promoLabel;
