@@ -46,8 +46,8 @@ public class ProductItemMapper {
 		float listPrice = dto.getProductInventory().getStockvalue() * dto.getCostPrice();
 		vo.setListPrice(listPrice);
 		vo.setUom(dto.getUom());
-		vo.setDomainDataId(domainDataMapper.EntityToVo(dto.getDomainData()).getDomainDataId());
-		vo.setStore(storeMapper.EntityToVo(dto.getStore()));
+		vo.setDomainDataId(dto.getDomainDataId());
+		vo.setStoreId(dto.getStoreId());
 		vo.setBarcodeId(dto.getBarcodeId());
 		List<ProductImage> listImages = new ArrayList<>();
 		List<ProductImage> productImage = dto.getProductImage();
@@ -117,10 +117,9 @@ public class ProductItemMapper {
 		dto.setHsnCode(vo.getHsnCode());
 		dto.setBarcodeId(vo.getBarcodeId());
 		dto.setUom(vo.getUom());
-		Domaindata data = new Domaindata();
-		data.setDomainDataId(vo.getDomainDataId());
-		dto.setDomainData(data);
-		dto.setStore(storeMapper.VoToEntity(vo.getStore()));
+		dto.setDomainDataId(vo.getDomainDataId());
+
+		dto.setStoreId(vo.getStoreId());
 		return dto;
 
 	}

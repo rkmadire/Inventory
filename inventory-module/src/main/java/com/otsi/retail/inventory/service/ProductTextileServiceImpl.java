@@ -17,12 +17,14 @@ import com.otsi.retail.inventory.mapper.BarcodeTextileMapper;
 import com.otsi.retail.inventory.mapper.ProductTextileMapper;
 import com.otsi.retail.inventory.mapper.StoreMapper;
 import com.otsi.retail.inventory.model.BarcodeTextile;
+import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.model.ProductTextile;
 import com.otsi.retail.inventory.model.Store;
 import com.otsi.retail.inventory.repo.BarcodeTextileRepo;
 import com.otsi.retail.inventory.repo.ProductTextileRepo;
 import com.otsi.retail.inventory.repo.StoreRepo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
+import com.otsi.retail.inventory.vo.ProductItemVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
 
@@ -228,7 +230,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		/*
 		 * using itemMrp< and itemMrp>
 		 */
-		if (vo.getItemMrpLessThan() != 0 && vo.getItemMrpGreaterThan() != 0) {
+		else if (vo.getItemMrpLessThan() != 0 && vo.getItemMrpGreaterThan() != 0) {
 			List<ProductTextile> prodOpt = productTextileRepo.findByItemMrpBetween(vo.getItemMrpLessThan(),
 					vo.getItemMrpGreaterThan());
 			List<Long> bars = prodOpt.stream().map(s -> s.getBarcodeTextile().getBarcodeTextileId())
@@ -245,7 +247,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		/*
 		 * using barcodeStore(storeName)
 		 */
-		if (vo.getStoreName() != null) {
+		else if (vo.getStoreName() != null) {
 			Store store = storeRepo.findByStoreName(vo.getStoreName());
 			if (store != null) {
 				barcodeDetails = barcodeTextileRepo.findByProductTextileStoreStoreName(vo.getStoreName());
@@ -253,6 +255,12 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 				log.error("No record found with given information");
 				throw new RecordNotFoundException("No record found with given information");
 			}
+		}
+		
+		else {
+			List<BarcodeTextile> prodItemDetails1 = barcodeTextileRepo.findAll();
+			List<BarcodeTextileVo> productList = barcodeTextileMapper.EntityToVo(prodItemDetails1);
+			return productList;
 		}
 
 		List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeDetails);

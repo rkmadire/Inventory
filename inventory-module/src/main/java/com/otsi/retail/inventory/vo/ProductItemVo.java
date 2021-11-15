@@ -42,7 +42,7 @@ public class ProductItemVo {
 
 	private int barcodeId;
 
-	private StoresVo store;
+	private Long storeId;
 
 	private Long domainDataId;
 

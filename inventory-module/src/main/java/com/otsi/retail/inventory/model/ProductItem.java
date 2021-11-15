@@ -66,11 +66,10 @@ public class ProductItem {
 	
 	private String discontinued;
 
-	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
-	private Store store;
+	private Long storeId;
 
-	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
-	private Domaindata domainData;
+	
+	private Long domainDataId;
 
 	private Long puid;
 
