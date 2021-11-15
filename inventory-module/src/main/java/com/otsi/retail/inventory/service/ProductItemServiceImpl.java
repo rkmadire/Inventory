@@ -52,12 +52,12 @@ public class ProductItemServiceImpl implements ProductItemService {
 		if (productItemRepo.existsByName(vo.getName())) {
 			throw new DuplicateRecordException("product name is already exists:" + vo.getName());
 		}
-		if(productItemRepo.existsByBarcodeId(vo.getBarcodeId())) {
+		if (productItemRepo.existsByBarcodeId(vo.getBarcodeId())) {
 			throw new DuplicateRecordException("barcodeId is already exists:" + vo.getBarcodeId());
 		}
 		ProductItem productItem = productItemMapper.VoToEntity(vo);
-		if(!vo.getIsBarcode()) {
-			Random ran=new Random();
+		if (!vo.getIsBarcode()) {
+			Random ran = new Random();
 			productItem.setBarcodeId(ran.nextInt());
 		}
 		ProductItem saveProductItem = productItemRepo.save(productItem);
@@ -282,7 +282,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		prodInventory.setLastModified(LocalDate.now());
 		prodInventory.setProductItem(item.getProductItem());
 		productInventoryRepo.save(prodInventory);
-		return "updated inventory successfully:" + vo.getBarcodeId();
+		return "updated inventory successfully:" + vo.getProductItemId();
 	}
 
 	@Override
@@ -320,10 +320,12 @@ public class ProductItemServiceImpl implements ProductItemService {
 		});
 		List<ProductItemAv> pav = productItemAvRepo.saveAll(prodavs);
 		update.setProductItemAvId(pav);
+	
 
-		List<ProductImage> listImages = new ArrayList<>();
-		List<ProductImage> productImage = vo.getProductImage();
-
+	List<ProductImage> listImages = new ArrayList<>();
+	List<ProductImage> productImage = vo.getProductImage();
+	if(vo.getProductImage()!=null)
+	{
 		productImage.forEach(x -> {
 			ProductImage image = new ProductImage();
 			image.setProductImageId(x.getProductImageId());
@@ -335,8 +337,10 @@ public class ProductItemServiceImpl implements ProductItemService {
 			listImages.add(image);
 
 		});
+
 		List<ProductImage> s = productImageRepo.saveAll(listImages);
 		update.setProductImage(s);
+	}
 		Optional<ProductInventory> prodOp = productInventoryRepo.findByProductItem(save);
 		ProductInventory prodInv = prodOp.get();
 		prodInv.setProductItem(save);
