@@ -32,11 +32,10 @@ public interface BarcodeTextileRepo extends JpaRepository<BarcodeTextile, Long> 
 
 	List<BarcodeTextile> findByProductTextileEmpId(String empId);
 
-
-	List<BarcodeTextile> findByProductTextileStoreStoreName(String storeName);
-
 	List<BarcodeTextile> findByBarcodeTextileIdIn(List<Long> bars);
 
 	List<BarcodeTextile> findByBarcodeIn(List<String> barcode);
+
+	List<BarcodeTextile> findByProductTextileStoreId(Long storeId);
 
 }

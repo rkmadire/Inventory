@@ -39,8 +39,6 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	@Autowired
 	private ProductTextileMapper productTextileMapper;
 
-	@Autowired
-	private StoreMapper storeMapper;
 
 	@Autowired
 	private ProductTextileRepo productTextileRepo;
@@ -48,9 +46,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	@Autowired
 	private BarcodeTextileRepo barcodeTextileRepo;
 
-	@Autowired
-	private StoreRepo storeRepo;
-
+	
 	@Override
 	public String addBarcodeTextile(BarcodeTextileVo textileVo) {
 		log.debug("debugging saveProductTextile:" + textileVo);
@@ -245,12 +241,12 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		}
 
 		/*
-		 * using barcodeStore(storeName)
+		 * using barcodeStore(storeId)
 		 */
-		else if (vo.getStoreName() != null) {
-			Store store = storeRepo.findByStoreName(vo.getStoreName());
-			if (store != null) {
-				barcodeDetails = barcodeTextileRepo.findByProductTextileStoreStoreName(vo.getStoreName());
+		else if (vo.getStoreId() != null) {
+			Optional<ProductTextile> prodOpt = productTextileRepo.findByStoreId(vo.getStoreId());
+			if (prodOpt.isPresent()) {
+				barcodeDetails = barcodeTextileRepo.findByProductTextileStoreId(vo.getStoreId());
 			} else {
 				log.error("No record found with given information");
 				throw new RecordNotFoundException("No record found with given information");
