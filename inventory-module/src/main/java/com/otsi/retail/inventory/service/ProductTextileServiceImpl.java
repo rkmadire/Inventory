@@ -73,7 +73,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		textile.setItemCode(textileVo.getProductTextile().getItemCode());
 		textile.setCreateForLocation(0);
 		textile.setValueAdditionCp(0);
-		textile.setStore(storeMapper.VoToEntity(textileVo.getProductTextile().getStore()));
+		textile.setStoreId(textileVo.getProductTextile().getStoreId());
 		textile.setCreatedAt(LocalDate.now());
 		textile.setUpdatedAt(LocalDate.now());
 		textile.setOriginalBarcodeCreatedAt(LocalDate.now());
@@ -135,7 +135,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		textile.setEmpId(vo.getProductTextile().getEmpId());
 		textile.setItemMrp(vo.getProductTextile().getItemMrp());
 		textile.setValueAdditionCp(0);
-		textile.setStore(storeMapper.VoToEntity(vo.getProductTextile().getStore()));
+		textile.setStoreId(vo.getProductTextile().getStoreId());
 		textile.setUpdatedAt(LocalDate.now());
 		textile.setOriginalBarcodeCreatedAt(LocalDate.now());
 		ProductTextile textileSave = productTextileRepo.save(textile);
