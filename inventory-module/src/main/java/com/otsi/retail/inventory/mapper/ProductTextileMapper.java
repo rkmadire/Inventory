@@ -32,7 +32,7 @@ public class ProductTextileMapper {
 		vo.setCreatedAt(dto.getCreatedAt());
 		vo.setUpdatedAt(dto.getUpdatedAt());
 		vo.setOriginalBarcodeCreatedAt(dto.getOriginalBarcodeCreatedAt());
-		vo.setStore(storeMapper.EntityToVo(dto.getStore()));
+		vo.setStoreId(dto.getStoreId());
 		return vo;
 
 	}
@@ -66,7 +66,7 @@ public class ProductTextileMapper {
 		 * BarcodeTextile bt = new BarcodeTextile();
 		 * bt.setBarcodeTextileId(vo.getBarcodeTextileId()); dto.setBarcodeTextile(bt);
 		 */
-		dto.setStore(storeMapper.VoToEntity(vo.getStore()));
+		dto.setStoreId(vo.getStoreId());
 		return dto;
 
 	}

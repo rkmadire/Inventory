@@ -18,6 +18,6 @@ public class SearchFilterVo {
 	
 	private float itemMrpGreaterThan;
 	
-	private String storeName;
+	private Long storeId;
 
 }
