@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.otsi.retail.inventory.commons.ProductItemAvEnum;
 import com.otsi.retail.inventory.exceptions.DuplicateRecordException;
+import com.otsi.retail.inventory.exceptions.InvalidDataException;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
 import com.otsi.retail.inventory.mapper.ProductItemMapper;
 import com.otsi.retail.inventory.model.ProductImage;
@@ -288,16 +289,22 @@ public class ProductItemServiceImpl implements ProductItemService {
 	@Override
 	public String updateBarcode(ProductItemVo vo) {
 		log.debug(" debugging updateBarcode:" + vo);
+
 		Optional<ProductItem> dto = productItemRepo.findByBarcodeId(vo.getBarcodeId());
 		if (!dto.isPresent()) {
 			log.error("Record Not Found");
 			throw new RecordNotFoundException("barcode record not found");
 		}
-		Optional<ProductItem> prodOpt = productItemRepo.findByProductItemId(dto.get().getProductItemId());
+		Optional<ProductItem> prodOpt = productItemRepo.findByProductItemId(vo.getProductItemId());
 		if (!prodOpt.isPresent()) {
 			throw new RecordNotFoundException("productItem record not found");
 		}
-		ProductItem update = productItemMapper.VoToEntity(vo);
+		if (dto.get().getProductItemId() != vo.getProductItemId()
+				|| prodOpt.get().getBarcodeId() != vo.getBarcodeId()) {
+			throw new InvalidDataException("productItemId record not found/barcodeId is incorrect");
+		}
+		ProductItem update = productItemMapper.VoToEntityUpdate(vo, dto.get());
+
 		ProductItem save = productItemRepo.save(update);
 		List<ProductItemAv> prodAvOpt = productItemAvRepo.findByProductItem(save);
 		List<ProductItemAv> prodavs = new ArrayList<>();
@@ -320,27 +327,25 @@ public class ProductItemServiceImpl implements ProductItemService {
 		});
 		List<ProductItemAv> pav = productItemAvRepo.saveAll(prodavs);
 		update.setProductItemAvId(pav);
-	
 
-	List<ProductImage> listImages = new ArrayList<>();
-	List<ProductImage> productImage = vo.getProductImage();
-	if(vo.getProductImage()!=null)
-	{
-		productImage.forEach(x -> {
-			ProductImage image = new ProductImage();
-			image.setProductImageId(x.getProductImageId());
-			image.setImage(x.getImage());
-			image.setPIUID(x.getPIUID());
-			image.setCreationDate(LocalDate.now());
-			image.setLastModified(LocalDate.now());
-			image.setProductItem(save);
-			listImages.add(image);
+		List<ProductImage> listImages = new ArrayList<>();
+		List<ProductImage> productImage = vo.getProductImage();
+		if (vo.getProductImage() != null) {
+			productImage.forEach(x -> {
+				ProductImage image = new ProductImage();
+				image.setProductImageId(x.getProductImageId());
+				image.setImage(x.getImage());
+				image.setPIUID(x.getPIUID());
+				image.setCreationDate(LocalDate.now());
+				image.setLastModified(LocalDate.now());
+				image.setProductItem(save);
+				listImages.add(image);
 
-		});
+			});
 
-		List<ProductImage> s = productImageRepo.saveAll(listImages);
-		update.setProductImage(s);
-	}
+			List<ProductImage> s = productImageRepo.saveAll(listImages);
+			update.setProductImage(s);
+		}
 		Optional<ProductInventory> prodOp = productInventoryRepo.findByProductItem(save);
 		ProductInventory prodInv = prodOp.get();
 		prodInv.setProductItem(save);
@@ -348,8 +353,10 @@ public class ProductItemServiceImpl implements ProductItemService {
 		prodInv.setStockvalue(vo.getStockValue());
 		ProductInventory prodInvSave = productInventoryRepo.save(prodInv);
 		update.setProductInventory(prodInvSave);
+
 		log.info("barcode updated successsfully:" + vo.toString());
 		return "barcode updated successsfully:" + vo.getBarcodeId();
+
 	}
 
 	@Override

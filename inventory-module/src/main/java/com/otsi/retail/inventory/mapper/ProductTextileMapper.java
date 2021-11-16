@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.otsi.retail.inventory.model.BarcodeTextile;
 import com.otsi.retail.inventory.model.ProductTextile;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
 
@@ -79,5 +81,6 @@ public class ProductTextileMapper {
 		return vos.stream().map(vo -> VoToEntity(vo)).collect(Collectors.toList());
 
 	}
+	
 
 }
