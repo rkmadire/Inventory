@@ -104,5 +104,35 @@ public class BarcodeTextileMapper {
 		return vos.stream().map(vo -> VoToEntity(vo)).collect(Collectors.toList());
 
 	}
+	
+	public BarcodeTextileVo EntityToVoUpdate(BarcodeTextile dto,BarcodeTextileVo vo) {
+		
+		vo.setBarcode(dto.getBarcode());
+		vo.setAttr_1(dto.getAttr_1());
+		vo.setAttr_2(dto.getAttr_2());
+		vo.setAttr_3(dto.getAttr_3());
+		vo.setAttr_4(dto.getAttr_4());
+		vo.setAttr_5(dto.getAttr_5());
+		vo.setAttr_6(dto.getAttr_6());
+		vo.setAttr_7(dto.getAttr_7());
+		vo.setAttr_8(dto.getAttr_8());
+		vo.setAttr_9(dto.getAttr_9());
+		vo.setAttr_10(dto.getAttr_10());
+		vo.setAttr_11(dto.getAttr_11());
+		vo.setAttr_12(dto.getAttr_12());
+		vo.setAttr_13(dto.getAttr_13());
+		vo.setAttr_14(dto.getAttr_14());
+		vo.setAttr_15(dto.getAttr_15());
+		vo.setAttr_16(dto.getAttr_16());
+		vo.setAttr_17(dto.getAttr_17());
+		vo.setAttr_18(dto.getAttr_18());
+		vo.setAttr_19(dto.getAttr_19());
+		vo.setAttr_20(dto.getAttr_20());
+		vo.setFromDate(dto.getCreationDate());
+		vo.setToDate(dto.getLastModified());
+		vo.setProductTextile(productTextileMapper.EntityToVo(dto.getProductTextile()));
+		return vo;
+
+	}
 
 }

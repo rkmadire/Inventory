@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -38,9 +39,11 @@ public class ProductItem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long productItemId;
-
-	private int barcodeId;
+	@Column(unique=true)
+    private Long productItemId;
+	
+	@Column(unique=true)
+    private int barcodeId;
 
 	private String empId;
 

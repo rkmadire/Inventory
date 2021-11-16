@@ -97,10 +97,13 @@ public class ProductItemMapper {
 	 */
 
 	public ProductItem VoToEntity(ProductItemVo vo) {
-
+       
 		ProductItem dto = new ProductItem();
 		Random ran = new Random();
+		
 		dto.setProductItemId(vo.getProductItemId());
+		dto.setBarcodeId(vo.getBarcodeId());
+		
 		dto.setName(vo.getName());
 		dto.setCostPrice(vo.getCostPrice());
 		dto.setCreationDate(LocalDate.now());
@@ -115,7 +118,7 @@ public class ProductItemMapper {
 		dto.setDiscontinued(vo.getDiscontinued());
 		dto.setTyecode(vo.getTyecode());
 		dto.setHsnCode(vo.getHsnCode());
-		dto.setBarcodeId(vo.getBarcodeId());
+		
 		dto.setUom(vo.getUom());
 		dto.setDomainDataId(vo.getDomainDataId());
 
@@ -131,5 +134,30 @@ public class ProductItemMapper {
 		return vos.stream().map(vo -> VoToEntity(vo)).collect(Collectors.toList());
 
 	}
+	
+	public ProductItem VoToEntityUpdate(ProductItemVo vo,ProductItem dto) {
+	       
+		
+		dto.setCostPrice(vo.getCostPrice());
+		dto.setCreationDate(LocalDate.now());
+		dto.setLastModifiedDate(LocalDate.now());
+		dto.setDefaultImage(vo.getDefaultImage());
+		dto.setListPrice(vo.getListPrice());
+		dto.setStatus(vo.getStatus());
+		dto.setStock(vo.getStock());
+		dto.setEmpId(vo.getEmpId());
+		dto.setDiscontinued(vo.getDiscontinued());
+		dto.setTitle(vo.getTitle());
+		dto.setDiscontinued(vo.getDiscontinued());
+		dto.setTyecode(vo.getTyecode());
+		dto.setHsnCode(vo.getHsnCode());
+		
+		dto.setUom(vo.getUom());
+		dto.setDomainDataId(vo.getDomainDataId());
+
+		dto.setStoreId(vo.getStoreId());
+		return dto;
+	}
+
 
 }
