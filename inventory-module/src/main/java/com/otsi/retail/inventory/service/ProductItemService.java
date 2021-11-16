@@ -20,13 +20,13 @@ public interface ProductItemService {
 
 	List<ProductItemVo> getAllBarcodes(ProductItemVo vo);
 
-	ProductItemVo getBarcodeId(int barcodeId);
+	ProductItemVo getBarcodeId(Long barcodeId);
 
 	String updateInventory(ProductItemVo vo);
 
 	String updateBarcode(ProductItemVo vo);
 
-	String deleteBarcode(int barcodeId);
+	String deleteBarcode(Long barcodeId);
 
 	String fromNewSale(Map<String,Integer> map);
 

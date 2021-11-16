@@ -59,7 +59,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		ProductItem productItem = productItemMapper.VoToEntity(vo);
 		if (!vo.getIsBarcode()) {
 			Random ran = new Random();
-			productItem.setBarcodeId(ran.nextInt());
+			productItem.setBarcodeId(ran.nextLong());
 		}
 		ProductItem saveProductItem = productItemRepo.save(productItem);
 		saveAVValues(vo, saveProductItem);
@@ -206,7 +206,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 	}
 
 	@Override
-	public ProductItemVo getBarcodeId(int barcodeId) {
+	public ProductItemVo getBarcodeId(Long barcodeId) {
 		log.debug("debugging getProductByProductId:" + barcodeId);
 		Optional<ProductItem> barOpt = productItemRepo.findByBarcodeId(barcodeId);
 		if (!(barOpt.isPresent())) {
@@ -283,7 +283,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		prodInventory.setLastModified(LocalDate.now());
 		prodInventory.setProductItem(item.getProductItem());
 		productInventoryRepo.save(prodInventory);
-		return "updated inventory successfully:" + vo.getProductItemId();
+		return "updated inventory successfully:" + prodOpt.get().getProductItemId();
 	}
 
 	@Override
@@ -301,7 +301,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		}
 		if (dto.get().getProductItemId() != vo.getProductItemId()
 				|| prodOpt.get().getBarcodeId() != vo.getBarcodeId()) {
-			throw new InvalidDataException("productItemId record not found/barcodeId is incorrect");
+			throw new RecordNotFoundException("productItemId record not found/barcodeId is incorrect");
 		}
 		ProductItem update = productItemMapper.VoToEntityUpdate(vo, dto.get());
 
@@ -360,7 +360,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 	}
 
 	@Override
-	public String deleteBarcode(int barcodeId) {
+	public String deleteBarcode(Long barcodeId) {
 		log.debug(" debugging deleteBarcode:" + barcodeId);
 		Optional<ProductItem> barOpt = productItemRepo.findByBarcodeId(barcodeId);
 		if (!barOpt.isPresent()) {
