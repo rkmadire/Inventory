@@ -107,7 +107,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	public String updateBarcodeTextile(BarcodeTextileVo vo) {
 		log.debug(" debugging updateBarcode:" + vo);
 		if(vo.getProductTextile().getProductTextileId()==null) {
-			throw new RecordNotFoundException("product textileId textile record not found");
+			throw new InvalidDataException("product textileId textile record not found");
 		}
 		Optional<BarcodeTextile> dto = barcodeTextileRepo.findByBarcodeTextileId(vo.getBarcodeTextileId());
 		if (!dto.isPresent()) {
@@ -116,7 +116,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		}
 		if (dto.get().getProductTextile().getProductTextileId() != vo.getProductTextile().getProductTextileId()
 				|| dto.get().getBarcodeTextileId() != vo.getBarcodeTextileId()) {
-			throw new InvalidDataException("productTextileId record not found/barcodeTextileId is incorrect");
+			throw new RecordNotFoundException("productTextileId record not found/barcodeTextileId is incorrect");
 		}
 		BarcodeTextile barTextile = dto.get();
 		barTextile.setBarcode(vo.getBarcode());

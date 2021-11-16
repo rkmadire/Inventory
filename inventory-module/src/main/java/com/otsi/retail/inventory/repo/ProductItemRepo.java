@@ -24,12 +24,13 @@ public interface ProductItemRepo extends JpaRepository<ProductItem, Long> {
 			LocalDate toDate, Long productItemId);
 
 	List<ProductItem> findByCreationDateBetweenAndBarcodeIdOrderByLastModifiedDateAsc(LocalDate fromDate,
-			LocalDate toDate, int barcodeId);
+			LocalDate toDate, Long barcodeId);
 
-	Optional<ProductItem> findByBarcodeId(int barcodeId);
+	Optional<ProductItem> findByBarcodeId(long barcodeId);
 
 	boolean existsByName(String name);
 
-	boolean existsByBarcodeId(int barcodeId);
+	boolean existsByBarcodeId(Long barcodeId);
+
 
 }

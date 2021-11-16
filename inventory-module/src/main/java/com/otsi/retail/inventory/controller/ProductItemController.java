@@ -54,7 +54,7 @@ public class ProductItemController {
 	}
 
 	@DeleteMapping("/deleteBarcode")
-	public GateWayResponse<?> deleteBarcode(@RequestParam("barcodeId") int barcodeId) {
+	public GateWayResponse<?> deleteBarcode(@RequestParam("barcodeId") Long barcodeId) {
 		log.info("Received Request to deleteBarcode :" + barcodeId);
 		String deleteBarcode = productItemService.deleteBarcode(barcodeId);
 		return new GateWayResponse<>("Barcode deleted successfully", deleteBarcode);
@@ -83,7 +83,7 @@ public class ProductItemController {
 	}
 
 	@GetMapping("/getBarcodeId")
-	public GateWayResponse<?> getBarcodeId(@RequestParam("barcodeId") int barcodeId) {
+	public GateWayResponse<?> getBarcodeId(@RequestParam("barcodeId") Long barcodeId) {
 		log.info("Recieved request to getBarcodeId:" + barcodeId);
 		ProductItemVo inventory = productItemService.getBarcodeId(barcodeId);
 		return new GateWayResponse<>("fetching barcode details successfully with barcodeId", inventory);
