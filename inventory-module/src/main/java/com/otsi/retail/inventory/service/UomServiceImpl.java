@@ -3,13 +3,14 @@ package com.otsi.retail.inventory.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
 import com.otsi.retail.inventory.mapper.UomMapper;
-import com.otsi.retail.inventory.model.Domaindata;
 import com.otsi.retail.inventory.model.UomEntity;
 import com.otsi.retail.inventory.repo.UomRepo;
 import com.otsi.retail.inventory.vo.UomVo;
