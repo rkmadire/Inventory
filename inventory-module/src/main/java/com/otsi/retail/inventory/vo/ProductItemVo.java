@@ -40,7 +40,7 @@ public class ProductItemVo {
 
 	private String uom;
 
-	private Long barcodeId;
+	private String barcodeId;
 
 	private Long storeId;
 

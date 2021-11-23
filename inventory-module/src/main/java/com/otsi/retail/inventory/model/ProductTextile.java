@@ -3,6 +3,7 @@ package com.otsi.retail.inventory.model;
 import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -27,7 +28,7 @@ public class ProductTextile {
 	private Long productTextileId;
 
 	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
-	@JoinColumn(name = "barcodeTextileId")
+	@JoinColumn(name = "barcodeTextileId", unique = true)
 	@JsonManagedReference
 	private BarcodeTextile barcodeTextile;
 	private String parentBarcode;

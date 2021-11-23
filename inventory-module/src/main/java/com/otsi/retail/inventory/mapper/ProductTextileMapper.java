@@ -13,11 +13,7 @@ import com.otsi.retail.inventory.vo.ProductTextileVo;
 
 @Component
 public class ProductTextileMapper {
-
-	@Autowired
-	private StoreMapper storeMapper;
-
-
+	
 	/*
 	 * EntityToVo converts dto to vo
 	 * 

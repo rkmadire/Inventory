@@ -6,26 +6,17 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.otsi.retail.inventory.commons.ProductItemAvEnum;
-import com.otsi.retail.inventory.model.Domaindata;
 import com.otsi.retail.inventory.model.ProductImage;
 import com.otsi.retail.inventory.model.ProductInventory;
 import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.model.ProductItemAv;
-import com.otsi.retail.inventory.model.Store;
 import com.otsi.retail.inventory.vo.ProductItemVo;
 
 @Component
 public class ProductItemMapper {
-
-	@Autowired
-	private DomainDataMapper domainDataMapper;
-
-	@Autowired
-	private StoreMapper storeMapper;
 
 	public ProductItemVo EntityToVo(ProductItem dto) {
 		ProductItemVo vo = new ProductItemVo();
@@ -97,13 +88,13 @@ public class ProductItemMapper {
 	 */
 
 	public ProductItem VoToEntity(ProductItemVo vo) {
-       
+
 		ProductItem dto = new ProductItem();
 		Random ran = new Random();
-		
+
 		dto.setProductItemId(vo.getProductItemId());
 		dto.setBarcodeId(vo.getBarcodeId());
-		
+
 		dto.setName(vo.getName());
 		dto.setCostPrice(vo.getCostPrice());
 		dto.setCreationDate(LocalDate.now());
@@ -118,7 +109,7 @@ public class ProductItemMapper {
 		dto.setDiscontinued(vo.getDiscontinued());
 		dto.setTyecode(vo.getTyecode());
 		dto.setHsnCode(vo.getHsnCode());
-		
+
 		dto.setUom(vo.getUom());
 		dto.setDomainDataId(vo.getDomainDataId());
 
@@ -134,10 +125,9 @@ public class ProductItemMapper {
 		return vos.stream().map(vo -> VoToEntity(vo)).collect(Collectors.toList());
 
 	}
-	
-	public ProductItem VoToEntityUpdate(ProductItemVo vo,ProductItem dto) {
-	       
-		
+
+	public ProductItem VoToEntityUpdate(ProductItemVo vo, ProductItem dto) {
+
 		dto.setCostPrice(vo.getCostPrice());
 		dto.setCreationDate(LocalDate.now());
 		dto.setLastModifiedDate(LocalDate.now());
@@ -151,13 +141,12 @@ public class ProductItemMapper {
 		dto.setDiscontinued(vo.getDiscontinued());
 		dto.setTyecode(vo.getTyecode());
 		dto.setHsnCode(vo.getHsnCode());
-		
+
 		dto.setUom(vo.getUom());
 		dto.setDomainDataId(vo.getDomainDataId());
 
 		dto.setStoreId(vo.getStoreId());
 		return dto;
 	}
-
 
 }

@@ -43,7 +43,7 @@ public class ProductItem {
     private Long productItemId;
 	
 	@Column(unique=true)
-    private Long barcodeId;
+    private String barcodeId;
 
 	private String empId;
 
