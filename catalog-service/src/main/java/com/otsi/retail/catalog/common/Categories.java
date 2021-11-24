@@ -12,7 +12,7 @@ import lombok.Data;
 
 public enum Categories {
 
-	None(0L,"none"),Main_Category(1L,"main_category"), Sub_Category(2L,"sub_category"), Leaf_Category(3L,"leaf_category");
+	None(0L,"none"),DIVISION(1L,"division"), SECTION(2L,"section"), SUB_SECTION(3L,"sub_section");
 	
 	private Long id;
 	private String name;

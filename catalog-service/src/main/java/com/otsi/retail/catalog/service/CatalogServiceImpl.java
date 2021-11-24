@@ -115,7 +115,7 @@ public class CatalogServiceImpl implements CatalogService {
 	@Override
 	public List<CatalogVo> getMainCategories() {
 		
-		List<CatalogEntity> ent = catalogRepo.findByDescription(Categories.Main_Category);
+		List<CatalogEntity> ent = catalogRepo.findByDescription(Categories.DIVISION);
 		if (ent.isEmpty()) {
 			throw new RecordNotFoundException("record not exists");
 		}
