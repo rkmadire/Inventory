@@ -19,7 +19,7 @@ public class ProductTextileVo {
 	private LocalDate createdAt;
 	private LocalDate updatedAt;
 	private String uom;
-	private int hsnMasterId;
+	private Long hsnMasterId;
 	private String originalBarcode;
 	private LocalDate originalBarcodeCreatedAt;
 	private int createForLocation;

@@ -58,7 +58,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		}
 		ProductItem productItem = productItemMapper.VoToEntity(vo);
 		if (!vo.getIsBarcode()) {
-			
+
 			productItem.setBarcodeId(getSaltString());
 		}
 		ProductItem saveProductItem = productItemRepo.save(productItem);
@@ -91,20 +91,19 @@ public class ProductItemServiceImpl implements ProductItemService {
 		return "barcode saved successfully:" + prodInvSave.getProductItem().getBarcodeId();
 
 	}
-	
+
 	protected String getSaltString() {
-        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-        while (salt.length() < 18) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
-        }
-        String saltStr = salt.toString(); 
-        return saltStr;
+		String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+		StringBuilder salt = new StringBuilder();
+		Random rnd = new Random();
+		while (salt.length() < 18) { // length of the random string.
+			int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+			salt.append(SALTCHARS.charAt(index));
+		}
+		String saltStr = salt.toString();
+		return saltStr;
 
-    }
-
+	}
 
 	private void saveAVValues(ProductItemVo vo, ProductItem savedproductItem) {
 
@@ -192,6 +191,30 @@ public class ProductItemServiceImpl implements ProductItemService {
 				throw new RecordNotFoundException("No record found with given productItemId");
 			}
 
+		}
+		/*
+		 * using productItemId
+		 */
+		else if (vo.getFromDate() == null && vo.getToDate() == null && vo.getProductItemId() != null) {
+			Optional<ProductItem> barOpt = productItemRepo.findByProductItemId(vo.getProductItemId());
+			if (!barOpt.isPresent()) {
+				throw new RecordNotFoundException("barcode record is not found");
+
+			} else {
+
+				prodItemDetails.add(barOpt.get());
+				List<ProductItemVo> productList = productItemMapper.EntityToVo(prodItemDetails);
+				return productList;
+
+			}
+		}
+		/*
+		 * values with empty string
+		 */
+		else if (vo.getFromDate() == null && vo.getToDate() == null && vo.getProductItemId() == null) {
+			List<ProductItem> prodItemDetails1 = productItemRepo.findAll();
+			List<ProductItemVo> productList = productItemMapper.EntityToVo(prodItemDetails1);
+			return productList;
 		} else {
 			List<ProductItem> prodItemDetails1 = productItemRepo.findAll();
 			List<ProductItemVo> productList = productItemMapper.EntityToVo(prodItemDetails1);
@@ -223,7 +246,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 	public ProductItemVo getBarcodeId(String barcodeId) {
 		log.debug("debugging getProductByProductId:" + barcodeId);
 		ProductItem barOpt = productItemRepo.findByBarcodeId(barcodeId);
-		if (barOpt==null) {
+		if (barOpt == null) {
 			throw new RecordNotFoundException("barcode record is not found");
 
 		} else {
@@ -243,7 +266,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		/*
 		 * using dates
 		 */
-		if (vo.getFromDate() != null && vo.getToDate() != null && vo.getBarcodeId() == null) {
+		if (vo.getFromDate() != null && vo.getToDate() != null && vo.getBarcodeId() == "") {
 			barcodeDetails = productItemRepo.findByCreationDateBetweenOrderByLastModifiedDateAsc(vo.getFromDate(),
 					vo.getToDate());
 
@@ -258,14 +281,37 @@ public class ProductItemServiceImpl implements ProductItemService {
 		 */
 		else if (vo.getFromDate() != null && vo.getToDate() != null && vo.getBarcodeId() != null) {
 			ProductItem barOpt = productItemRepo.findByBarcodeId(vo.getBarcodeId());
-			if (barOpt==null) {
+			if (barOpt != null) {
 				barcodeDetails = productItemRepo.findByCreationDateBetweenAndBarcodeIdOrderByLastModifiedDateAsc(
 						vo.getFromDate(), vo.getToDate(), vo.getBarcodeId());
 			} else {
 				log.error("No record found with given barcodeId");
 				throw new RecordNotFoundException("No record found with given barcodeId");
 			}
+		}
+		/*
+		 * values with empty string
+		 */
+		else if ((vo.getFromDate() == null) && (vo.getToDate() == null) && (vo.getBarcodeId() == "")) {
+			List<ProductItem> barcodeDetails1 = productItemRepo.findAll();
+			List<ProductItemVo> barcodeList = productItemMapper.EntityToVo(barcodeDetails1);
+			return barcodeList;
+		}
+		/*
+		 * using barcodeId
+		 */
+		else if (vo.getFromDate() == null && vo.getToDate() == null && (vo.getBarcodeId() != null)) {
+			ProductItem barOpt = productItemRepo.findByBarcodeId(vo.getBarcodeId());
+			if (barOpt == null) {
+				throw new RecordNotFoundException("barcode record is not found");
 
+			} else {
+
+				barcodeDetails.add(barOpt);
+				List<ProductItemVo> barcodeList = productItemMapper.EntityToVo(barcodeDetails);
+				return barcodeList;
+
+			}
 		} else {
 			List<ProductItem> barcodeDetails1 = productItemRepo.findAll();
 			List<ProductItemVo> barcodeList = productItemMapper.EntityToVo(barcodeDetails1);
@@ -282,7 +328,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 	public String updateInventory(ProductItemVo vo) {
 
 		ProductItem barOpt = productItemRepo.findByBarcodeId(vo.getBarcodeId());
-		if (barOpt==null) {
+		if (barOpt == null) {
 			throw new RecordNotFoundException("barcode id is not found");
 		}
 		Optional<ProductItem> prodOpt = productItemRepo.findByProductItemId(barOpt.getProductItemId());
@@ -293,7 +339,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		ProductInventory prodInventory = new ProductInventory();
 		prodInventory.setProductInventoryId(item.getProductInventoryId());
 		prodInventory.setStockvalue(vo.getStockValue());
-		prodInventory.setCreationDate(item.getCreationDate());
+		prodInventory.setCreationDate(LocalDate.now());
 		prodInventory.setLastModified(LocalDate.now());
 		prodInventory.setProductItem(item.getProductItem());
 		productInventoryRepo.save(prodInventory);
@@ -307,7 +353,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 			throw new InvalidDataException("productItem record not found");
 		}
 		ProductItem dto = productItemRepo.findByBarcodeId(vo.getBarcodeId());
-		if (dto==null) {
+		if (dto == null) {
 			log.error("Record Not Found");
 			throw new RecordNotFoundException("barcode record not found");
 		}
@@ -376,7 +422,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 	public String deleteBarcode(String barcodeId) {
 		log.debug(" debugging deleteBarcode:" + barcodeId);
 		ProductItem barOpt = productItemRepo.findByBarcodeId(barcodeId);
-		if (barOpt==null) {
+		if (barOpt == null) {
 			throw new RecordNotFoundException("barcode details not found with id: " + barcodeId);
 		}
 		Optional<ProductItem> prodOpt = productItemRepo.findByProductItemId(barOpt.getProductItemId());
@@ -408,7 +454,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 			}
 		}
 		ProductItem barOpt = productItemRepo.findByBarcodeId(barcodeId);
-		if (barOpt==null) {
+		if (barOpt == null) {
 			throw new RecordNotFoundException("barcode id is not found");
 		}
 		Optional<ProductItem> prodOpt = productItemRepo.findByProductItemId(barOpt.getProductItemId());
@@ -418,7 +464,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		}
 		ProductInventory prodInventory = new ProductInventory();
 		prodInventory.setProductInventoryId(item.getProductInventoryId());
-		prodInventory.setStockvalue(Math.abs(barOpt.getProductInventory().getStockvalue()-qty));
+		prodInventory.setStockvalue(Math.abs(barOpt.getProductInventory().getStockvalue() - qty));
 		prodInventory.setLastModified(LocalDate.now());
 		prodInventory.setProductItem(item.getProductItem());
 		productInventoryRepo.save(prodInventory);

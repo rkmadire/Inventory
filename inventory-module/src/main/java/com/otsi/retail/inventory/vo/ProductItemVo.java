@@ -57,5 +57,7 @@ public class ProductItemVo {
 	private int stockValue;
 	
 	private Boolean isBarcode;
+	
+	private float value;
 
 }

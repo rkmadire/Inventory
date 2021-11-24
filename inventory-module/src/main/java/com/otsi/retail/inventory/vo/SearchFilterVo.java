@@ -19,5 +19,7 @@ public class SearchFilterVo {
 	private float itemMrpGreaterThan;
 	
 	private Long storeId;
+	
+	private String barcode;
 
 }

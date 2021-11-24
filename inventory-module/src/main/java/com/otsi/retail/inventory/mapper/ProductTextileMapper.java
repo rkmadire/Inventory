@@ -13,7 +13,7 @@ import com.otsi.retail.inventory.vo.ProductTextileVo;
 
 @Component
 public class ProductTextileMapper {
-	
+
 	/*
 	 * EntityToVo converts dto to vo
 	 * 
@@ -22,8 +22,7 @@ public class ProductTextileMapper {
 	public ProductTextileVo EntityToVo(ProductTextile dto) {
 		ProductTextileVo vo = new ProductTextileVo();
 		BeanUtils.copyProperties(dto, vo);
-		vo.setUom("units");
-		vo.setHsnMasterId(0);
+		
 		vo.setCreateForLocation(0);
 		vo.setValueAdditionCp(0);
 		vo.setQty(dto.getQty());
@@ -34,7 +33,7 @@ public class ProductTextileMapper {
 		return vo;
 
 	}
-	
+
 	/*
 	 * to convert list dto's to vo's
 	 */
@@ -53,7 +52,6 @@ public class ProductTextileMapper {
 		ProductTextile dto = new ProductTextile();
 		BeanUtils.copyProperties(vo, dto);
 		dto.setUom("units");
-		dto.setHsnMasterId(0);
 		dto.setCreateForLocation(0);
 		dto.setValueAdditionCp(0);
 		dto.setQty(1);
@@ -68,7 +66,7 @@ public class ProductTextileMapper {
 		return dto;
 
 	}
-	
+
 	/*
 	 * to convert list vo's to dto's
 	 */
@@ -77,6 +75,5 @@ public class ProductTextileMapper {
 		return vos.stream().map(vo -> VoToEntity(vo)).collect(Collectors.toList());
 
 	}
-	
 
 }
