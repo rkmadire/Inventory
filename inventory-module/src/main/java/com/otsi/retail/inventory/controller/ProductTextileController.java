@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
+import com.otsi.retail.inventory.rabbitmq.MQConfig;
 import com.otsi.retail.inventory.service.ProductTextileService;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
+import com.otsi.retail.inventory.vo.ProductItemVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
 
@@ -76,8 +79,8 @@ public class ProductTextileController {
 		List<BarcodeTextileVo> allBarcodes = productTextileService.getAllBarcodes(vo);
 		return new GateWayResponse<>("fetching all barcode textile details sucessfully", allBarcodes);
 	}
-
-	@PostMapping("/fromNewsaleForTextile")
+	
+	@RabbitListener(queues = MQConfig.QUEUE)
 	public GateWayResponse<?> fromNewsaleForTextile(@RequestBody List<String> barCode) {
 		List<BarcodeTextileVo> barcodeDetails = productTextileService.getAllBarcodes(barCode);
 		return new GateWayResponse<>("fetching barcode details fromk newsale", barcodeDetails);

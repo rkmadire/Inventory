@@ -25,11 +25,11 @@ public class BarcodeTextileMapper {
 		BarcodeTextileVo vo = new BarcodeTextileVo();
 		vo.setBarcodeTextileId(dto.getBarcodeTextileId());
 		vo.setBarcode(dto.getBarcode());
-		vo.setAttr_1(dto.getAttr_1());
-		vo.setAttr_2(dto.getAttr_2());
-		vo.setAttr_3(dto.getAttr_3());
-		vo.setAttr_4(dto.getAttr_4());
-		vo.setAttr_5(dto.getAttr_5());
+		vo.setDivision(dto.getDivision());
+		vo.setSection(dto.getSection());
+		vo.setSubSection(dto.getSubSection());
+		vo.setCategory(dto.getCategory());
+		vo.setBatchNo(dto.getBatchNo());
 		vo.setAttr_6(dto.getAttr_6());
 		vo.setAttr_7(dto.getAttr_7());
 		vo.setAttr_8(dto.getAttr_8());
@@ -70,11 +70,11 @@ public class BarcodeTextileMapper {
 		BarcodeTextile dto = new BarcodeTextile();
 		dto.setBarcodeTextileId(vo.getBarcodeTextileId());
 		dto.setBarcode(vo.getBarcode());
-		dto.setAttr_1(vo.getAttr_1());
-		dto.setAttr_2(vo.getAttr_2());
-		dto.setAttr_3(vo.getAttr_3());
-		dto.setAttr_4(vo.getAttr_4());
-		dto.setAttr_5(vo.getAttr_5());
+		dto.setDivision(vo.getDivision());
+		dto.setSection(vo.getSection());
+		dto.setSubSection(vo.getSubSection());
+		dto.setCategory(vo.getCategory());
+		dto.setBatchNo(vo.getBatchNo());
 		dto.setAttr_6(vo.getAttr_6());
 		dto.setAttr_7(vo.getAttr_7());
 		dto.setAttr_8(vo.getAttr_8());
@@ -104,15 +104,11 @@ public class BarcodeTextileMapper {
 		return vos.stream().map(vo -> VoToEntity(vo)).collect(Collectors.toList());
 
 	}
-	
-	public BarcodeTextileVo EntityToVoUpdate(BarcodeTextile dto,BarcodeTextileVo vo) {
-		
+
+	public BarcodeTextileVo EntityToVoUpdate(BarcodeTextile dto, BarcodeTextileVo vo) {
+
 		vo.setBarcode(dto.getBarcode());
-		vo.setAttr_1(dto.getAttr_1());
-		vo.setAttr_2(dto.getAttr_2());
-		vo.setAttr_3(dto.getAttr_3());
-		vo.setAttr_4(dto.getAttr_4());
-		vo.setAttr_5(dto.getAttr_5());
+		vo.setBatchNo(dto.getBatchNo());
 		vo.setAttr_6(dto.getAttr_6());
 		vo.setAttr_7(dto.getAttr_7());
 		vo.setAttr_8(dto.getAttr_8());

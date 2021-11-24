@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
+import com.otsi.retail.inventory.rabbitmq.MQConfig;
 import com.otsi.retail.inventory.service.ProductItemService;
 import com.otsi.retail.inventory.vo.ProductItemVo;
 
@@ -96,8 +98,8 @@ public class ProductItemController {
 		return new GateWayResponse<>("fetching all barcode details sucessfully", allBarcodes);
 	}
 
-	@PostMapping("/fromNewsaleForRetail")
-	public GateWayResponse<?> fromNewsaleForRetail(@RequestBody Map<String,Integer> map){
+	@RabbitListener(queues = MQConfig.QUEUE)
+	public GateWayResponse<?> fromNewsaleForRetail(@RequestBody Map<String, Integer> map) {
 		String allBars = productItemService.fromNewSale(map);
 
 		return new GateWayResponse<>("fetching all barcode details sucessfully", allBars);

@@ -24,11 +24,11 @@ public class BarcodeTextile {
 	@GeneratedValue
 	private Long barcodeTextileId;
 	private String barcode;
-	private String attr_1;
-	private String attr_2;
-	private String attr_3;
-	private String attr_4;
-	private String attr_5;
+	private String division;
+	private String section;
+	private String subSection;
+	private String category;
+	private String batchNo;
 	private String attr_6;
 	private String attr_7;
 	private String attr_8;

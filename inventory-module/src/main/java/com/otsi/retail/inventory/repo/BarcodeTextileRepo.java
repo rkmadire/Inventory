@@ -38,4 +38,6 @@ public interface BarcodeTextileRepo extends JpaRepository<BarcodeTextile, Long> 
 
 	List<BarcodeTextile> findByProductTextileStoreId(Long storeId);
 
+	boolean existsByProductTextileEmpId(String empId);
+
 }

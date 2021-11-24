@@ -18,6 +18,11 @@ import com.otsi.retail.inventory.vo.ProductItemVo;
 @Component
 public class ProductItemMapper {
 
+	/*
+	 * EntityToVo converts dto to vo
+	 * 
+	 */
+
 	public ProductItemVo EntityToVo(ProductItem dto) {
 		ProductItemVo vo = new ProductItemVo();
 		vo.setProductItemId(dto.getProductItemId());
@@ -34,8 +39,9 @@ public class ProductItemMapper {
 		vo.setName(dto.getName());
 		vo.setEmpId(dto.getEmpId());
 		vo.setCostPrice(dto.getCostPrice());
-		float listPrice = dto.getProductInventory().getStockvalue() * dto.getCostPrice();
-		vo.setListPrice(listPrice);
+		float stockIncrementValue= dto.getProductInventory().getStockvalue() * dto.getCostPrice();
+		vo.setValue(stockIncrementValue);
+		vo.setListPrice(vo.getListPrice());
 		vo.setUom(dto.getUom());
 		vo.setDomainDataId(dto.getDomainDataId());
 		vo.setStoreId(dto.getStoreId());
@@ -88,13 +94,13 @@ public class ProductItemMapper {
 	 */
 
 	public ProductItem VoToEntity(ProductItemVo vo) {
-
+       
 		ProductItem dto = new ProductItem();
 		Random ran = new Random();
-
+		
 		dto.setProductItemId(vo.getProductItemId());
 		dto.setBarcodeId(vo.getBarcodeId());
-
+		
 		dto.setName(vo.getName());
 		dto.setCostPrice(vo.getCostPrice());
 		dto.setCreationDate(LocalDate.now());
@@ -109,7 +115,7 @@ public class ProductItemMapper {
 		dto.setDiscontinued(vo.getDiscontinued());
 		dto.setTyecode(vo.getTyecode());
 		dto.setHsnCode(vo.getHsnCode());
-
+		
 		dto.setUom(vo.getUom());
 		dto.setDomainDataId(vo.getDomainDataId());
 
@@ -125,9 +131,10 @@ public class ProductItemMapper {
 		return vos.stream().map(vo -> VoToEntity(vo)).collect(Collectors.toList());
 
 	}
-
-	public ProductItem VoToEntityUpdate(ProductItemVo vo, ProductItem dto) {
-
+	
+	public ProductItem VoToEntityUpdate(ProductItemVo vo,ProductItem dto) {
+	       
+		
 		dto.setCostPrice(vo.getCostPrice());
 		dto.setCreationDate(LocalDate.now());
 		dto.setLastModifiedDate(LocalDate.now());
@@ -141,12 +148,13 @@ public class ProductItemMapper {
 		dto.setDiscontinued(vo.getDiscontinued());
 		dto.setTyecode(vo.getTyecode());
 		dto.setHsnCode(vo.getHsnCode());
-
+		
 		dto.setUom(vo.getUom());
 		dto.setDomainDataId(vo.getDomainDataId());
 
 		dto.setStoreId(vo.getStoreId());
 		return dto;
 	}
+
 
 }

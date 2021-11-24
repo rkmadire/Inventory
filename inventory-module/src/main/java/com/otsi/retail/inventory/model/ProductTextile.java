@@ -28,7 +28,7 @@ public class ProductTextile {
 	private Long productTextileId;
 
 	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
-	@JoinColumn(name = "barcodeTextileId", unique = true)
+	@JoinColumn(name = "barcodeTextileId",unique = true)
 	@JsonManagedReference
 	private BarcodeTextile barcodeTextile;
 	private String parentBarcode;
@@ -42,7 +42,7 @@ public class ProductTextile {
 	private LocalDate createdAt;
 	private LocalDate updatedAt;
 	private String uom;
-	private int hsnMasterId;
+	private Long hsnMasterId;
 	private String originalBarcode;
 	private LocalDate originalBarcodeCreatedAt;
 	private int createForLocation;
