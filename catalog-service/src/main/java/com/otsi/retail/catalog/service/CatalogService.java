@@ -29,4 +29,8 @@ public interface CatalogService {
 
 	public List<CatalogVo> getMainCategories();
 
+	public List<CatalogVo> getAllCategories();
+	
+	
+
 }

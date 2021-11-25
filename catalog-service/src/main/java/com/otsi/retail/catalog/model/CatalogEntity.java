@@ -40,7 +40,7 @@ public class CatalogEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String name;
-
+    private String catergory;
 	private Categories description;
 	private int status;
 	@JsonIgnore

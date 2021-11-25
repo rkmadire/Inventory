@@ -33,6 +33,7 @@ public class CatalogMapper {
 		// entity.setParent(vo.getCUID());
 		entity.setCreateDate(new Date());
 		entity.setLastModified(new Date());
+		entity.setCatergory(vo.getCategory());
 
 		return entity;
 
@@ -46,6 +47,7 @@ public class CatalogMapper {
 			CatalogVo vo = new CatalogVo();
 			vo.setId(x.getId());
 			vo.setName(x.getName());
+			vo.setCategory(x.getCatergory());
 			vo.setDescription(x.getDescription());
 			vo.setStatus(x.getStatus());
 			vo.setCUID(x.getParent().getId());
