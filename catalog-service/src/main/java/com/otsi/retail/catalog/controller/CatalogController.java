@@ -80,5 +80,14 @@ public class CatalogController {
 		return new GateWayResponse<>("Catalog deleted successfully");
 
 	}
+	
+	@GetMapping("/ListOfAllCategories")
+	public GateWayResponse<?> getListOfCategories() {
+
+		List<CatalogVo> vo = catalogService.getAllCategories();
+		LOGGER.info("Received request to getAllListOfCategories:" + vo);
+		return new GateWayResponse<>(vo);
+
+	}
 
 }

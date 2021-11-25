@@ -124,4 +124,17 @@ public class CatalogServiceImpl implements CatalogService {
 		return lvo;
 	}
 
+	@Override
+	public List<CatalogVo> getAllCategories() {
+		
+		List<CatalogEntity> listOfCategories = catalogRepo.findAll();
+		if(listOfCategories.isEmpty()) {
+			throw new RecordNotFoundException("record not exists");
+		}
+		
+		List<CatalogVo> catalogList = catalogMapper.convertlEntityToVo(listOfCategories);
+		
+		return catalogList;
+	}
+
 }

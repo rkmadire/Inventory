@@ -22,6 +22,7 @@ public class CatalogVo {
 
 	private Long id;
 	private String name;
+	private String category;
 	private Categories description;
 	private int status;
 	private Long CUID = 0L;
