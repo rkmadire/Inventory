@@ -1,4 +1,4 @@
-name: CI - CD @ Barcode-module
+name: CI - CD @ barcode-module
 on:
   push:
     branches:
@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env: 
-      MODULE_NAME: Barcode-module
+      MODULE_NAME: barcode-module
     permissions:
       contents: read
       packages: write
@@ -54,7 +54,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     env: 
-      MODULE_NAME: Barcode-module
+      MODULE_NAME: barcode-module
     permissions:
       contents: read
       packages: write

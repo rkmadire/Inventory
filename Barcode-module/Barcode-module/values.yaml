@@ -1,7 +1,7 @@
-# Default values for Barcode-module.
+# Default values for barcode-module.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-name: Barcode-module
+name: barcode-module
 
 env:
   postgres_user: postgres
@@ -13,7 +13,7 @@ replicaCount: 1
 namespace: 
   name: default
 image:
-  repository: 604430719928.dkr.ecr.ap-south-1.amazonaws.com/Barcode-module
+  repository: 604430719928.dkr.ecr.ap-south-1.amazonaws.com/barcode-module
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""

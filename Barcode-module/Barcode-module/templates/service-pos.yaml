@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "Barcode-module.fullname" . }}-pos
+  name: {{ include "barcode-module.fullname" . }}-pos
   labels:
-    {{- include "Barcode-module.labels" . | nindent 4 }}
+    {{- include "barcode-module.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.postgres.type }}
   ports:
     - port: {{ .Values.service.postgres.port }}
   selector:
-    {{- include "Barcode-module.selectorLabels" . | nindent 4 }}
+    {{- include "barcode-module.selectorLabels" . | nindent 4 }}

@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "Barcode-module.fullname" . }}
+  name: {{ include "barcode-module.fullname" . }}
   namespace: {{ .Values.namespace.name }}
   labels:
-    {{- include "Barcode-module.labels" . | nindent 4 }}
+    {{- include "barcode-module.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "Barcode-module.selectorLabels" . | nindent 6 }}
+      {{- include "barcode-module.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,9 +19,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "Barcode-module.selectorLabels" . | nindent 8 }}
+        {{- include "barcode-module.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "Barcode-module.serviceAccountName" . }}
+      serviceAccountName: {{ include "barcode-module.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -36,7 +36,7 @@ spec:
           - name: SPRING_DATASOURCE_PASSWORD
             value: {{ .Values.env.postgres_password }}
           - name: SPRING_DATASOURCE_URL
-            value: jdbc:postgresql://{{ include "Barcode-module.fullname" . }}-pos:5432/{{ .Values.env.postgres_db }}
+            value: jdbc:postgresql://{{ include "barcode-module.fullname" . }}-pos:5432/{{ .Values.env.postgres_db }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -50,7 +50,7 @@ spec:
           #    path: /
           #    port: http
           #volumeMounts:
-          #  - name: Barcode-module-data
+          #  - name: barcode-module-data
           #    mountPath: /app/database
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -67,10 +67,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       #volumes:
-      #  - name: Barcode-module-data
+      #  - name: barcode-module-data
       #  {{- if .Values.persistence.enabled }}
       #    persistentVolumeClaim:
-      #      claimName: {{ include "Barcode-module.fullname" . }}
+      #      claimName: {{ include "barcode-module.fullname" . }}
       #  {{- else }}
       #    emptyDir: {}
       #  {{- end -}}

@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "Barcode-module.name" -}}
+{{- define "barcode-module.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "Barcode-module.fullname" -}}
+{{- define "barcode-module.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "Barcode-module.chart" -}}
+{{- define "barcode-module.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "Barcode-module.labels" -}}
-helm.sh/chart: {{ include "Barcode-module.chart" . }}
-{{ include "Barcode-module.selectorLabels" . }}
+{{- define "barcode-module.labels" -}}
+helm.sh/chart: {{ include "barcode-module.chart" . }}
+{{ include "barcode-module.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "Barcode-module.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "Barcode-module.name" . }}
+{{- define "barcode-module.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "barcode-module.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "Barcode-module.serviceAccountName" -}}
+{{- define "barcode-module.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "Barcode-module.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "barcode-module.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

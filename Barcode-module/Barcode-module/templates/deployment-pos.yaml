@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "Barcode-module.fullname" . }}-pos
+  name: {{ include "barcode-module.fullname" . }}-pos
   namespace: {{ .Values.namespace.name }}
   labels:
-    {{- include "Barcode-module.labels" . | nindent 4 }}
+    {{- include "barcode-module.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "Barcode-module.selectorLabels" . | nindent 6 }}
+      {{- include "barcode-module.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,9 +19,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "Barcode-module.selectorLabels" . | nindent 8 }}
+        {{- include "barcode-module.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "Barcode-module.serviceAccountName" . }}
+      serviceAccountName: {{ include "barcode-module.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -52,7 +52,7 @@ spec:
           #    path: /
           #    port: http
           volumeMounts:
-            - name: Barcode-module-data
+            - name: barcode-module-data
               mountPath: /var/lib/postgresql/data
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -69,10 +69,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - name: Barcode-module-data
+        - name: barcode-module-data
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ include "Barcode-module.fullname" . }}-pos
+            claimName: {{ include "barcode-module.fullname" . }}-pos
         {{- else }}
           emptyDir: {}
         {{- end -}}
