@@ -46,9 +46,13 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	@Override
 	public String addBarcodeTextile(BarcodeTextileVo textileVo) {
 		log.debug("debugging saveProductTextile:" + textileVo);
-		if (barcodeTextileRepo.existsByProductTextileEmpId(textileVo.getProductTextile().getEmpId())) {
-			throw new DuplicateRecordException("product name is already exists:" + textileVo.getProductTextile().getEmpId());
-		}		
+		/*
+		 * if
+		 * (barcodeTextileRepo.existsByProductTextileEmpId(textileVo.getProductTextile()
+		 * .getEmpId())) { throw new
+		 * DuplicateRecordException("product name is already exists:" +
+		 * textileVo.getProductTextile().getEmpId()); }
+		 */
 		Random ran = new Random();
 		BarcodeTextile barTextile = new BarcodeTextile();
 		barTextile.setBarcodeTextileId(textileVo.getBarcodeTextileId());
@@ -59,13 +63,15 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		barTextile.setSection(textileVo.getSection());
 		barTextile.setSubSection(textileVo.getSubSection());
 		barTextile.setCategory(textileVo.getCategory());
+		barTextile.setBatchNo(textileVo.getBatchNo());
+		barTextile.setColour(textileVo.getColour());
 		BarcodeTextile barTextileSave = barcodeTextileRepo.save(barTextile);
 		ProductTextile textile = new ProductTextile();
 		textile.setProductTextileId(textileVo.getProductTextile().getProductTextileId());
 		textile.setBarcodeTextile(barTextileSave);
 		textile.setCostPrice(textileVo.getProductTextile().getCostPrice());
 		textile.setQty(1);
-		textile.setUom("units");
+		textile.setUom(textileVo.getProductTextile().getUom());
 		textile.setHsnMasterId(textileVo.getProductTextile().getHsnMasterId());
 		textile.setEmpId(textileVo.getProductTextile().getEmpId());
 		textile.setItemMrp(textileVo.getProductTextile().getItemMrp());
@@ -126,6 +132,12 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		BarcodeTextile barTextile = dto.get();
 		barTextile.setCreationDate(LocalDate.now());
 		barTextile.setLastModified(LocalDate.now());
+		barTextile.setBatchNo(vo.getBatchNo());
+		barTextile.setDivision(vo.getDivision());
+		barTextile.setSection(vo.getSection());
+		barTextile.setSubSection(vo.getSubSection());
+		barTextile.setColour(vo.getColour());
+		barTextile.setCategory(vo.getCategory());
 		BarcodeTextile barTextileSave = barcodeTextileRepo.save(barTextile);
 		ProductTextile textile = new ProductTextile();
 		textile.setProductTextileId(vo.getProductTextile().getProductTextileId());
@@ -139,6 +151,8 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		textile.setItemMrp(vo.getProductTextile().getItemMrp());
 		textile.setValueAdditionCp(0);
 		textile.setUpdatedAt(LocalDate.now());
+
+		textile.setEmpId(vo.getProductTextile().getEmpId());
 		textile.setStoreId(vo.getProductTextile().getStoreId());
 		textile.setOriginalBarcodeCreatedAt(LocalDate.now());
 		ProductTextile textileSave = productTextileRepo.save(textile);
@@ -245,14 +259,14 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		}
 		/*
 		 * values with empty string(reports)
+		 * 
+		 * else if ((vo.getFromDate() == null) && (vo.getToDate() == null) &&
+		 * (vo.getBarcodeTextileId() == null) && (vo.getStoreId() == null) &&
+		 * (vo.getEmpId() == "") && (vo.getItemMrpLessThan() == 0) &&
+		 * (vo.getItemMrpGreaterThan() == 0)) { List<BarcodeTextile> prodItemDetails1 =
+		 * barcodeTextileRepo.findAll(); List<BarcodeTextileVo> barcodeList =
+		 * barcodeTextileMapper.EntityToVo(prodItemDetails1); return barcodeList; }
 		 */
-		else if ((vo.getFromDate() == null) && (vo.getToDate() == null) && (vo.getBarcodeTextileId() == null)
-				&& (vo.getStoreId() == null) && (vo.getEmpId() == "") && (vo.getItemMrpLessThan() == 0)
-				&& (vo.getItemMrpGreaterThan() == 0)) {
-			List<BarcodeTextile> prodItemDetails1 = barcodeTextileRepo.findAll();
-			List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(prodItemDetails1);
-			return barcodeList;
-		}
 		/*
 		 * using empId
 		 */

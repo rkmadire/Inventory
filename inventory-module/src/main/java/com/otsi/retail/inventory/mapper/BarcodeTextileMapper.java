@@ -30,7 +30,7 @@ public class BarcodeTextileMapper {
 		vo.setSubSection(dto.getSubSection());
 		vo.setCategory(dto.getCategory());
 		vo.setBatchNo(dto.getBatchNo());
-		vo.setAttr_6(dto.getAttr_6());
+		vo.setColour(dto.getColour());
 		vo.setAttr_7(dto.getAttr_7());
 		vo.setAttr_8(dto.getAttr_8());
 		vo.setAttr_9(dto.getAttr_9());
@@ -75,7 +75,7 @@ public class BarcodeTextileMapper {
 		dto.setSubSection(vo.getSubSection());
 		dto.setCategory(vo.getCategory());
 		dto.setBatchNo(vo.getBatchNo());
-		dto.setAttr_6(vo.getAttr_6());
+		dto.setColour(vo.getColour());
 		dto.setAttr_7(vo.getAttr_7());
 		dto.setAttr_8(vo.getAttr_8());
 		dto.setAttr_9(vo.getAttr_9());
@@ -109,7 +109,7 @@ public class BarcodeTextileMapper {
 
 		vo.setBarcode(dto.getBarcode());
 		vo.setBatchNo(dto.getBatchNo());
-		vo.setAttr_6(dto.getAttr_6());
+		vo.setColour(dto.getColour());
 		vo.setAttr_7(dto.getAttr_7());
 		vo.setAttr_8(dto.getAttr_8());
 		vo.setAttr_9(dto.getAttr_9());

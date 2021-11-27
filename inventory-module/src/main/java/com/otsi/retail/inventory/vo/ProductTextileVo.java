@@ -31,5 +31,6 @@ public class ProductTextileVo {
 	private String attr_23;
 	private String attr_24;
 	private String attr_25;
+	private float value;
 
 }

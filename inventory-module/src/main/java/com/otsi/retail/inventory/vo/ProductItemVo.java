@@ -46,7 +46,7 @@ public class ProductItemVo {
 
 	private Long domainDataId;
 
-	private String color;
+	private String colour;
 
 	private int length;
 
@@ -57,6 +57,8 @@ public class ProductItemVo {
 	private int stockValue;
 	
 	private Boolean isBarcode;
+	
+	private String batchNo;
 	
 	private float value;
 

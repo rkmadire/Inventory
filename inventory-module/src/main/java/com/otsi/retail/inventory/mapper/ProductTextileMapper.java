@@ -26,8 +26,11 @@ public class ProductTextileMapper {
 		vo.setCreateForLocation(0);
 		vo.setValueAdditionCp(0);
 		vo.setQty(dto.getQty());
+		vo.setEmpId(dto.getEmpId());
 		vo.setCreatedAt(dto.getCreatedAt());
 		vo.setUpdatedAt(dto.getUpdatedAt());
+		float stockIncrementValue= dto.getCostPrice() * dto.getQty();
+		vo.setValue(stockIncrementValue);
 		vo.setOriginalBarcodeCreatedAt(dto.getOriginalBarcodeCreatedAt());
 		vo.setStoreId(dto.getStoreId());
 		return vo;
@@ -51,7 +54,7 @@ public class ProductTextileMapper {
 	public ProductTextile VoToEntity(ProductTextileVo vo) {
 		ProductTextile dto = new ProductTextile();
 		BeanUtils.copyProperties(vo, dto);
-		dto.setUom("units");
+		dto.setUom(vo.getUom());
 		dto.setCreateForLocation(0);
 		dto.setValueAdditionCp(0);
 		dto.setQty(1);
