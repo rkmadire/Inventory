@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.otsi.retail.catalog.error.ErrorResponse;
 
 
+
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -21,6 +22,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(value = DataNotFoundException.class)
 	public ResponseEntity<Object> handleDataNotFoundException(DataNotFoundException dataNotException) {
 		ErrorResponse<?> error = new ErrorResponse<>(401, "Data not found");
+		return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(value = DuplicateRecordException.class)
+	public ResponseEntity<Object> handleDuplicateRecordException(DuplicateRecordException duplicateRecordException) {
+		ErrorResponse<?> error = new ErrorResponse<>(402, "Duplicate record found");
 		return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
 	}
 

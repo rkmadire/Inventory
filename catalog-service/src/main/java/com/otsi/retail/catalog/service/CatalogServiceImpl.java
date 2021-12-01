@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.otsi.retail.catalog.common.Categories;
 import com.otsi.retail.catalog.exceptions.DataNotFoundException;
+import com.otsi.retail.catalog.exceptions.DuplicateRecordException;
 import com.otsi.retail.catalog.exceptions.RecordNotFoundException;
 import com.otsi.retail.catalog.mapper.CatalogMapper;
 import com.otsi.retail.catalog.model.CatalogEntity;
@@ -35,32 +36,31 @@ public class CatalogServiceImpl implements CatalogService {
 
 	@Override
 	public CatalogVo saveCatalogDetails(CatalogVo catalog) throws Exception {
+		CatalogEntity entity = new CatalogEntity();
 
-		CatalogEntity entity = catalogMapper.convertVoToEntity(catalog);
+		entity = catalogMapper.convertVoToEntity(catalog);
 		if (entity == null) {
 			throw new DataNotFoundException("Data not found");
 		}
 
-		if (entity.getDescription() == Categories.Main_Category) {
-			entity.setCUID(null);
+		if (catalog.getCUID() == 0) {
+			entity.setParent(null);
+		} else {
+			CatalogEntity centity = this.catalogRepo.getById(catalog.getCUID());
+			entity.setParent(centity);
 		}
-		/*
-		 * else if (entity.getDescription() == Categories.Sub_Category) {
-		 * //entity.setDescription(Categories.Main_Category);
-		 * //entity.setCUID(Categories.Main_Category.getId());
-		 * //entity.setName(Categories.Main_Category.getName());
-		 * System.out.println("Sub-Category Details :- " + entity); } else if
-		 * (entity.getDescription() == Categories.Leaf_Category) {
-		 * entity.setDescription(Categories.Sub_Category);
-		 * entity.setCUID(Categories.Sub_Category.getId());
-		 * //entity.setName(Categories.Sub_Category.getName());
-		 * System.out.println("Leaf-Category Details :- " + entity); }
-		 */
+
 		catalogRepo.save(entity);
 
 		CatalogVo vo = catalogMapper.convertEntityToVo(entity);
+		if (entity.getParent() != null) {
+			vo.setCUID(entity.getParent().getId());
+		} else {
+			vo.setCUID(null);
 
+		}
 		return vo;
+
 	}
 
 	@Override
@@ -79,47 +79,62 @@ public class CatalogServiceImpl implements CatalogService {
 	}
 
 	@Override
-	public List<CatalogVo> getAllCatalogs() {
+	public void deleteCategoryById(Long id) throws Exception {
 
-		List<CatalogEntity> entity = catalogRepo.findAll();
-		if (entity.isEmpty()) {
-			throw new DataNotFoundException("Data not exists");
-		}
-		List<CatalogVo> vo = catalogMapper.convertEntityToVo(entity);
-		return vo;
+		if (catalogRepo.findById(id).isPresent()) {
+			if (catalogRepo.findByParentId(id).isEmpty()) {
+				catalogRepo.deleteById(id);
+			} else {
+				throw new DuplicateRecordException(
+						"Failed to delete,  Please delete child categories associated with this category");
+			}
+
+		} else
+
+			throw new RecordNotFoundException("record Not found");
 	}
 
 	@Override
-	public CatalogVo updateCatalog(Long id, CatalogVo vo) throws Exception {
-
-		Optional<CatalogEntity> catalog = catalogRepo.findById(vo.getId());
-
-		if (!catalog.isPresent()) {
-			throw new RecordNotFoundException("Given catalog details are not exists");
-		}
-		if (catalog.get().getDescription() == Categories.Main_Category) {
-			vo.setCUID(null);
-		}
-
-		CatalogEntity catalogSave = catalogMapper.convertVoToEntity(vo);
-		catalogRepo.save(catalogSave);
-
-		CatalogVo catalogSave1 = catalogMapper.convertEntityToVo(catalogSave);
-
-		return catalogSave1;
-	}
-
-	@Override
-	public void deleteCatalogById(Long id) throws Exception {
+	public List<CatalogVo> getCategories(Long id) {
 
 		Optional<CatalogEntity> entity = catalogRepo.findById(id);
-		if (entity.isPresent()) {
-			catalogRepo.deleteById(id);
-
-		} else {
-			throw new RecordNotFoundException("Given catalog details are not exists");
+		if (entity.isEmpty()) {
+			throw new RecordNotFoundException("record not exists");
 		}
 
+		List<CatalogEntity> pentity = catalogRepo.findByParentId(entity.get().getId());
+		if (pentity.isEmpty()) {
+			throw new RecordNotFoundException("record not exists");
+		}
+		
+		List<CatalogVo> lvo = catalogMapper.convertlistEntityToVo(pentity);
+		
+		return lvo;
+	}
+
+	@Override
+	public List<CatalogVo> getMainCategories() {
+		
+		List<CatalogEntity> ent = catalogRepo.findByDescription(Categories.DIVISION);
+		if (ent.isEmpty()) {
+			throw new RecordNotFoundException("record not exists");
+		}
+		
+		List<CatalogVo> lvo = catalogMapper.convertlEntityToVo(ent);
+		return lvo;
+	}
+
+	@Override
+	public List<CatalogVo> getAllCategories() {
+		
+		List<CatalogEntity> listOfCategories = catalogRepo.findAll();
+		if(listOfCategories.isEmpty()) {
+			throw new RecordNotFoundException("record not exists");
+		}
+		
+		List<CatalogVo> catalogList = catalogMapper.convertlEntityToVo(listOfCategories);
+		
+		return catalogList;
 	}
 
 }

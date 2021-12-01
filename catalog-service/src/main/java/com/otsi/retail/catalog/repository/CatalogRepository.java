@@ -20,11 +20,17 @@ import com.otsi.retail.catalog.vo.CatalogVo;
 @Repository
 public interface CatalogRepository extends JpaRepository<CatalogEntity, Long> {
 
-	Optional<CatalogEntity> findById(Long id);
+	Optional<CatalogEntity> findById(int i);
 
 	Optional<CatalogEntity> findByName(String name);
 
 	CatalogVo save(CatalogVo update);
+
+	CatalogEntity getById(int cuid);
+
+	List<CatalogEntity> findByParentId(Long id);
+
+	List<CatalogEntity> findByDescription(Categories mainCategory);
 
 	//CatalogEntity findByCategory(Categories catgeory);
 }

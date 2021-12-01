@@ -19,10 +19,18 @@ public interface CatalogService {
 
 	public CatalogVo getCatalogByName(String name) throws Exception;
 
-	public List<CatalogVo> getAllCatalogs();
+	//public List<CatalogVo> getAllCatalogs();
 
-	public CatalogVo updateCatalog(Long id, CatalogVo vo) throws Exception;
+	//public CatalogVo updateCatalog(Long id, CatalogVo vo) throws Exception;
 
-	public void deleteCatalogById(Long id) throws Exception;
+	public void deleteCategoryById(Long id) throws Exception;
+
+	public List<CatalogVo> getCategories(Long id);
+
+	public List<CatalogVo> getMainCategories();
+
+	public List<CatalogVo> getAllCategories();
+	
+	
 
 }

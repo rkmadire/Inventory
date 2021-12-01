@@ -3,35 +3,39 @@
  */
 package com.otsi.retail.catalog.common;
 
+import lombok.Data;
+
 /**
  * @author Sudheer.Swamy
  *
  */
+
 public enum Categories {
 
-	Main_Category(1,"main_category"), Sub_Category(2,"sub_category"), Leaf_Category(3,"leaf_category");
+	None(0L,"none"),DIVISION(1L,"division"), SECTION(2L,"section"), SUB_SECTION(3L,"sub_section");
 	
-	private int id;
+	private Long id;
 	private String name;
+	
 	
 	/**
 	 * @param id
 	 * @param name
 	 */
-	private Categories(int id, String name) {
+	private Categories(Long id, String name) {
 		this.id = id;
 		this.name = name;
 	}
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	/**
@@ -46,6 +50,8 @@ public enum Categories {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	
 	
 	
 

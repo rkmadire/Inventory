@@ -6,10 +6,10 @@ spring:
     name: catalog-service
  datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5432/inventory-management
+    url: jdbc:postgresql://localhost:5432/inventory-module
     username: postgres
-    password: root
-    intialization-mode: always
+    password: 12345678
+    #intialization-mode: always
  jpa:
    hibernate:
     ddl-auto: update
