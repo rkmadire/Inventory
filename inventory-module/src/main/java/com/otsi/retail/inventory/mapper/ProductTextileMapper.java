@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 
 import com.otsi.retail.inventory.model.BarcodeTextile;
 import com.otsi.retail.inventory.model.ProductTextile;
+import com.otsi.retail.inventory.model.ProductTransaction;
+import com.otsi.retail.inventory.repo.ProductTransactionRepo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
+import com.otsi.retail.inventory.vo.ProductTransactionVo;
 
 @Component
 public class ProductTextileMapper {
@@ -22,15 +25,11 @@ public class ProductTextileMapper {
 	public ProductTextileVo EntityToVo(ProductTextile dto) {
 		ProductTextileVo vo = new ProductTextileVo();
 		BeanUtils.copyProperties(dto, vo);
-		
 		vo.setCreateForLocation(0);
 		vo.setValueAdditionCp(0);
-		vo.setQty(dto.getQty());
 		vo.setEmpId(dto.getEmpId());
 		vo.setCreatedAt(dto.getCreatedAt());
 		vo.setUpdatedAt(dto.getUpdatedAt());
-		float stockIncrementValue= dto.getCostPrice() * dto.getQty();
-		vo.setValue(stockIncrementValue);
 		vo.setOriginalBarcodeCreatedAt(dto.getOriginalBarcodeCreatedAt());
 		vo.setStoreId(dto.getStoreId());
 		return vo;
@@ -57,14 +56,9 @@ public class ProductTextileMapper {
 		dto.setUom(vo.getUom());
 		dto.setCreateForLocation(0);
 		dto.setValueAdditionCp(0);
-		dto.setQty(1);
 		dto.setCreatedAt(LocalDate.now());
 		dto.setUpdatedAt(LocalDate.now());
 		dto.setOriginalBarcodeCreatedAt(LocalDate.now());
-		/*
-		 * BarcodeTextile bt = new BarcodeTextile();
-		 * bt.setBarcodeTextileId(vo.getBarcodeTextileId()); dto.setBarcodeTextile(bt);
-		 */
 		dto.setStoreId(vo.getStoreId());
 		return dto;
 

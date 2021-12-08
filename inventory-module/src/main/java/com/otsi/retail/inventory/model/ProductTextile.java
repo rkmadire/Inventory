@@ -12,6 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.otsi.retail.inventory.commons.ProductStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,7 +37,6 @@ public class ProductTextile {
 	private float itemMrp;
 	private float itemRsp;
 	private String empId;
-	private int qty;
 	private Long storeId;
 	private String promoLabel;
 	private LocalDate createdAt;
@@ -49,7 +49,7 @@ public class ProductTextile {
 	private float valueAdditionCp;
 	private String itemCode;
 	private String itemSku;
-	private String attr_21;
+	private ProductStatus status;
 	private String attr_22;
 	private String attr_23;
 	private String attr_24;

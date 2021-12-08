@@ -21,5 +21,7 @@ public class SearchFilterVo {
 	private Long storeId;
 	
 	private String barcode;
+	
+	private boolean masterFlag;
 
 }
