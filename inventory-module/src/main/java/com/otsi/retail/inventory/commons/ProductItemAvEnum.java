@@ -2,7 +2,7 @@ package com.otsi.retail.inventory.commons;
 
 public enum ProductItemAvEnum {
 	
-	COLOR(0,"color"),LENGTH(1,"length"),PRODUCT_VALIDITY(2,"productValidity");
+	COLOR(0,"colour"),LENGTH(1,"length"),PRODUCT_VALIDITY(2,"productValidity");
 
 	private int id;
 	private String eName;

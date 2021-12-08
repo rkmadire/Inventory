@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MQConfig {
 
-	public static final String QUEUE = "Message_Queue";
+	public static final String QUEUE = "Message_Queue1";
 	public static final String EXCHANGE = "Topic_Exchange";
 	public static final String ROUTING_KEY = "Routing_key";
 

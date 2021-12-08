@@ -4,10 +4,13 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.otsi.retail.inventory.vo.AdjustmentsVo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
 import com.otsi.retail.inventory.vo.ProductItemVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
+import com.otsi.retail.inventory.vo.ProductTransactionVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
+import com.otsi.retail.inventory.vo.UpdateInventoryRequest;
 
 @Service
 public interface ProductTextileService {
@@ -26,6 +29,8 @@ public interface ProductTextileService {
 
 	String incrementQty(BarcodeTextileVo vo);
 
-	List<BarcodeTextileVo> getAllBarcodes(List<String> barCode);
+	String inventoryUpdateForTextile(List<UpdateInventoryRequest> request);
+
+	List<AdjustmentsVo> getAllAdjustments(AdjustmentsVo vo);
 
 }

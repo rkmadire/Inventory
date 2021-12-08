@@ -109,11 +109,11 @@ public class ProductItemServiceImpl implements ProductItemService {
 
 		ProductItemAv productItemAv = null;
 
-		if (vo.getColor() != null) {
+		if (vo.getColour() != null) {
 			productItemAv = new ProductItemAv();
 			productItemAv.setName(ProductItemAvEnum.COLOR.geteName());
 			productItemAv.setType(ProductItemAvEnum.COLOR.getId());
-			productItemAv.setStringValue(vo.getColor());
+			productItemAv.setStringValue(vo.getColour());
 			saveToRepo(productItemAv, savedproductItem);
 
 		}
@@ -371,7 +371,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 
 			y.setProductItemAvId(y.getProductItemAvId());
 			if (y.getName().equalsIgnoreCase(ProductItemAvEnum.COLOR.geteName())) {
-				y.setStringValue(vo.getColor());
+				y.setStringValue(vo.getColour());
 			}
 			if (y.getName().equalsIgnoreCase(ProductItemAvEnum.LENGTH.geteName())) {
 				y.setIntValue(vo.getLength());

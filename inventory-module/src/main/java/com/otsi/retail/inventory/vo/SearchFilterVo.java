@@ -1,6 +1,9 @@
 package com.otsi.retail.inventory.vo;
 
 import java.time.LocalDate;
+
+import com.otsi.retail.inventory.commons.ProductStatus;
+
 import lombok.Data;
 
 @Data
@@ -21,5 +24,7 @@ public class SearchFilterVo {
 	private Long storeId;
 	
 	private String barcode;
+	
+	private ProductStatus status;
 
 }

@@ -39,9 +39,10 @@ public class ProductItemMapper {
 		vo.setName(dto.getName());
 		vo.setEmpId(dto.getEmpId());
 		vo.setCostPrice(dto.getCostPrice());
+		vo.setBatchNo(dto.getBatchNo());
 		float stockIncrementValue= dto.getProductInventory().getStockvalue() * dto.getCostPrice();
 		vo.setValue(stockIncrementValue);
-		vo.setListPrice(vo.getListPrice());
+		vo.setListPrice(dto.getListPrice());
 		vo.setUom(dto.getUom());
 		vo.setDomainDataId(dto.getDomainDataId());
 		vo.setStoreId(dto.getStoreId());
@@ -65,7 +66,7 @@ public class ProductItemMapper {
 		List<ProductItemAv> productAv = dto.getProductItemAvId();
 		productAv.stream().forEach(y -> {
 			if (y.getName().equalsIgnoreCase(ProductItemAvEnum.COLOR.geteName())) {
-				vo.setColor(y.getStringValue());
+				vo.setColour(y.getStringValue());
 			}
 			if (y.getName().equalsIgnoreCase(ProductItemAvEnum.LENGTH.geteName())) {
 				vo.setLength(y.getIntValue());
@@ -115,7 +116,7 @@ public class ProductItemMapper {
 		dto.setDiscontinued(vo.getDiscontinued());
 		dto.setTyecode(vo.getTyecode());
 		dto.setHsnCode(vo.getHsnCode());
-		
+		dto.setBatchNo(vo.getBatchNo());
 		dto.setUom(vo.getUom());
 		dto.setDomainDataId(vo.getDomainDataId());
 
@@ -148,7 +149,7 @@ public class ProductItemMapper {
 		dto.setDiscontinued(vo.getDiscontinued());
 		dto.setTyecode(vo.getTyecode());
 		dto.setHsnCode(vo.getHsnCode());
-		
+		dto.setBatchNo(vo.getBatchNo());
 		dto.setUom(vo.getUom());
 		dto.setDomainDataId(vo.getDomainDataId());
 

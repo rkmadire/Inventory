@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.otsi.retail.inventory.commons.ProductStatus;
 import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.model.ProductTextile;
 
@@ -21,5 +22,6 @@ public interface ProductTextileRepo extends JpaRepository<ProductTextile, Long> 
 
 	Optional<ProductTextile> findByStoreId(Long storeId);
 
+	ProductTextile findByStatus(ProductStatus status);
 
 }
