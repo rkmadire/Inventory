@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.otsi.retail.inventory.commons.ProductStatus;
 import com.otsi.retail.inventory.model.BarcodeTextile;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
 
@@ -48,6 +49,7 @@ public class BarcodeTextileMapper {
 		vo.setFromDate(dto.getCreationDate());
 		vo.setToDate(dto.getLastModified());
 		vo.setProductTextile(productTextileMapper.EntityToVo(dto.getProductTextile()));
+
 		return vo;
 
 	}

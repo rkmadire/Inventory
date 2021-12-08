@@ -192,18 +192,6 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		ProductTransaction transact = productTransactionRepo.findByBarcodeId(vo.getBarcodeTextileId());
 		transact.setMasterFlag(false);
 		productTransactionRepo.save(transact);
-		ProductTransaction prodTrans = new ProductTransaction();
-		prodTrans.setBarcodeId(barTextileSave.getBarcodeTextileId());
-		prodTrans.setStoreId(textileSave.getStoreId());
-		prodTrans.setEffectingTableID(textileSave.getProductTextileId());
-		prodTrans.setQuantity(vo.getProductTextile().getQty());
-		prodTrans.setNatureOfTransaction(NatureOfTransaction.REBARPARENT.getName());
-		prodTrans.setCreationDate(LocalDate.now());
-		prodTrans.setLastModified(LocalDate.now());
-		prodTrans.setMasterFlag(true);
-		prodTrans.setComment("rebar");
-		prodTrans.setEffectingTable("product textile table");
-		ProductTransaction saveTrans = productTransactionRepo.save(prodTrans);
 		Adjustments ad = new Adjustments();
 		ad.setCreatedBy(textileSave.getEmpId());
 		ad.setCreationDate(LocalDate.now());
@@ -212,6 +200,19 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		ad.setLastModifiedDate(LocalDate.now());
 		ad.setComments("rebar");
 		Adjustments audSave = adjustmentRepo.save(ad);
+		ProductTransaction prodTrans = new ProductTransaction();
+		prodTrans.setBarcodeId(barTextileSave.getBarcodeTextileId());
+		prodTrans.setStoreId(textileSave.getStoreId());
+		prodTrans.setEffectingTableID(audSave.getAdjustmentId());
+		prodTrans.setQuantity(vo.getProductTextile().getQty());
+		prodTrans.setNatureOfTransaction(NatureOfTransaction.REBARPARENT.getName());
+		prodTrans.setCreationDate(LocalDate.now());
+		prodTrans.setLastModified(LocalDate.now());
+		prodTrans.setMasterFlag(true);
+		prodTrans.setComment("Adjustments");
+		prodTrans.setEffectingTable("Adjustments");
+		ProductTransaction saveTrans = productTransactionRepo.save(prodTrans);
+
 		return "Rebarcoding textile updated successfully:" + barTextileSave.getBarcodeTextileId();
 	}
 
@@ -258,8 +259,10 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		List<BarcodeTextile> barcodeDetails = new ArrayList<>();
 
 		if (vo.getFromDate() != null && vo.getToDate() != null && (vo.getBarcode() == null || vo.getBarcode() == "")) {
-			barcodeDetails = barcodeTextileRepo.findByCreationDateBetweenOrderByLastModifiedAsc(vo.getFromDate(),
-					vo.getToDate());
+			ProductStatus status = ProductStatus.ENABLE;
+
+			barcodeDetails = barcodeTextileRepo.findByCreationDateBetweenAndProductTextileStatusOrderByLastModifiedAsc(vo.getFromDate(),
+					vo.getToDate(),status);
 
 			if (barcodeDetails.isEmpty()) {
 				log.error("No record found with given information");
@@ -350,6 +353,10 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 			barcodeDetails.add(textile);
 			List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeDetails);
+			barcodeList.stream().forEach(v -> {
+				ProductTransaction transact = productTransactionRepo.findByBarcodeId(v.getBarcodeTextileId());
+				v.getProductTextile().setQty(transact.getQuantity());
+			});
 			return barcodeList;
 		}
 
@@ -357,13 +364,25 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		 * values with empty string
 		 */
 		else if ((vo.getFromDate() == null) && (vo.getToDate() == null) && (vo.getBarcode() == "")) {
-			List<BarcodeTextile> barcodeTextileList = barcodeTextileRepo.findAll();
+			ProductStatus status = ProductStatus.ENABLE;
+
+			List<BarcodeTextile> barcodeTextileList = barcodeTextileRepo.findByProductTextileStatus(status);
+            
 			List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeTextileList);
+			barcodeList.stream().forEach(v -> {
+				ProductTransaction transact = productTransactionRepo.findByBarcodeId(v.getBarcodeTextileId());
+				/*
+				 * ProductTextile textileStat = productTextileRepo.findByStatus(status);
+				 * v.setProductTextile(productTextileMapper.EntityToVo(textileStat));
+				 */
+				v.getProductTextile().setQty(transact.getQuantity());
+			});
 			return barcodeList;
 		}
 
 		List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeDetails);
 		barcodeList.stream().forEach(v -> {
+
 			ProductTransaction transact = productTransactionRepo.findByBarcodeId(v.getBarcodeTextileId());
 			v.getProductTextile().setQty(transact.getQuantity());
 		});

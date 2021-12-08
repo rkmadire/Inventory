@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.otsi.retail.inventory.commons.ProductStatus;
 import com.otsi.retail.inventory.model.BarcodeTextile;
 import com.otsi.retail.inventory.model.ProductTextile;
 import com.otsi.retail.inventory.model.ProductTransaction;
@@ -24,6 +25,7 @@ public class ProductTextileMapper {
 
 	public ProductTextileVo EntityToVo(ProductTextile dto) {
 		ProductTextileVo vo = new ProductTextileVo();
+
 		BeanUtils.copyProperties(dto, vo);
 		vo.setCreateForLocation(0);
 		vo.setValueAdditionCp(0);
@@ -32,6 +34,7 @@ public class ProductTextileMapper {
 		vo.setUpdatedAt(dto.getUpdatedAt());
 		vo.setOriginalBarcodeCreatedAt(dto.getOriginalBarcodeCreatedAt());
 		vo.setStoreId(dto.getStoreId());
+
 		return vo;
 
 	}
