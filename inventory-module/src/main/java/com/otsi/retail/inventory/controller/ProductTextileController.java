@@ -82,7 +82,7 @@ public class ProductTextileController {
 		return new GateWayResponse<>("fetching all barcode textile details sucessfully", allBarcodes);
 	}
 	
-	//@RabbitListener(queues = MQConfig.QUEUE)
+	//@RabbitListener(queues = MQConfig.inventory_queue_textile)
 	@PostMapping("/inventoryUpdateForTextile")
 	public GateWayResponse<?> inventoryUpdateForTextile(@RequestBody List<UpdateInventoryRequest> request) {
 		String barcodeDetails = productTextileService.inventoryUpdateForTextile(request);
