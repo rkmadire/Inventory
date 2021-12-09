@@ -248,7 +248,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		}
 
 		BarcodeTextileVo vo = barcodeTextileMapper.EntityToVo(textile);
-		vo.setProductTextile(productTextileMapper.EntityToVo(textile.getProductTextile()));
+		ProductTransaction transact = productTransactionRepo.findByBarcodeId(vo.getBarcodeTextileId());
+		vo.getProductTextile().setQty(transact.getQuantity());
+		vo.getProductTextile().setValue(transact.getQuantity() * vo.getProductTextile().getCostPrice());
 		log.warn("we are checking if textile is fetching...");
 		return vo;
 	}
@@ -261,8 +263,8 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		if (vo.getFromDate() != null && vo.getToDate() != null && (vo.getBarcode() == null || vo.getBarcode() == "")) {
 			ProductStatus status = ProductStatus.ENABLE;
 
-			barcodeDetails = barcodeTextileRepo.findByCreationDateBetweenAndProductTextileStatusOrderByLastModifiedAsc(vo.getFromDate(),
-					vo.getToDate(),status);
+			barcodeDetails = barcodeTextileRepo.findByCreationDateBetweenAndProductTextileStatusOrderByLastModifiedAsc(
+					vo.getFromDate(), vo.getToDate(), status);
 
 			if (barcodeDetails.isEmpty()) {
 				log.error("No record found with given information");
@@ -356,6 +358,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			barcodeList.stream().forEach(v -> {
 				ProductTransaction transact = productTransactionRepo.findByBarcodeId(v.getBarcodeTextileId());
 				v.getProductTextile().setQty(transact.getQuantity());
+				v.getProductTextile().setValue(transact.getQuantity() * v.getProductTextile().getCostPrice());
 			});
 			return barcodeList;
 		}
@@ -367,7 +370,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			ProductStatus status = ProductStatus.ENABLE;
 
 			List<BarcodeTextile> barcodeTextileList = barcodeTextileRepo.findByProductTextileStatus(status);
-            
+
 			List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeTextileList);
 			barcodeList.stream().forEach(v -> {
 				ProductTransaction transact = productTransactionRepo.findByBarcodeId(v.getBarcodeTextileId());
@@ -376,6 +379,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 				 * v.setProductTextile(productTextileMapper.EntityToVo(textileStat));
 				 */
 				v.getProductTextile().setQty(transact.getQuantity());
+				v.getProductTextile().setValue(transact.getQuantity() * v.getProductTextile().getCostPrice());
 			});
 			return barcodeList;
 		}
@@ -385,6 +389,8 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 			ProductTransaction transact = productTransactionRepo.findByBarcodeId(v.getBarcodeTextileId());
 			v.getProductTextile().setQty(transact.getQuantity());
+
+			v.getProductTextile().setValue(transact.getQuantity() * v.getProductTextile().getCostPrice());
 		});
 
 		log.warn("we are checking if barcode textile is fetching...");
@@ -422,7 +428,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		/*
 		 * using dates
 		 */
-		if (vo.getFromDate() != null && vo.getToDate() != null && (vo.getAdjustmentId() == null)) {
+		if (vo.getFromDate() != null && vo.getToDate() != null && (vo.getCurrentBarcodeId() == "")) {
 			adjustmentDetails = adjustmentRepo.findByCreationDateBetweenOrderByLastModifiedDateAsc(vo.getFromDate(),
 					vo.getToDate());
 
@@ -433,42 +439,44 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		}
 
 		/*
-		 * using dates and adjusmentId
+		 * using dates and currentBarcodeId
 		 */
-		else if (vo.getFromDate() != null && vo.getToDate() != null && vo.getAdjustmentId() != null) {
-			Optional<Adjustments> adjustOpt = adjustmentRepo.findByAdjustmentId(vo.getAdjustmentId());
-			if (adjustOpt.isPresent()) {
-				adjustmentDetails = adjustmentRepo.findByCreationDateBetweenAndAdjustmentIdOrderByLastModifiedDateAsc(
-						vo.getFromDate(), vo.getToDate(), vo.getAdjustmentId());
+		else if (vo.getFromDate() != null && vo.getToDate() != null && vo.getCurrentBarcodeId() != null) {
+			Adjustments adjustOpt = adjustmentRepo.findByCurrentBarcodeId(vo.getCurrentBarcodeId());
+			if (adjustOpt != null) {
+				adjustmentDetails = adjustmentRepo
+						.findByCreationDateBetweenAndCurrentBarcodeIdOrderByLastModifiedDateAsc(vo.getFromDate(),
+								vo.getToDate(), vo.getCurrentBarcodeId());
 			} else {
 				log.error("No record found with given adjustmentId");
 				throw new RecordNotFoundException("No record found with given adjustmentId");
 			}
 
 		}
+
 		/*
-		 * using adjusmentId
+		 * values with empty string
 		 */
-		else if (vo.getFromDate() == null && vo.getToDate() == null && vo.getAdjustmentId() != null) {
-			Optional<Adjustments> adjustOpt = adjustmentRepo.findByAdjustmentId(vo.getAdjustmentId());
-			if (!adjustOpt.isPresent()) {
+		else if (vo.getFromDate() == null && vo.getToDate() == null && vo.getCurrentBarcodeId() == "") {
+			List<Adjustments> adjustDetails1 = adjustmentRepo.findAll();
+			List<AdjustmentsVo> adjustDetails = adjustmentMapper.EntityToVo(adjustDetails1);
+			return adjustDetails;
+		}
+		/*
+		 * using currentBarcodeId
+		 */
+		else if (vo.getFromDate() == null && vo.getToDate() == null && vo.getCurrentBarcodeId() != null) {
+			Adjustments adjustOpt = adjustmentRepo.findByCurrentBarcodeId(vo.getCurrentBarcodeId());
+			if (adjustOpt == null) {
 				throw new RecordNotFoundException("adjustment record is not found");
 
 			} else {
 
-				adjustmentDetails.add(adjustOpt.get());
+				adjustmentDetails.add(adjustOpt);
 				List<AdjustmentsVo> adjustList = adjustmentMapper.EntityToVo(adjustmentDetails);
 				return adjustList;
 
 			}
-		}
-		/*
-		 * values with empty string
-		 */
-		else if (vo.getFromDate() == null && vo.getToDate() == null && vo.getAdjustmentId() == null) {
-			List<Adjustments> adjustDetails1 = adjustmentRepo.findAll();
-			List<AdjustmentsVo> adjustDetails = adjustmentMapper.EntityToVo(adjustDetails1);
-			return adjustDetails;
 		} else {
 			List<Adjustments> adjustDetails1 = adjustmentRepo.findAll();
 			List<AdjustmentsVo> adjustDetails = adjustmentMapper.EntityToVo(adjustDetails1);
