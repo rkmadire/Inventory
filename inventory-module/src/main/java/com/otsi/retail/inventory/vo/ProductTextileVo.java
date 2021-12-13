@@ -1,6 +1,9 @@
 package com.otsi.retail.inventory.vo;
 
 import java.time.LocalDate;
+
+import com.otsi.retail.inventory.commons.ProductStatus;
+
 import lombok.Data;
 
 @Data
@@ -26,10 +29,11 @@ public class ProductTextileVo {
 	private float valueAdditionCp;
 	private String itemCode;
 	private String itemSku;
-	private String attr_21;
+	private ProductStatus status;
 	private String attr_22;
 	private String attr_23;
 	private String attr_24;
 	private String attr_25;
+	private float value;
 
 }

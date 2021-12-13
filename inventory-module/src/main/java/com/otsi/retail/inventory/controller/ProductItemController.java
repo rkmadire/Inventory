@@ -98,7 +98,7 @@ public class ProductItemController {
 		return new GateWayResponse<>("fetching all barcode details sucessfully", allBarcodes);
 	}
 
-	@RabbitListener(queues = MQConfig.QUEUE)
+	//@RabbitListener(queues = MQConfig.INVENTORYQUEUE)
 	public GateWayResponse<?> fromNewsaleForRetail(@RequestBody Map<String, Integer> map) {
 		String allBars = productItemService.fromNewSale(map);
 

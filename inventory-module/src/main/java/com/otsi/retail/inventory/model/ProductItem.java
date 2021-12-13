@@ -52,6 +52,8 @@ public class ProductItem {
 	private String defaultImage;
 
 	private int status;
+	
+	private String batchNo;
 
 	private String title;
 	

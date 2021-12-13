@@ -1,6 +1,5 @@
 package com.otsi.retail.inventory.rabbitmq;
 
-
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -16,23 +15,23 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MQConfig {
 
-	public static final String QUEUE = "Message_Queue";
-	public static final String EXCHANGE = "Topic_Exchange";
-	public static final String ROUTING_KEY = "Routing_key";
+	public static final String inventory_queue_textile = "inventory_queue_textile";
+	public static final String inventory_exchange = "inventory_exchange";
+	public static final String inventory_rk = "inventory_rk ";
 
 	@Bean
 	public Queue queue() {
-		return new Queue(QUEUE);
+		return new Queue(inventory_queue_textile);
 	}
 
 	@Bean
 	public TopicExchange exchange() {
-		return new TopicExchange(EXCHANGE);
+		return new TopicExchange(inventory_exchange);
 	}
 
 	@Bean
 	public Binding binding(Queue queue, TopicExchange exchange) {
-		return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
+		return BindingBuilder.bind(queue).to(exchange).with(inventory_rk);
 
 	}
 

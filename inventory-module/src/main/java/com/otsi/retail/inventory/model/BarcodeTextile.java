@@ -24,12 +24,12 @@ public class BarcodeTextile {
 	@GeneratedValue
 	private Long barcodeTextileId;
 	private String barcode;
-	private String division;
-	private String section;
-	private String subSection;
-	private String category;
+	private Long division;
+	private Long section;
+	private Long subSection;
+	private Long category;
 	private String batchNo;
-	private String attr_6;
+	private String colour;
 	private String attr_7;
 	private String attr_8;
 	private String attr_9;

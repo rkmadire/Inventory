@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.rabbitmq.MQConfig;
 import com.otsi.retail.inventory.service.ProductTextileService;
+import com.otsi.retail.inventory.vo.AdjustmentsVo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
-import com.otsi.retail.inventory.vo.ProductItemVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
+import com.otsi.retail.inventory.vo.ProductTransactionVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
+import com.otsi.retail.inventory.vo.UpdateInventoryRequest;
 
 /**
  * @author vasavi
@@ -39,7 +41,7 @@ public class ProductTextileController {
 	@PostMapping("/addBarcode_Textile")
 	public GateWayResponse<?> addBarcodeTextile(@RequestBody BarcodeTextileVo textileVo) {
 		log.info("Recieved request to saveTextile:" + textileVo);
-		String textileSave = productTextileService.incrementQty(textileVo);
+		String textileSave = productTextileService.addBarcodeTextile(textileVo);
 		return new GateWayResponse<>("barcode textile saved successfully", textileSave);
 
 	}
@@ -80,11 +82,18 @@ public class ProductTextileController {
 		return new GateWayResponse<>("fetching all barcode textile details sucessfully", allBarcodes);
 	}
 	
-	@RabbitListener(queues = MQConfig.QUEUE)
-	public GateWayResponse<?> fromNewsaleForTextile(@RequestBody List<String> barCode) {
-		List<BarcodeTextileVo> barcodeDetails = productTextileService.getAllBarcodes(barCode);
-		return new GateWayResponse<>("fetching barcode details fromk newsale", barcodeDetails);
+	//@RabbitListener(queues = MQConfig.inventory_queue_textile)
+	@PostMapping("/inventoryUpdateForTextile")
+	public GateWayResponse<?> inventoryUpdateForTextile(@RequestBody List<UpdateInventoryRequest> request) {
+		String barcodeDetails = productTextileService.inventoryUpdateForTextile(request);
+		return new GateWayResponse<>("update inventory from newsale", barcodeDetails);
 
 	}
-
+	
+	@PostMapping("/getAllAdjustments")
+	public GateWayResponse<?> getAllAdjustments(@RequestBody AdjustmentsVo vo) {
+		log.info("Recieved request to getAllBarcodesForTextile");
+		List<AdjustmentsVo> allBarcodes = productTextileService.getAllAdjustments(vo);
+		return new GateWayResponse<>("fetching all adjusment details sucessfully", allBarcodes);
+	}
 }
