@@ -5,7 +5,7 @@ name: inventory-module
 
 env:
   postgres_user: postgres
-  postgres_password: Otsi@123
+  postgres_password: Vasavi
   postgres_data: /var/lib/postgresql/data/pgdata
   postgres_db: inventory-module
 
