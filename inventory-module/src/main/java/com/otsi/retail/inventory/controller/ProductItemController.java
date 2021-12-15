@@ -2,6 +2,7 @@ package com.otsi.retail.inventory.controller;
 
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.service.ProductItemService;
-import com.otsi.retail.inventory.vo.AdjustmentsReVo;
-import com.otsi.retail.inventory.vo.AdjustmentsVo;
 import com.otsi.retail.inventory.vo.ProductItemVo;
-import com.otsi.retail.inventory.vo.UpdateInventoryRequest;
 
 /**
  * @author vasavi
@@ -112,12 +111,5 @@ public class ProductItemController {
 		String saveVoList = productItemService.saveProductList(productItemVos);
 		return new GateWayResponse<>("saving list of product", saveVoList);
 
-	}
-
-	@PostMapping("/getAllAdjustmentsRe")
-	public GateWayResponse<?> getAllAdjustmentsRe(@RequestBody AdjustmentsReVo vo) {
-		log.info("Recieved request to getAllAdjustmentsRe:" + vo);
-		List<AdjustmentsReVo> allAdjustments = productItemService.getAllAdjustmentsRe(vo);
-		return new GateWayResponse<>("fetching all adjusment details sucessfully", allAdjustments);
 	}
 }

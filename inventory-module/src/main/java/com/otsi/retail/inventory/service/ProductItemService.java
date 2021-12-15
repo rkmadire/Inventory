@@ -5,9 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.otsi.retail.inventory.vo.AdjustmentsReVo;
 import com.otsi.retail.inventory.vo.ProductItemVo;
-import com.otsi.retail.inventory.vo.UpdateInventoryRequest;
 
 @Service
 public interface ProductItemService {
@@ -32,7 +30,6 @@ public interface ProductItemService {
 
 	String saveProductList(List<ProductItemVo> productItemVos);
 
-	List<AdjustmentsReVo> getAllAdjustmentsRe(AdjustmentsReVo vo);
 
 	String fromNewSaleForRetail(Map<String, Integer> map);
 

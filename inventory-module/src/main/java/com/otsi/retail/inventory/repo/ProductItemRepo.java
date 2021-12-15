@@ -24,21 +24,17 @@ public interface ProductItemRepo extends JpaRepository<ProductItem, Long> {
 
 	boolean existsByBarcodeId(String barcodeId);
 
-	List<ProductItem> findByCreationDateBetweenOrderByLastModifiedDateAsc(LocalDate fromDate, LocalDate toDate);
-
 	ProductItem findByStoreId(Long storeId);
 
 	List<ProductItem> findAllByStoreId(Long storeId);
 
-	List<ProductItem> findByStatus(int status);
+	List<ProductItem> findByCreationDateBetweenAndProductItemIdAndStoreIdOrderByLastModifiedDateAsc(LocalDate fromDate,
+			LocalDate toDate, Long productItemId, Long storeId);
 
-	List<ProductItem> findByCreationDateBetweenAndBarcodeIdAndStoreIdAndStatusOrderByLastModifiedDateAsc(
-			LocalDate fromDate, LocalDate toDate, String barcodeId, Long storeId, int status);
+	List<ProductItem> findByCreationDateBetweenAndStoreIdOrderByLastModifiedDateAsc(LocalDate fromDate,
+			LocalDate toDate, Long storeId);
 
-	List<ProductItem> findByCreationDateBetweenAndStoreIdAndStatusOrderByLastModifiedDateAsc(LocalDate fromDate,
-			LocalDate toDate, Long storeId, int status);
-
-	List<ProductItem> findByCreationDateBetweenAndProductItemIdAndStoreIdAndStatusOrderByLastModifiedDateAsc(
-			LocalDate fromDate, LocalDate toDate, Long productItemId, Long storeId, int status);
+	List<ProductItem> findByCreationDateBetweenAndBarcodeIdAndStoreIdOrderByLastModifiedDateAsc(LocalDate fromDate,
+			LocalDate toDate, String barcodeId, Long storeId);
 
 }
