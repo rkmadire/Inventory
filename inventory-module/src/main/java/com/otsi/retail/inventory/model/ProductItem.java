@@ -77,6 +77,8 @@ public class ProductItem {
 	private Long domainDataId;
 
 	private Long puid;
+	
+	private String parentbarcode;
 
 	private LocalDate creationDate;
 

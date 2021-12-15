@@ -5,22 +5,24 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.otsi.retail.inventory.vo.AdjustmentsReVo;
 import com.otsi.retail.inventory.vo.ProductItemVo;
+import com.otsi.retail.inventory.vo.UpdateInventoryRequest;
 
 @Service
 public interface ProductItemService {
 
 	String createBarcode(ProductItemVo vo);
 
-	ProductItemVo getProductByProductId(Long productItemId);
+	ProductItemVo getProductByProductId(Long productItemId, Long storeId);
 
-	ProductItemVo getProductByName(String name);
+	ProductItemVo getProductByName(String name, Long storeId);
 
 	List<ProductItemVo> getAllProducts(ProductItemVo vo);
 
 	List<ProductItemVo> getAllBarcodes(ProductItemVo vo);
 
-	ProductItemVo getBarcodeId(String barcodeId);
+	ProductItemVo getBarcodeId(String barcodeId, Long storeId);
 
 	String updateInventory(ProductItemVo vo);
 
@@ -28,6 +30,12 @@ public interface ProductItemService {
 
 	String deleteBarcode(String barcodeId);
 
-	String fromNewSale(Map<String,Integer> map);
+	String saveProductList(List<ProductItemVo> productItemVos);
+
+	List<AdjustmentsReVo> getAllAdjustmentsRe(AdjustmentsReVo vo);
+
+	String fromNewSaleForRetail(Map<String, Integer> map);
+
+	
 
 }

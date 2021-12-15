@@ -45,5 +45,19 @@ public interface BarcodeTextileRepo extends JpaRepository<BarcodeTextile, Long> 
 	List<BarcodeTextile> findByCreationDateBetweenAndProductTextileStatusOrderByLastModifiedAsc(LocalDate fromDate,
 			LocalDate toDate, ProductStatus status);
 
+	List<BarcodeTextile> findAllByProductTextileStoreId(Long storeId);
+
+	List<BarcodeTextile> findByCreationDateBetweenAndProductTextileStatusAndProductTextileStoreIdOrderByLastModifiedAsc(
+			LocalDate fromDate, LocalDate toDate, ProductStatus status, Long storeId);
+
+	List<BarcodeTextile> findByCreationDateBetweenAndBarcodeAndProductTextileStoreIdOrderByLastModifiedAsc(
+			LocalDate fromDate, LocalDate toDate, String barcode, Long storeId);
+
+	List<BarcodeTextile> findByCreationDateBetweenAndBarcodeTextileIdAndProductTextileStoreIdOrderByLastModifiedAsc(
+			LocalDate fromDate, LocalDate toDate, Long barcodeTextileId, Long storeId);
+	
+	
+	
+
 
 }
