@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,24 +17,16 @@ import com.otsi.retail.inventory.commons.ProductItemAvEnum;
 import com.otsi.retail.inventory.exceptions.DuplicateRecordException;
 import com.otsi.retail.inventory.exceptions.InvalidDataException;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
-import com.otsi.retail.inventory.mapper.AdjustmentReMapper;
 import com.otsi.retail.inventory.mapper.ProductItemMapper;
-import com.otsi.retail.inventory.model.Adjustments;
-import com.otsi.retail.inventory.model.AdjustmentsRe;
 import com.otsi.retail.inventory.model.ProductImage;
 import com.otsi.retail.inventory.model.ProductInventory;
 import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.model.ProductItemAv;
-import com.otsi.retail.inventory.model.ProductTransaction;
-import com.otsi.retail.inventory.repo.AdjustmentReRepo;
 import com.otsi.retail.inventory.repo.ProductImageRepo;
 import com.otsi.retail.inventory.repo.ProductInventoryRepo;
 import com.otsi.retail.inventory.repo.ProductItemAvRepo;
 import com.otsi.retail.inventory.repo.ProductItemRepo;
-import com.otsi.retail.inventory.vo.AdjustmentsReVo;
-import com.otsi.retail.inventory.vo.AdjustmentsVo;
 import com.otsi.retail.inventory.vo.ProductItemVo;
-import com.otsi.retail.inventory.vo.UpdateInventoryRequest;
 
 @Component
 public class ProductItemServiceImpl implements ProductItemService {
@@ -56,12 +47,6 @@ public class ProductItemServiceImpl implements ProductItemService {
 
 	@Autowired
 	private ProductItemMapper productItemMapper;
-
-	@Autowired
-	private AdjustmentReRepo adjustmentReRepo;
-
-	@Autowired
-	private AdjustmentReMapper adjustmentReMapper;
 
 	@Override
 	public String createBarcode(ProductItemVo vo) {
@@ -191,7 +176,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 	public List<ProductItemVo> getAllProducts(ProductItemVo vo) {
 		log.debug("debugging getAllProducts()");
 		List<ProductItem> prodItemDetails = new ArrayList<>();
-		int status = 1;
+		
 		List<ProductItem> storeOpt = productItemRepo.findAllByStoreId(vo.getStoreId());
 
 		/*
@@ -203,8 +188,8 @@ public class ProductItemServiceImpl implements ProductItemService {
 			if (storeOpt != null) {
 
 				prodItemDetails = productItemRepo
-						.findByCreationDateBetweenAndStoreIdAndStatusOrderByLastModifiedDateAsc(vo.getFromDate(),
-								vo.getToDate(), vo.getStoreId(), status);
+						.findByCreationDateBetweenAndStoreIdOrderByLastModifiedDateAsc(vo.getFromDate(),
+								vo.getToDate(), vo.getStoreId());
 
 				if (prodItemDetails.isEmpty()) {
 					log.error("No record found with given information");
@@ -225,8 +210,8 @@ public class ProductItemServiceImpl implements ProductItemService {
 				Optional<ProductItem> prodOpt = productItemRepo.findByProductItemId(vo.getProductItemId());
 				if (prodOpt.isPresent()) {
 					prodItemDetails = productItemRepo
-							.findByCreationDateBetweenAndProductItemIdAndStoreIdAndStatusOrderByLastModifiedDateAsc(
-									vo.getFromDate(), vo.getToDate(), vo.getProductItemId(), vo.getStoreId(), status);
+							.findByCreationDateBetweenAndProductItemIdAndStoreIdOrderByLastModifiedDateAsc(
+									vo.getFromDate(), vo.getToDate(), vo.getProductItemId(), vo.getStoreId());
 				} else {
 					log.error("No record found with given productItemId");
 					throw new RecordNotFoundException("No record found with given productItemId");
@@ -264,8 +249,8 @@ public class ProductItemServiceImpl implements ProductItemService {
 				&& vo.getStoreId() != null) {
 
 			if (storeOpt != null) {
-				List<ProductItem> prodItemDetails1 = productItemRepo.findAllByStoreId(vo.getStoreId());
-				List<ProductItemVo> productList = productItemMapper.EntityToVo(prodItemDetails1);
+				//List<ProductItem> prodItemDetails1 = productItemRepo.findByStoreIdIn(vo.getStoreId());
+				List<ProductItemVo> productList = productItemMapper.EntityToVo(storeOpt);
 				return productList;
 			} else {
 				throw new RecordNotFoundException("No record found with storeId");
@@ -276,11 +261,11 @@ public class ProductItemServiceImpl implements ProductItemService {
 		 */
 		else if (vo.getFromDate() == null && vo.getToDate() == null && vo.getProductItemId() == null
 				&& vo.getStoreId() == null) {
-			List<ProductItem> prodItemDetails1 = productItemRepo.findByStatus(status);
+			List<ProductItem> prodItemDetails1 = productItemRepo.findAll();
 			List<ProductItemVo> productList = productItemMapper.EntityToVo(prodItemDetails1);
 			return productList;
 		} else {
-			List<ProductItem> prodItemDetails1 = productItemRepo.findByStatus(status);
+			List<ProductItem> prodItemDetails1 = productItemRepo.findAll();
 			List<ProductItemVo> productList = productItemMapper.EntityToVo(prodItemDetails1);
 			return productList;
 		}
@@ -337,15 +322,15 @@ public class ProductItemServiceImpl implements ProductItemService {
 	public List<ProductItemVo> getAllBarcodes(ProductItemVo vo) {
 		log.debug("debugging getAllBarcodes()");
 		List<ProductItem> barcodeDetails = new ArrayList<>();
-		int status = 1;
+		
 		/*
 		 * using dates and storeId
 		 */
 		if (vo.getFromDate() != null && vo.getToDate() != null && vo.getBarcodeId() == "" && vo.getStoreId() != null) {
 			List<ProductItem> storeOpt = productItemRepo.findAllByStoreId(vo.getStoreId());
 			if (storeOpt != null) {
-				barcodeDetails = productItemRepo.findByCreationDateBetweenAndStoreIdAndStatusOrderByLastModifiedDateAsc(
-						vo.getFromDate(), vo.getToDate(), vo.getStoreId(), status);
+				barcodeDetails = productItemRepo.findByCreationDateBetweenAndStoreIdOrderByLastModifiedDateAsc(
+						vo.getFromDate(), vo.getToDate(), vo.getStoreId());
 
 				if (barcodeDetails.isEmpty()) {
 					log.error("No record found with given information");
@@ -366,8 +351,8 @@ public class ProductItemServiceImpl implements ProductItemService {
 				ProductItem barOpt = productItemRepo.findByBarcodeId(vo.getBarcodeId());
 				if (barOpt != null) {
 					barcodeDetails = productItemRepo
-							.findByCreationDateBetweenAndBarcodeIdAndStoreIdAndStatusOrderByLastModifiedDateAsc(
-									vo.getFromDate(), vo.getToDate(), vo.getBarcodeId(), vo.getStoreId(), status);
+							.findByCreationDateBetweenAndBarcodeIdAndStoreIdOrderByLastModifiedDateAsc(
+									vo.getFromDate(), vo.getToDate(), vo.getBarcodeId(), vo.getStoreId());
 				} else {
 					log.error("No record found with given barcodeId");
 					throw new RecordNotFoundException("No record found with given barcodeId");
@@ -382,7 +367,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		 */
 		else if ((vo.getFromDate() == null) && (vo.getToDate() == null) && (vo.getBarcodeId() == "")
 				&& (vo.getStoreId() == null)) {
-			List<ProductItem> barcodeDetails1 = productItemRepo.findByStatus(status);
+			List<ProductItem> barcodeDetails1 = productItemRepo.findAll();;
 			List<ProductItemVo> barcodeList = productItemMapper.EntityToVo(barcodeDetails1);
 			return barcodeList;
 		}
@@ -422,7 +407,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		} else if (vo.getStoreId() != null) {
 			List<ProductItem> storeOpt = productItemRepo.findAllByStoreId(vo.getStoreId());
 			if (storeOpt != null) {
-				List<ProductItem> barcodeDetails1 = productItemRepo.findByStatus(status);
+				List<ProductItem> barcodeDetails1 = productItemRepo.findAll();;
 				List<ProductItemVo> barcodeList = productItemMapper.EntityToVo(barcodeDetails1);
 				return barcodeList;
 			} else {
@@ -455,21 +440,27 @@ public class ProductItemServiceImpl implements ProductItemService {
 			prodInventory.setCreationDate(LocalDate.now());
 			prodInventory.setLastModified(LocalDate.now());
 			prodInventory.setProductItem(item.getProductItem());
+			prodInventory.setEffectingTable("Product Item Table");
+			prodInventory.setEffectingTableID(item.getEffectingTableID());
+			prodInventory.setBarcodeId(vo.getBarcodeId());
+			prodInventory.setMasterFlag(true);
+			prodInventory.setNatureOfTransaction(NatureOfTransaction.PURCHASE.getName());
+			prodInventory.setComment("Product Item table");
+			prodInventory.setStoreId(item.getStoreId());
 			productInventoryRepo.save(prodInventory);
 			return "updated inventory successfully:" + prodOpt.get().getProductItemId();
 		} else {
 			throw new RecordNotFoundException("No record found with storeId");
 		}
 	}
-
 	@Override
 	public String updateBarcode(ProductItemVo vo) {
 		log.debug(" debugging updateBarcode:" + vo);
 		if (vo.getProductItemId() == null) {
 			throw new InvalidDataException("productItem record not found");
 		}
-		ProductItem dtoBar = productItemRepo.findByBarcodeId(vo.getBarcodeId());
-		if (dtoBar == null) {
+		ProductItem dto = productItemRepo.findByBarcodeId(vo.getBarcodeId());
+		if (dto == null) {
 			log.error("Record Not Found");
 			throw new RecordNotFoundException("barcode record not found");
 		}
@@ -477,58 +468,60 @@ public class ProductItemServiceImpl implements ProductItemService {
 		if (!prodOpt.isPresent()) {
 			throw new RecordNotFoundException("productItem record not found");
 		}
-		ProductItem item = prodOpt.get();
-		item.setStatus(0);
-		ProductItem itemUpdate = productItemRepo.save(item);
-		Optional<ProductInventory> prodOp = productInventoryRepo.findByProductItem(itemUpdate);
-		ProductInventory prodInvUpdate = prodOp.get();
-		prodInvUpdate.setLastModified(LocalDate.now());
-		prodInvUpdate.setProductItem(itemUpdate);
-		prodInvUpdate.setMasterFlag(false);
-		ProductInventory prodInvSaveUpdate = productInventoryRepo.save(prodInvUpdate);
-		ProductItem productItem = productItemMapper.VoToEntityRebar(vo);
-		productItem.setParentbarcode(item.getBarcodeId());
-		ProductItem saveProductItem = productItemRepo.save(productItem);
-		saveAVValues(vo, saveProductItem);
+
+		ProductItem update = productItemMapper.VoToEntityUpdate(vo, dto);
+
+		ProductItem save = productItemRepo.save(update);
+		List<ProductItemAv> prodAvOpt = productItemAvRepo.findByProductItem(save);
+		List<ProductItemAv> prodavs = new ArrayList<>();
+		prodAvOpt.stream().forEach(y -> {
+
+			y.setProductItemAvId(y.getProductItemAvId());
+			if (y.getName().equalsIgnoreCase(ProductItemAvEnum.COLOR.geteName())) {
+				y.setStringValue(vo.getColour());
+			}
+			if (y.getName().equalsIgnoreCase(ProductItemAvEnum.LENGTH.geteName())) {
+				y.setIntValue(vo.getLength());
+			}
+			if (y.getName().equalsIgnoreCase(ProductItemAvEnum.PRODUCT_VALIDITY.geteName())) {
+				y.setDateValue(vo.getProductValidity());
+			}
+
+			y.setProductItem(save);
+
+			prodavs.add(y);
+		});
+		List<ProductItemAv> pav = productItemAvRepo.saveAll(prodavs);
+		update.setProductItemAvId(pav);
+
 		List<ProductImage> listImages = new ArrayList<>();
 		List<ProductImage> productImage = vo.getProductImage();
 		if (vo.getProductImage() != null) {
 			productImage.forEach(x -> {
 				ProductImage image = new ProductImage();
+				image.setProductImageId(x.getProductImageId());
 				image.setImage(x.getImage());
 				image.setPIUID(x.getPIUID());
 				image.setCreationDate(LocalDate.now());
 				image.setLastModified(LocalDate.now());
-				image.setProductItem(saveProductItem);
+				image.setProductItem(save);
 				listImages.add(image);
 
 			});
+
 			List<ProductImage> s = productImageRepo.saveAll(listImages);
-			productItem.setProductImage(s);
+			update.setProductImage(s);
 		}
-		AdjustmentsRe ad = new AdjustmentsRe();
-		ad.setCreatedBy(saveProductItem.getEmpId());
-		ad.setCreationDate(LocalDate.now());
-		ad.setCurrentBarcodeId(saveProductItem.getBarcodeId());
-		ad.setToBeBarcodeId(itemUpdate.getBarcodeId());
-		ad.setLastModifiedDate(LocalDate.now());
-		ad.setComments("rebar");
-		AdjustmentsRe audSave = adjustmentReRepo.save(ad);
-		ProductInventory prodInv = new ProductInventory();
-		prodInv.setProductItem(saveProductItem);
-		prodInv.setBarcodeId(productItem.getBarcodeId());
-		prodInv.setEffectingTable("AdjustmentRe");
-		prodInv.setEffectingTableID(audSave.getAdjustmentReId());
-		prodInv.setMasterFlag(true);
-		prodInv.setNatureOfTransaction(NatureOfTransaction.REBARPARENT.getName());
-		prodInv.setComment("Rebar");
-		prodInv.setStoreId(vo.getStoreId());
-		prodInv.setCreationDate(LocalDate.now());
+		Optional<ProductInventory> prodOp = productInventoryRepo.findByProductItem(save);
+		ProductInventory prodInv = prodOp.get();
+		prodInv.setProductItem(save);
 		prodInv.setLastModified(LocalDate.now());
 		prodInv.setStockvalue(vo.getStockValue());
 		ProductInventory prodInvSave = productInventoryRepo.save(prodInv);
-		log.info("Rebarcoding saved successsfully:" + vo.toString());
-		return "Rebarcoding saved successsfully:" + saveProductItem.getProductItemId();
+		update.setProductInventory(prodInvSave);
+
+		log.info("barcode updated successsfully:" + vo.toString());
+		return "barcode updated successsfully:" + vo.getBarcodeId();
 	}
 
 	@Override
@@ -595,114 +588,4 @@ public class ProductItemServiceImpl implements ProductItemService {
 		return "saving list of product details...";
 	}
 
-	@Override
-	public List<AdjustmentsReVo> getAllAdjustmentsRe(AdjustmentsReVo vo) {
-		log.info("Received request to getAllAdjustmentsRe:" + vo);
-		List<AdjustmentsRe> adjustmentDetails = new ArrayList<>();
-
-		List<ProductInventory> inv = productInventoryRepo.findAllByStoreId(vo.getStoreId());
-
-		/*
-		 * using dates
-		 */
-		if (vo.getFromDate() != null && vo.getToDate() != null && (vo.getCurrentBarcodeId() == "")
-				&& vo.getStoreId() != null) {
-			if (vo.getStoreId() != null) {
-				adjustmentDetails = adjustmentReRepo
-						.findByCreationDateBetweenOrderByLastModifiedDateAsc(vo.getFromDate(), vo.getToDate());
-
-				if (adjustmentDetails.isEmpty()) {
-					log.error("No record found with given information");
-					throw new RecordNotFoundException("No record found with given information");
-				}
-			} else {
-				throw new RecordNotFoundException("No record found with storeId");
-			}
-		}
-
-		/*
-		 * using dates and currentBarcodeId and storeId
-		 */
-		else if (vo.getFromDate() != null && vo.getToDate() != null && vo.getCurrentBarcodeId() != null
-				&& vo.getStoreId() != null) {
-			AdjustmentsRe adjustOpt = adjustmentReRepo.findByCurrentBarcodeId(vo.getCurrentBarcodeId());
-			if (adjustOpt != null) {
-				adjustmentDetails = adjustmentReRepo
-						.findByCreationDateBetweenAndCurrentBarcodeIdOrderByLastModifiedDateAsc(vo.getFromDate(),
-								vo.getToDate(), vo.getCurrentBarcodeId());
-			} else {
-				log.error("No record found with given adjustmentId");
-				throw new RecordNotFoundException("No record found with given adjustmentId");
-			}
-		}
-
-		/*
-		 * values with empty string
-		 */
-		else if (vo.getFromDate() == null && vo.getToDate() == null && vo.getCurrentBarcodeId() == ""
-				&& vo.getStoreId() == null) {
-			List<AdjustmentsRe> adjustDetails1 = adjustmentReRepo.findAll();
-			List<AdjustmentsReVo> adjustDetails = adjustmentReMapper.EntityToVo(adjustDetails1);
-			return adjustDetails;
-		}
-		/*
-		 * using storeId
-		 */
-		else if (vo.getFromDate() == null && vo.getToDate() == null && vo.getCurrentBarcodeId() == ""
-				&& vo.getStoreId() != null) {
-			if (vo.getStoreId() != null) {
-				List<Long> effectingId = inv.stream().map(e -> e.getEffectingTableID()).collect(Collectors.toList());
-				List<AdjustmentsRe> adjustmentDetails1 = adjustmentReRepo.findByAdjustmentReIdIn(effectingId);
-
-				List<AdjustmentsReVo> adjustDetailsVo = adjustmentReMapper.EntityToVo(adjustmentDetails1);
-				adjustDetailsVo.stream().forEach(a -> {
-					inv.stream().forEach(t -> {
-						a.setStoreId(t.getStoreId());
-					});
-
-				});
-				return adjustDetailsVo;
-			} else {
-				throw new RecordNotFoundException("No record found with storeId:" + vo.getStoreId());
-			}
-		}
-
-		/*
-		 * using currentBarcodeId and storeId
-		 */
-		else if (vo.getFromDate() == null && vo.getToDate() == null && vo.getCurrentBarcodeId() != null
-				&& vo.getStoreId() != null)
-
-		{
-			List<Long> effectingId = inv.stream().map(e -> e.getEffectingTableID()).collect(Collectors.toList());
-			List<AdjustmentsRe> adjustmentDetails1 = adjustmentReRepo
-					.findByCurrentBarcodeIdAndAdjustmentReIdIn(vo.getCurrentBarcodeId(), effectingId);
-			List<AdjustmentsReVo> adjustList = adjustmentReMapper.EntityToVo(adjustmentDetails1);
-			adjustList.stream().forEach(a -> {
-				inv.stream().forEach(t -> {
-					a.setStoreId(t.getStoreId());
-				});
-
-			});
-			return adjustList;
-
-		}
-
-		else {
-			List<AdjustmentsRe> adjustDetails1 = adjustmentReRepo.findAll();
-			List<AdjustmentsReVo> adjustDetails = adjustmentReMapper.EntityToVo(adjustDetails1);
-			return adjustDetails;
-		}
-
-		List<AdjustmentsReVo> adjustmentList = adjustmentReMapper.EntityToVo(adjustmentDetails);
-		adjustmentList.stream().forEach(a -> {
-			inv.stream().forEach(t -> {
-				a.setStoreId(t.getStoreId());
-			});
-
-		});
-		log.warn("we are checking if barcode textile is fetching...");
-		log.info("fetching all barcode textile details");
-		return adjustmentList;
-	}
 }

@@ -130,17 +130,14 @@ public class ProductItemMapper {
 
 	}
 
-	public ProductItem VoToEntityRebar(ProductItemVo vo) {
-		ProductItem dto = new ProductItem();
-		Random ran = new Random();
-		dto.setBarcodeId("REBAR/" + LocalDate.now().getYear() + LocalDate.now().getDayOfMonth() + "/" + ran.nextInt());
-		dto.setName(vo.getName());
+	public ProductItem VoToEntityUpdate(ProductItemVo vo, ProductItem dto) {
+
 		dto.setCostPrice(vo.getCostPrice());
 		dto.setCreationDate(LocalDate.now());
 		dto.setLastModifiedDate(LocalDate.now());
 		dto.setDefaultImage(vo.getDefaultImage());
 		dto.setListPrice(vo.getListPrice());
-		dto.setStatus(1);
+		dto.setStatus(vo.getStatus());
 		dto.setStock(vo.getStock());
 		dto.setEmpId(vo.getEmpId());
 		dto.setDiscontinued(vo.getDiscontinued());
@@ -151,6 +148,7 @@ public class ProductItemMapper {
 		dto.setBatchNo(vo.getBatchNo());
 		dto.setUom(vo.getUom());
 		dto.setDomainDataId(vo.getDomainDataId());
+
 		dto.setStoreId(vo.getStoreId());
 		return dto;
 	}
