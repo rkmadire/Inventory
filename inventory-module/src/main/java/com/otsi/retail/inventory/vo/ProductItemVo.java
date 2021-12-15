@@ -21,12 +21,14 @@ public class ProductItemVo {
 	private int status;
 
 	private String title;
-	
+
 	private String hsnCode;
 
 	private int stock;
-	
+
 	private String discontinued;
+
+	private String parentbarcode;
 
 	private LocalDate fromDate;
 
@@ -55,11 +57,11 @@ public class ProductItemVo {
 	private List<ProductImage> ProductImage;
 
 	private int stockValue;
-	
+
 	private Boolean isBarcode;
-	
+
 	private String batchNo;
-	
+
 	private float value;
 
 }

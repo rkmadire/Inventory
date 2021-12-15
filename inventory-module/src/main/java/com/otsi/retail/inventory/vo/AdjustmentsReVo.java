@@ -4,9 +4,9 @@ import java.time.LocalDate;
 import lombok.Data;
 
 @Data
-public class AdjustmentsVo {
+public class AdjustmentsReVo {
 
-	private Long adjustmentId;
+	private Long adjustmentReId;
 	private String currentBarcodeId;
 	private String toBeBarcodeId;
 	private String createdBy;

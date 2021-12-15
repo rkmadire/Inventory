@@ -25,7 +25,7 @@ public class ProductTransactionMapper {
 		vo.setBarcodeId(dto.getBarcodeId());
 		vo.setComment(dto.getComment());
 		vo.setEffectingTable(dto.getEffectingTable());
-		vo.setEffectingTableID(dto.getEffectingTableID());
+		vo.setEffectingTableId(dto.getEffectingTableId());
 		vo.setQuantity(dto.getQuantity());
 		vo.setMasterFlag(dto.isMasterFlag());
 		vo.setNatureOfTransaction(dto.getNatureOfTransaction());
