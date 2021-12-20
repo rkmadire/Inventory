@@ -1,9 +1,9 @@
 server:
- port: 9092
+ port: 9091
  
 spring:
  application:
-    name: inventory-service
+    name: inventory-module
  datasource:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/inventory-module
@@ -25,9 +25,7 @@ eureka:
     instance-id: ${spring.application.name}:${random.int}
     hostname: localhost
 
-logging:
-    file:
-      name: C:/Users/ADMIN/Desktop/logs/inventory-module.log    
-    level:
-     com.otsi.retail.inventory.service: DEBUG   
 
+
+springdoc:
+    packagesToScan: com.otsi.retail.inventory
