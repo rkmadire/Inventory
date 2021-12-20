@@ -22,8 +22,8 @@ public interface ProductTextileService {
 	String updateBarcodeTextile(BarcodeTextileVo vo);
 
 	String deleteBarcodeTextile(Long barcodeTextileId);
-	
-	BarcodeTextileVo getBarcodeTextile(String barcode);
+
+	BarcodeTextileVo getBarcodeTextile(String barcode, Long storeId);
 
 	List<BarcodeTextileVo> getAllBarcodes(SearchFilterVo vo);
 
@@ -32,5 +32,7 @@ public interface ProductTextileService {
 	String inventoryUpdateForTextile(List<UpdateInventoryRequest> request);
 
 	List<AdjustmentsVo> getAllAdjustments(AdjustmentsVo vo);
+
+	String saveProductTextileList(List<BarcodeTextileVo> barcodeTextileVos);
 
 }

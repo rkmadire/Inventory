@@ -22,4 +22,10 @@ public interface ProductTransactionRepo extends JpaRepository<ProductTransaction
 
 	ProductTransaction findByQuantity(int qty);
 
+	List<ProductTransaction> findAllByStoreId(Long storeId);
+
+	ProductTransaction findByEffectingTableId(Long adjustmentId);
+
+	ProductTransaction findByStoreId(Long storeId);
+
 }

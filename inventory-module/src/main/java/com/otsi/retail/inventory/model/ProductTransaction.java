@@ -25,7 +25,7 @@ public class ProductTransaction {
 	private int quantity;
 	private String natureOfTransaction;
 	private String effectingTable;
-	private Long effectingTableID;
+	private Long effectingTableId;
 	private boolean masterFlag;
 	private String comment;
 	private LocalDate creationDate;
