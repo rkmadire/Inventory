@@ -2,7 +2,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ include "inventory-module.fullname" . }}
+  name: {{ include "inventory-module.fullname" . }}-pos
   labels:
     {{- include "inventory-module.labels" . | nindent 4 }}
   annotations:
