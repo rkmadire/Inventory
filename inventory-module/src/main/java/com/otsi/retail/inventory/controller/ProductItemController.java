@@ -3,8 +3,8 @@ package com.otsi.retail.inventory.controller;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +27,7 @@ import com.otsi.retail.inventory.vo.ProductItemVo;
 @RequestMapping("/inventoryRetail")
 public class ProductItemController {
 
-	private Logger log = LoggerFactory.getLogger(ProductItemController.class);
+	private Logger log = LogManager.getLogger(ProductItemController.class);
 
 	@Autowired
 	private ProductItemService productItemService;

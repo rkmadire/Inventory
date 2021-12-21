@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,7 @@ import com.otsi.retail.inventory.vo.UomVo;
 @Component
 public class UomServiceImpl implements UomService {
 
-	private Logger log = LoggerFactory.getLogger(UomServiceImpl.class);
+	private Logger log = LogManager.getLogger(UomServiceImpl.class);
 
 	@Autowired
 	private UomRepo uomRepo;

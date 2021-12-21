@@ -2,9 +2,8 @@ package com.otsi.retail.inventory.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,13 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
-import com.otsi.retail.inventory.rabbitmq.MQConfig;
 import com.otsi.retail.inventory.service.ProductTextileService;
 import com.otsi.retail.inventory.vo.AdjustmentsVo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
-import com.otsi.retail.inventory.vo.ProductItemVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
-import com.otsi.retail.inventory.vo.ProductTransactionVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
 import com.otsi.retail.inventory.vo.UpdateInventoryRequest;
 
@@ -34,7 +30,7 @@ import com.otsi.retail.inventory.vo.UpdateInventoryRequest;
 @RequestMapping("/inventoryTextile")
 public class ProductTextileController {
 
-	private Logger log = LoggerFactory.getLogger(ProductTextileController.class);
+	private Logger log = LogManager.getLogger(ProductTextileController.class);
 
 	@Autowired
 	private ProductTextileService productTextileService;

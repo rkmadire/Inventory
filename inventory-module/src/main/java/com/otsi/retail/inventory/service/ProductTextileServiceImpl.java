@@ -7,8 +7,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,6 @@ import com.otsi.retail.inventory.mapper.ProductTextileMapper;
 import com.otsi.retail.inventory.mapper.ProductTransactionMapper;
 import com.otsi.retail.inventory.model.Adjustments;
 import com.otsi.retail.inventory.model.BarcodeTextile;
-import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.model.ProductTextile;
 import com.otsi.retail.inventory.model.ProductTransaction;
 import com.otsi.retail.inventory.repo.AdjustmentRepo;
@@ -30,16 +29,14 @@ import com.otsi.retail.inventory.repo.ProductTextileRepo;
 import com.otsi.retail.inventory.repo.ProductTransactionRepo;
 import com.otsi.retail.inventory.vo.AdjustmentsVo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
-import com.otsi.retail.inventory.vo.ProductItemVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
-import com.otsi.retail.inventory.vo.ProductTransactionVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
 import com.otsi.retail.inventory.vo.UpdateInventoryRequest;
 
 @Component
 public class ProductTextileServiceImpl implements ProductTextileService {
 
-	private Logger log = LoggerFactory.getLogger(ProductTextileServiceImpl.class);
+	private Logger log = LogManager.getLogger(ProductTextileServiceImpl.class);
 
 	@Autowired
 	private BarcodeTextileMapper barcodeTextileMapper;
