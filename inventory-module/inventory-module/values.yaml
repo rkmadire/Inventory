@@ -5,7 +5,7 @@ name: inventory-module
 
 env:
   postgres_user: postgres
-  postgres_password: Vasavi
+  postgres_password: Otsi@123
   postgres_data: /var/lib/postgresql/data/pgdata
   postgres_db: inventory-module
 
@@ -100,7 +100,7 @@ tolerations: []
 affinity: {}
 
 persistence: 
-  enabled: false
+  enabled: true
   storageClass: gp2
   accessMode: ReadWriteOnce
   size: 1Gi
