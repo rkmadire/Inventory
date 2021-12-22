@@ -98,7 +98,7 @@ public class CatalogServiceImpl implements CatalogService {
 	public List<CatalogVo> getCategories(Long id) {
 
 		Optional<CatalogEntity> entity = catalogRepo.findById(id);
-		if (entity.isEmpty()) {
+		if (!entity.isPresent()) {
 			throw new RecordNotFoundException("record not exists");
 		}
 
