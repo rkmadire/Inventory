@@ -415,6 +415,19 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			return barcodeList;
 		}
 
+		else if ((vo.getFromDate() == null) && (vo.getToDate() == null) && (vo.getBarcode() != null)
+				&& vo.getStoreId() == null && vo.getItemMrpGreaterThan() == 0 && vo.getItemMrpLessThan() == 0
+				&& vo.getEmpId() == null) {
+			BarcodeTextile textile = barcodeTextileRepo.findByBarcode(vo.getBarcode());
+			if (textile == null) {
+				throw new RecordNotFoundException("textile record is not found");
+			}
+
+			barcodeDetails.add(textile);
+			List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeDetails);
+            return barcodeList;
+		}
+
 		List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeDetails);
 		barcodeList.stream().forEach(v -> {
 
