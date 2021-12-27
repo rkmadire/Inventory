@@ -7,8 +7,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +39,7 @@ import com.otsi.retail.inventory.vo.UpdateInventoryRequest;
 @Component
 public class ProductTextileServiceImpl implements ProductTextileService {
 
-	private Logger log = LoggerFactory.getLogger(ProductTextileServiceImpl.class);
+	private Logger log = LogManager.getLogger(ProductTextileServiceImpl.class);
 
 	@Autowired
 	private BarcodeTextileMapper barcodeTextileMapper;
@@ -385,13 +385,12 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			}
 		}
 
-		/*
-		 * using barcodeStore(storeId)
-		 */
 		else if (vo.getStoreId() != null) {
+			ProductStatus status = ProductStatus.ENABLE;
 			List<ProductTextile> prodOpt = productTextileRepo.findAllByStoreId(vo.getStoreId());
 			if (prodOpt != null) {
-				barcodeDetails = barcodeTextileRepo.findByProductTextileStoreId(vo.getStoreId());
+				barcodeDetails = barcodeTextileRepo.findByProductTextileStoreIdAndProductTextileStatus(vo.getStoreId(),
+						status);
 			} else {
 				log.error("No record found with given information");
 				throw new RecordNotFoundException("No record found with given information");

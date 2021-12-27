@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.otsi.retail.inventory.commons.NatureOfTransaction;
 import com.otsi.retail.inventory.commons.ProductItemAvEnum;
 import com.otsi.retail.inventory.exceptions.DuplicateRecordException;
@@ -31,7 +29,7 @@ import com.otsi.retail.inventory.vo.ProductItemVo;
 @Component
 public class ProductItemServiceImpl implements ProductItemService {
 
-	private Logger log = LoggerFactory.getLogger(ProductItemServiceImpl.class);
+	private Logger log = LogManager.getLogger(ProductItemServiceImpl.class);
 
 	@Autowired
 	private ProductImageRepo productImageRepo;

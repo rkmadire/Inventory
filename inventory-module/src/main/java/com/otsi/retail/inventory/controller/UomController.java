@@ -2,9 +2,8 @@ package com.otsi.retail.inventory.controller;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.model.UomEntity;
 import com.otsi.retail.inventory.service.UomService;
@@ -24,7 +22,7 @@ import com.otsi.retail.inventory.vo.UomVo;
 @RequestMapping("/uom")
 public class UomController {
 
-	private Logger log = LoggerFactory.getLogger(UomController.class);
+	private Logger log = LogManager.getLogger(UomController.class);
 
 	@Autowired
 	private UomService uomService;

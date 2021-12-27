@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import com.otsi.retail.inventory.commons.ProductStatus;
 import com.otsi.retail.inventory.model.BarcodeTextile;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
-import com.otsi.retail.inventory.vo.ProductItemVo;
 
 @Repository
 public interface BarcodeTextileRepo extends JpaRepository<BarcodeTextile, Long> {
@@ -18,8 +17,6 @@ public interface BarcodeTextileRepo extends JpaRepository<BarcodeTextile, Long> 
 	BarcodeTextile findByBarcode(String barcode);
 
 	BarcodeTextile save(BarcodeTextileVo prodInv);
-
-	//List<BarcodeTextile> findByCreationDateBetweenOrderByLastModifiedAsc(LocalDate fromDate, LocalDate toDate);
 
 	Optional<BarcodeTextile> findByBarcodeTextileId(Long barcodeTextileId);
 
@@ -34,7 +31,6 @@ public interface BarcodeTextileRepo extends JpaRepository<BarcodeTextile, Long> 
 	List<BarcodeTextile> findByProductTextileEmpId(String empId);
 
 	List<BarcodeTextile> findByBarcodeTextileIdIn(List<Long> bars);
-
 
 	List<BarcodeTextile> findByProductTextileStoreId(Long storeId);
 
@@ -55,9 +51,7 @@ public interface BarcodeTextileRepo extends JpaRepository<BarcodeTextile, Long> 
 
 	List<BarcodeTextile> findByCreationDateBetweenAndBarcodeTextileIdAndProductTextileStoreIdOrderByLastModifiedAsc(
 			LocalDate fromDate, LocalDate toDate, Long barcodeTextileId, Long storeId);
-	
-	
-	
 
+	List<BarcodeTextile> findByProductTextileStoreIdAndProductTextileStatus(Long storeId, ProductStatus status);
 
 }
