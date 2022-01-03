@@ -1,26 +1,26 @@
 server:
- port: 9092
+  port: 9092
  
 spring:
- application:
+  application:
     name: inventory-service
- datasource:
+  datasource:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/inventory-module
     username: postgres
-    password: Vasavi
-    
- jpa:
-   hibernate:
+    password: Otsi@123
+    initializaion.mode: always
+  jpa:
+    hibernate:
     ddl-auto: update
-   database-platform: org.hibernate.dialect.PostgreSQL9Dialect
-   show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    show-sql: true
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://localhost:8762/eureka/
   instance:
     instance-id: ${spring.application.name}:${random.int}
     hostname: localhost
@@ -29,5 +29,5 @@ logging:
     file:
       name: C:/Users/ADMIN/Desktop/logs/inventory-module.log    
     level:
-      com.otsi.retail.inventory.service: DEBUG   
+     com.otsi.retail.inventory.service: DEBUG   
 
