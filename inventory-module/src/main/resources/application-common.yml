@@ -15,6 +15,11 @@ spring:
     ddl-auto: update
    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
    show-sql: true
+ rabbitmq:
+      host: localhost
+      port: 5672
+      username: guest
+      password: guest
 eureka:
   client:
     register-with-eureka: true
@@ -27,7 +32,7 @@ eureka:
 
 logging:
     file:
-      name: C:/Users/ADMIN/Desktop/logs/inventory-module.log    
+      name: C:\Users\retails\Desktop\logs\inventory-module.log    
     level:
       com.otsi.retail.inventory.service: DEBUG   
 
