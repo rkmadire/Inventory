@@ -54,4 +54,6 @@ public interface BarcodeTextileRepo extends JpaRepository<BarcodeTextile, Long> 
 
 	List<BarcodeTextile> findByProductTextileStoreIdAndProductTextileStatus(Long storeId, ProductStatus status);
 
+	BarcodeTextile findByProductTextileParentBarcode(String barcode);
+
 }
