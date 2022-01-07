@@ -1,20 +1,25 @@
 server:
- port: 9091
+ port: 9092
  
 spring:
  application:
-    name: inventory-module
+    name: inventory-service
  datasource:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/inventory-module
     username: postgres
     password: Vasavi
-    initializaion.mode: always
+    
  jpa:
    hibernate:
     ddl-auto: update
    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
    show-sql: true
+ rabbitmq:
+      host: localhost
+      port: 5672
+      username: guest
+      password: guest
 eureka:
   client:
     register-with-eureka: true
@@ -25,7 +30,9 @@ eureka:
     instance-id: ${spring.application.name}:${random.int}
     hostname: localhost
 
+logging:
+    file:
+      name: C:/Users/ADMIN/Desktop/logs/inventory-module.log    
+    level:
+      com.otsi.retail.inventory.service: DEBUG   
 
-
-springdoc:
-    packagesToScan: com.otsi.retail.inventory

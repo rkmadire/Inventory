@@ -3,6 +3,7 @@ package com.otsi.retail.inventory.rabbitmq;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -25,12 +26,12 @@ public class MQConfig {
 	}
 
 	@Bean
-	public TopicExchange exchange() {
-		return new TopicExchange(inventory_exchange);
+	public DirectExchange exchange() {
+		return new DirectExchange(inventory_exchange);
 	}
 
 	@Bean
-	public Binding binding(Queue queue, TopicExchange exchange) {
+	public Binding binding(Queue queue, DirectExchange exchange) {
 		return BindingBuilder.bind(queue).to(exchange).with(inventory_rk);
 
 	}

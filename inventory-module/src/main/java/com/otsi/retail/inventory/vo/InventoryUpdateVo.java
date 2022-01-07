@@ -3,14 +3,15 @@ package com.otsi.retail.inventory.vo;
 import lombok.Data;
 
 @Data
-public class UpdateInventoryRequest {
-	
-	private String barcode;
-	
-	private int qty;
-	
+public class InventoryUpdateVo {
+
+	private int quantity;
+
 	private Long lineItemId;
+
+	private String barCode;
 	
 	private Long storeId;
 
 }
+
