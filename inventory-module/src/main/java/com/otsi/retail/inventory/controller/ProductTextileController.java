@@ -1,6 +1,7 @@
 package com.otsi.retail.inventory.controller;
 
 import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -13,16 +14,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.rabbitmq.MQConfig;
 import com.otsi.retail.inventory.service.ProductTextileService;
 import com.otsi.retail.inventory.vo.AdjustmentsVo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
-import com.otsi.retail.inventory.vo.ProductItemVo;
+import com.otsi.retail.inventory.vo.EnumVo;
+import com.otsi.retail.inventory.vo.InventoryUpdateVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
-import com.otsi.retail.inventory.vo.ProductTransactionVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
-import com.otsi.retail.inventory.vo.UpdateInventoryRequest;
 
 /**
  * @author vasavi
@@ -82,13 +83,10 @@ public class ProductTextileController {
 		return new GateWayResponse<>("fetching all barcode textile details sucessfully", allBarcodes);
 	}
 
-	// @RabbitListener(queues = MQConfig.inventory_queue_textile)
-	@PostMapping("/inventoryUpdateForTextile")
-	public GateWayResponse<?> inventoryUpdateForTextile(@RequestBody List<UpdateInventoryRequest> request) {
-		String barcodeDetails = productTextileService.inventoryUpdateForTextile(request);
-		return new GateWayResponse<>("update inventory from newsale", barcodeDetails);
-
-	}
+	@RabbitListener(queues = MQConfig.inventory_queue_textile)
+	public void inventoryUpdateForTextile(@RequestBody List<InventoryUpdateVo> request) {
+		productTextileService.inventoryUpdateForTextile(request);
+		}
 
 	@PostMapping("/getAllAdjustments")
 	public GateWayResponse<?> getAllAdjustments(@RequestBody AdjustmentsVo vo) {
@@ -102,6 +100,21 @@ public class ProductTextileController {
 		log.info("Received Request to saveProductTextileList:" + barcodeTextileVos);
 		String saveVoList = productTextileService.saveProductTextileList(barcodeTextileVos);
 		return new GateWayResponse<>("saving list of product textile", saveVoList);
+
+	}
+
+	@GetMapping("/getValuesFromColumns")
+	public GateWayResponse<?> getValuesFromColumns(@RequestParam("enumName") String enumName) {
+		log.info("Recieved request to getValuesFromColumns");
+		List<String> enumVo = productTextileService.getValuesFromColumns(enumName);
+		return new GateWayResponse<>("fetching all " + enumName + " textile details sucessfully", enumVo);
+	}
+
+	@GetMapping("/getAllColumns")
+	public GateWayResponse<?> getAllColumns() {
+		log.info("Received Request to getAllColumns...");
+		List<String> columns = productTextileService.getAllColumns();
+		return new GateWayResponse<>("fetching all Column details", columns);
 
 	}
 }

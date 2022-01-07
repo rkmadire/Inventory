@@ -6,11 +6,10 @@ import org.springframework.stereotype.Service;
 
 import com.otsi.retail.inventory.vo.AdjustmentsVo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
-import com.otsi.retail.inventory.vo.ProductItemVo;
+import com.otsi.retail.inventory.vo.EnumVo;
+import com.otsi.retail.inventory.vo.InventoryUpdateVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
-import com.otsi.retail.inventory.vo.ProductTransactionVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
-import com.otsi.retail.inventory.vo.UpdateInventoryRequest;
 
 @Service
 public interface ProductTextileService {
@@ -29,10 +28,14 @@ public interface ProductTextileService {
 
 	String incrementQty(BarcodeTextileVo vo);
 
-	String inventoryUpdateForTextile(List<UpdateInventoryRequest> request);
+	String inventoryUpdateForTextile(List<InventoryUpdateVo> request);
 
 	List<AdjustmentsVo> getAllAdjustments(AdjustmentsVo vo);
 
 	String saveProductTextileList(List<BarcodeTextileVo> barcodeTextileVos);
+
+	List<String> getAllColumns();
+
+	List<String> getValuesFromColumns(String enumName);
 
 }

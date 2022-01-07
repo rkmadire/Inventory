@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.otsi.retail.inventory.commons.NatureOfTransaction;
@@ -19,10 +20,8 @@ import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
 import com.otsi.retail.inventory.mapper.AdjustmentMapper;
 import com.otsi.retail.inventory.mapper.BarcodeTextileMapper;
 import com.otsi.retail.inventory.mapper.ProductTextileMapper;
-import com.otsi.retail.inventory.mapper.ProductTransactionMapper;
 import com.otsi.retail.inventory.model.Adjustments;
 import com.otsi.retail.inventory.model.BarcodeTextile;
-import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.model.ProductTextile;
 import com.otsi.retail.inventory.model.ProductTransaction;
 import com.otsi.retail.inventory.repo.AdjustmentRepo;
@@ -31,11 +30,9 @@ import com.otsi.retail.inventory.repo.ProductTextileRepo;
 import com.otsi.retail.inventory.repo.ProductTransactionRepo;
 import com.otsi.retail.inventory.vo.AdjustmentsVo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
-import com.otsi.retail.inventory.vo.ProductItemVo;
+import com.otsi.retail.inventory.vo.InventoryUpdateVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
-import com.otsi.retail.inventory.vo.ProductTransactionVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
-import com.otsi.retail.inventory.vo.UpdateInventoryRequest;
 
 @Component
 public class ProductTextileServiceImpl implements ProductTextileService {
@@ -52,6 +49,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	private ProductTextileRepo productTextileRepo;
 
 	@Autowired
+	@Qualifier("barcodeTextileRepo")
 	private BarcodeTextileRepo barcodeTextileRepo;
 
 	@Autowired
@@ -60,11 +58,12 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	@Autowired
 	private AdjustmentRepo adjustmentRepo;
 
-	@Autowired
-	private ProductTransactionMapper productTransactionMapper;
+
 
 	@Autowired
 	private AdjustmentMapper adjustmentMapper;
+
+	
 
 	@Override
 	public String addBarcodeTextile(BarcodeTextileVo textileVo) {
@@ -456,18 +455,18 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	}
 
 	@Override
-	public String inventoryUpdateForTextile(List<UpdateInventoryRequest> request) {
+	public String inventoryUpdateForTextile(List<InventoryUpdateVo> request) {
 		request.stream().forEach(x -> {
 
-			BarcodeTextile barcodeDetails = barcodeTextileRepo.findByBarcode(x.getBarcode());
+			BarcodeTextile barcodeDetails = barcodeTextileRepo.findByBarcode(x.getBarCode());
 			ProductTransaction transact = productTransactionRepo.findByBarcodeId(barcodeDetails.getBarcodeTextileId());
 			transact.setMasterFlag(false);
-			transact.setQuantity(Math.abs(x.getQty() - transact.getQuantity()));
+			transact.setQuantity(Math.abs(x.getQuantity() - transact.getQuantity()));
 			productTransactionRepo.save(transact);
 			ProductTransaction prodTrans = new ProductTransaction();
 			prodTrans.setBarcodeId(barcodeDetails.getBarcodeTextileId());
 			prodTrans.setEffectingTableId(x.getLineItemId());
-			prodTrans.setQuantity(x.getQty());
+			prodTrans.setQuantity(x.getQuantity());
 			prodTrans.setStoreId(x.getStoreId());
 			prodTrans.setNatureOfTransaction(NatureOfTransaction.SALE.getName());
 			prodTrans.setCreationDate(LocalDate.now());
@@ -475,7 +474,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			prodTrans.setMasterFlag(true);
 			prodTrans.setComment("sale");
 			prodTrans.setEffectingTable("order table");
-			ProductTransaction saveTrans = productTransactionRepo.save(prodTrans);
+			productTransactionRepo.save(prodTrans);
 		});
 		log.info("updated inventory for textile from newsale successfully..");
 		return "updated inventory for textile from newsale successfully..";
@@ -608,5 +607,71 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		});
 		log.info("after saving all product textiles...");
 		return "saving list of product textile details...";
+	}
+
+	/*
+	 * @Override public List<EnumVo> getValuesFromColumns(String enumName) {
+	 * List<String> enumString = new ArrayList<>(); List<Float> enumFloat = new
+	 * ArrayList<>(); List<EnumVo> enumVos = new ArrayList<>(); if
+	 * (enumName.equalsIgnoreCase(ColumnsEnum.batchNo.toString())) {
+	 * List<BarcodeTextile> bar = barcodeTextileRepo.findAll(); enumString =
+	 * bar.stream().map(i -> i.getBatchNo()).collect(Collectors.toList());
+	 * enumString.stream().forEach(e -> { EnumVo vo = new EnumVo(); vo.setCode(e);
+	 * enumVos.add(vo); }); }
+	 * 
+	 * else if (enumName.equalsIgnoreCase(ColumnsEnum.costPrice.toString())) {
+	 * List<ProductTextile> prod = productTextileRepo.findAll(); enumFloat =
+	 * prod.stream().map(i -> i.getCostPrice()).collect(Collectors.toList());
+	 * enumFloat.stream().forEach(e -> { EnumVo vo = new EnumVo(); vo.setMrp(e);
+	 * enumVos.add(vo); }); }
+	 * 
+	 * else if (enumName.equalsIgnoreCase(ColumnsEnum.ItemMrp.toString())) {
+	 * List<ProductTextile> prod = productTextileRepo.findAll(); enumFloat =
+	 * prod.stream().map(i -> i.getItemMrp()).collect(Collectors.toList());
+	 * enumFloat.stream().forEach(e -> { EnumVo vo = new EnumVo(); vo.setMrp(e);
+	 * enumVos.add(vo); }); }
+	 * 
+	 * else if (enumName.equalsIgnoreCase(ColumnsEnum.colour.toString())) {
+	 * List<BarcodeTextile> bar = barcodeTextileRepo.findAll(); enumString =
+	 * bar.stream().map(i -> i.getColour()).collect(Collectors.toList());
+	 * enumString.stream().forEach(e -> { EnumVo vo = new EnumVo(); vo.setCode(e);
+	 * enumVos.add(vo); }); }
+	 * 
+	 * else if (enumName.equalsIgnoreCase(ColumnsEnum.uom.toString())) {
+	 * List<ProductTextile> prod = productTextileRepo.findAll(); enumString =
+	 * prod.stream().map(i -> i.getUom()).collect(Collectors.toList());
+	 * enumString.stream().forEach(e -> { EnumVo vo = new EnumVo(); vo.setCode(e);
+	 * enumVos.add(vo); }); } log.info("after fetching enumVos based on enumName:" +
+	 * enumName + "enumVos:" + enumVos); return enumVos;
+	 * 
+	 * }
+	 */
+	@Override
+	public List<String> getValuesFromColumns(String enumName) {
+		
+
+		//List<BarcodeTextile> bar=barcodeTextileRepo.findAllByProductTextile(enumName);
+
+	
+		 String tableName = getTableName(enumName);
+		
+         //bar.stream().map(x -> tableName).collect(Collectors.toList());
+         return null;
+	}
+
+	private String getTableName(String enumName) {
+		String query = "select column_name from information_schema.columns where table_name ='barcode_textile' AND column_name= "
+				+ enumName + "''";
+		// "select column_name from information_schema.columns where table_name In
+		// ('barcode_textile','product_textile')"
+		// "select table_name from information_schema.columns where column_name= '" +
+		return query;
+	}
+
+	@Override
+	public List<String> getAllColumns() {
+		List<String> bar = barcodeTextileRepo.findAllColumnNames();
+
+		return bar;
 	}
 }
