@@ -3,11 +3,9 @@ package com.otsi.retail.inventory.repo;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import com.otsi.retail.inventory.commons.ProductStatus;
 import com.otsi.retail.inventory.model.BarcodeTextile;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
@@ -59,16 +57,5 @@ public interface BarcodeTextileRepo extends JpaRepository<BarcodeTextile, Long> 
 
 	@Query(value = "select column_name from information_schema.columns where table_name In ('barcode_textile','product_textile')", nativeQuery = true)
 	List<String> findAllColumnNames();
-	// @Query(value="select colour from information_schema.columns where table_name
-	// ='barcode_textile'",nativeQuery = true)
-
-	//List<BarcodeTextile> findAllValueNames(String enumName);
-
-	
-	//List<BarcodeTextile> findAllByEnumName(String enumName);
-
-	
-
-	//List<BarcodeTextile> findAllByProductTextile(List<String> enumName);
 
 }

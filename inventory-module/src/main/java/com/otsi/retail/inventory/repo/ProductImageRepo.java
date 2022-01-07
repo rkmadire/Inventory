@@ -1,5 +1,5 @@
 /**
- * 
+ * Repository for productImage
  */
 package com.otsi.retail.inventory.repo;
 

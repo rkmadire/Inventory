@@ -42,6 +42,13 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId><!--$NO-MVN-MAN-VER$ -->
 			<version>${log4j2.version}</version><!--$NO-MVN-MAN-VER$ -->

@@ -6,13 +6,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
 import com.otsi.retail.inventory.commons.NatureOfTransaction;
 import com.otsi.retail.inventory.commons.ProductStatus;
 import com.otsi.retail.inventory.exceptions.ParentBarcodeFoundException;
@@ -26,7 +23,9 @@ import com.otsi.retail.inventory.model.ProductTextile;
 import com.otsi.retail.inventory.model.ProductTransaction;
 import com.otsi.retail.inventory.repo.AdjustmentRepo;
 import com.otsi.retail.inventory.repo.BarcodeTextileRepo;
+import com.otsi.retail.inventory.repo.BarcodeTextileRepoImpl;
 import com.otsi.retail.inventory.repo.ProductTextileRepo;
+import com.otsi.retail.inventory.repo.ProductTextileRepoImpl;
 import com.otsi.retail.inventory.repo.ProductTransactionRepo;
 import com.otsi.retail.inventory.vo.AdjustmentsVo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
@@ -49,7 +48,6 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	private ProductTextileRepo productTextileRepo;
 
 	@Autowired
-	@Qualifier("barcodeTextileRepo")
 	private BarcodeTextileRepo barcodeTextileRepo;
 
 	@Autowired
@@ -58,12 +56,14 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	@Autowired
 	private AdjustmentRepo adjustmentRepo;
 
-
-
 	@Autowired
 	private AdjustmentMapper adjustmentMapper;
 
-	
+	@Autowired
+	private ProductTextileRepoImpl productTextileRepoImpl;
+
+	@Autowired
+	private BarcodeTextileRepoImpl barcodeTextileRepoImpl;
 
 	@Override
 	public String addBarcodeTextile(BarcodeTextileVo textileVo) {
@@ -609,69 +609,25 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		return "saving list of product textile details...";
 	}
 
-	/*
-	 * @Override public List<EnumVo> getValuesFromColumns(String enumName) {
-	 * List<String> enumString = new ArrayList<>(); List<Float> enumFloat = new
-	 * ArrayList<>(); List<EnumVo> enumVos = new ArrayList<>(); if
-	 * (enumName.equalsIgnoreCase(ColumnsEnum.batchNo.toString())) {
-	 * List<BarcodeTextile> bar = barcodeTextileRepo.findAll(); enumString =
-	 * bar.stream().map(i -> i.getBatchNo()).collect(Collectors.toList());
-	 * enumString.stream().forEach(e -> { EnumVo vo = new EnumVo(); vo.setCode(e);
-	 * enumVos.add(vo); }); }
-	 * 
-	 * else if (enumName.equalsIgnoreCase(ColumnsEnum.costPrice.toString())) {
-	 * List<ProductTextile> prod = productTextileRepo.findAll(); enumFloat =
-	 * prod.stream().map(i -> i.getCostPrice()).collect(Collectors.toList());
-	 * enumFloat.stream().forEach(e -> { EnumVo vo = new EnumVo(); vo.setMrp(e);
-	 * enumVos.add(vo); }); }
-	 * 
-	 * else if (enumName.equalsIgnoreCase(ColumnsEnum.ItemMrp.toString())) {
-	 * List<ProductTextile> prod = productTextileRepo.findAll(); enumFloat =
-	 * prod.stream().map(i -> i.getItemMrp()).collect(Collectors.toList());
-	 * enumFloat.stream().forEach(e -> { EnumVo vo = new EnumVo(); vo.setMrp(e);
-	 * enumVos.add(vo); }); }
-	 * 
-	 * else if (enumName.equalsIgnoreCase(ColumnsEnum.colour.toString())) {
-	 * List<BarcodeTextile> bar = barcodeTextileRepo.findAll(); enumString =
-	 * bar.stream().map(i -> i.getColour()).collect(Collectors.toList());
-	 * enumString.stream().forEach(e -> { EnumVo vo = new EnumVo(); vo.setCode(e);
-	 * enumVos.add(vo); }); }
-	 * 
-	 * else if (enumName.equalsIgnoreCase(ColumnsEnum.uom.toString())) {
-	 * List<ProductTextile> prod = productTextileRepo.findAll(); enumString =
-	 * prod.stream().map(i -> i.getUom()).collect(Collectors.toList());
-	 * enumString.stream().forEach(e -> { EnumVo vo = new EnumVo(); vo.setCode(e);
-	 * enumVos.add(vo); }); } log.info("after fetching enumVos based on enumName:" +
-	 * enumName + "enumVos:" + enumVos); return enumVos;
-	 * 
-	 * }
-	 */
 	@Override
-	public List<String> getValuesFromColumns(String enumName) {
-		
-
-		//List<BarcodeTextile> bar=barcodeTextileRepo.findAllByProductTextile(enumName);
-
-	
-		 String tableName = getTableName(enumName);
-		
-         //bar.stream().map(x -> tableName).collect(Collectors.toList());
-         return null;
+	public List<String> getValuesFromProductTextileColumns(String enumName) {
+		List<String> prod = productTextileRepoImpl.getUniqueColumn(enumName);
+		log.info("after fetching ValuesFromProductTextileColumns:" + prod);
+		return prod;
 	}
 
-	private String getTableName(String enumName) {
-		String query = "select column_name from information_schema.columns where table_name ='barcode_textile' AND column_name= "
-				+ enumName + "''";
-		// "select column_name from information_schema.columns where table_name In
-		// ('barcode_textile','product_textile')"
-		// "select table_name from information_schema.columns where column_name= '" +
-		return query;
+	@Override
+	public List<String> getValuesFromBarcodeTextileColumns(String enumName) {
+		List<String> bar = barcodeTextileRepoImpl.getUniqueColumn(enumName);
+		log.info("after fetching ValuesFromBarcodeTextileColumns:" + bar);
+		return bar;
 	}
 
 	@Override
 	public List<String> getAllColumns() {
-		List<String> bar = barcodeTextileRepo.findAllColumnNames();
-
-		return bar;
+		List<String> columns = barcodeTextileRepo.findAllColumnNames();
+		log.info("after fetching all columns:" + columns);
+		return columns;
 	}
+
 }
