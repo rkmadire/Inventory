@@ -86,7 +86,7 @@ public class ProductTextileController {
 	@RabbitListener(queues = MQConfig.inventory_queue_textile)
 	public void inventoryUpdateForTextile(@RequestBody List<InventoryUpdateVo> request) {
 		productTextileService.inventoryUpdateForTextile(request);
-		}
+	}
 
 	@PostMapping("/getAllAdjustments")
 	public GateWayResponse<?> getAllAdjustments(@RequestBody AdjustmentsVo vo) {
@@ -103,10 +103,17 @@ public class ProductTextileController {
 
 	}
 
-	@GetMapping("/getValuesFromColumns")
-	public GateWayResponse<?> getValuesFromColumns(@RequestParam("enumName") String enumName) {
-		log.info("Recieved request to getValuesFromColumns");
-		List<String> enumVo = productTextileService.getValuesFromColumns(enumName);
+	@GetMapping("/getValuesFromProductTextileColumns")
+	public GateWayResponse<?> getValuesFromProductTextileColumns(@RequestParam("enumName") String enumName) {
+		log.info("Recieved request to getValuesFromProductTextileColumns:" + enumName);
+		List<String> enumVo = productTextileService.getValuesFromProductTextileColumns(enumName);
+		return new GateWayResponse<>("fetching all " + enumName + " textile details sucessfully", enumVo);
+	}
+
+	@GetMapping("/getValuesFromBarcodeTextileColumns")
+	public GateWayResponse<?> getValuesFromBarcodeTextileColumns(@RequestParam("enumName") String enumName) {
+		log.info("Recieved request to getValuesFromBarcodeTextileColumns:" + enumName);
+		List<String> enumVo = productTextileService.getValuesFromBarcodeTextileColumns(enumName);
 		return new GateWayResponse<>("fetching all " + enumName + " textile details sucessfully", enumVo);
 	}
 
