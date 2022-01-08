@@ -19,13 +19,19 @@ import com.otsi.retail.inventory.mapper.BarcodeTextileMapper;
 import com.otsi.retail.inventory.mapper.ProductTextileMapper;
 import com.otsi.retail.inventory.model.Adjustments;
 import com.otsi.retail.inventory.model.BarcodeTextile;
+import com.otsi.retail.inventory.model.ProductInventory;
+import com.otsi.retail.inventory.model.ProductItem;
 import com.otsi.retail.inventory.model.ProductTextile;
 import com.otsi.retail.inventory.model.ProductTransaction;
+import com.otsi.retail.inventory.model.ProductTransactionRe;
 import com.otsi.retail.inventory.repo.AdjustmentRepo;
 import com.otsi.retail.inventory.repo.BarcodeTextileRepo;
 import com.otsi.retail.inventory.repo.BarcodeTextileRepoImpl;
+import com.otsi.retail.inventory.repo.ProductInventoryRepo;
+import com.otsi.retail.inventory.repo.ProductItemRepo;
 import com.otsi.retail.inventory.repo.ProductTextileRepo;
 import com.otsi.retail.inventory.repo.ProductTextileRepoImpl;
+import com.otsi.retail.inventory.repo.ProductTransactionReRepo;
 import com.otsi.retail.inventory.repo.ProductTransactionRepo;
 import com.otsi.retail.inventory.vo.AdjustmentsVo;
 import com.otsi.retail.inventory.vo.BarcodeTextileVo;
@@ -64,6 +70,15 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 	@Autowired
 	private BarcodeTextileRepoImpl barcodeTextileRepoImpl;
+
+	@Autowired
+	private ProductItemRepo productItemRepo;
+
+	@Autowired
+	private ProductInventoryRepo productInventoryRepo;
+
+	@Autowired
+	private ProductTransactionReRepo productTransactionReRepo;
 
 	@Override
 	public String addBarcodeTextile(BarcodeTextileVo textileVo) {
@@ -455,29 +470,72 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	}
 
 	@Override
-	public String inventoryUpdateForTextile(List<InventoryUpdateVo> request) {
-		request.stream().forEach(x -> {
+	public void inventoryUpdate(List<InventoryUpdateVo> request) {
 
-			BarcodeTextile barcodeDetails = barcodeTextileRepo.findByBarcode(x.getBarCode());
-			ProductTransaction transact = productTransactionRepo.findByBarcodeId(barcodeDetails.getBarcodeTextileId());
-			transact.setMasterFlag(false);
-			transact.setQuantity(Math.abs(x.getQuantity() - transact.getQuantity()));
-			productTransactionRepo.save(transact);
-			ProductTransaction prodTrans = new ProductTransaction();
-			prodTrans.setBarcodeId(barcodeDetails.getBarcodeTextileId());
-			prodTrans.setEffectingTableId(x.getLineItemId());
-			prodTrans.setQuantity(x.getQuantity());
-			prodTrans.setStoreId(x.getStoreId());
-			prodTrans.setNatureOfTransaction(NatureOfTransaction.SALE.getName());
-			prodTrans.setCreationDate(LocalDate.now());
-			prodTrans.setLastModified(LocalDate.now());
-			prodTrans.setMasterFlag(true);
-			prodTrans.setComment("sale");
-			prodTrans.setEffectingTable("order table");
-			productTransactionRepo.save(prodTrans);
+		request.stream().forEach(x -> {
+			// for textile update
+			if (x.getDomainId() == 1) {
+				BarcodeTextile barcodeDetails = barcodeTextileRepo.findByBarcode(x.getBarCode());
+				if (barcodeDetails == null) {
+					log.error("record not found with barcode:" + x.getBarCode());
+					throw new RecordNotFoundException("record not found with barcode:" + x.getBarCode());
+				}
+				ProductTransaction transact = productTransactionRepo
+						.findByBarcodeId(barcodeDetails.getBarcodeTextileId());
+				transact.setMasterFlag(false);
+				transact.setQuantity(Math.abs(x.getQuantity() - transact.getQuantity()));
+				productTransactionRepo.save(transact);
+				ProductTransaction prodTrans = new ProductTransaction();
+				prodTrans.setBarcodeId(barcodeDetails.getBarcodeTextileId());
+				prodTrans.setEffectingTableId(x.getLineItemId());
+				prodTrans.setQuantity(x.getQuantity());
+				prodTrans.setStoreId(x.getStoreId());
+				prodTrans.setNatureOfTransaction(NatureOfTransaction.SALE.getName());
+				prodTrans.setCreationDate(LocalDate.now());
+				prodTrans.setLastModified(LocalDate.now());
+				prodTrans.setMasterFlag(true);
+				prodTrans.setComment("sale");
+				prodTrans.setEffectingTable("order table");
+				ProductTransaction textileUpdate = productTransactionRepo.save(prodTrans);
+				log.info("updated textile successfully from newsale...");
+
+			} else {
+				// for retail update
+				ProductItem barOpt = productItemRepo.findByBarcodeId(x.getBarCode());
+				if (barOpt == null) {
+					log.error("record not found with barcode:" + x.getBarCode());
+					throw new RecordNotFoundException("record not found with barcode:" + x.getBarCode());
+				}
+				Optional<ProductItem> prodOpt = productItemRepo.findByProductItemId(barOpt.getProductItemId());
+				ProductInventory item = prodOpt.get().getProductInventory();
+				if (item == null) {
+					throw new RecordNotFoundException("product inventory is not found");
+				}
+				ProductItem item1 = prodOpt.get();
+				Optional<ProductInventory> prodOp = productInventoryRepo.findByProductItem(item1);
+				ProductInventory prodInvUpdate = prodOp.get();
+				prodInvUpdate.setLastModified(LocalDate.now());
+				prodInvUpdate.setProductItem(item1);
+				prodInvUpdate.setStockvalue(Math.abs(barOpt.getProductInventory().getStockvalue() - x.getQuantity()));
+				productInventoryRepo.save(prodInvUpdate);
+
+				ProductTransactionRe prodTransRe = new ProductTransactionRe();
+				prodTransRe.setBarcodeId(barOpt.getBarcodeId());
+				prodTransRe.setEffectingTableId(x.getLineItemId());
+				prodTransRe.setQuantity(x.getQuantity());
+				prodTransRe.setStoreId(x.getStoreId());
+				prodTransRe.setNatureOfTransaction(NatureOfTransaction.SALE.getName());
+				prodTransRe.setCreationDate(LocalDate.now());
+				prodTransRe.setLastModified(LocalDate.now());
+				prodTransRe.setMasterFlag(true);
+				prodTransRe.setComment("sale");
+				prodTransRe.setEffectingTable("order table");
+				ProductTransactionRe retailUpdate = productTransactionReRepo.save(prodTransRe);
+				log.info("updated retail successfully from newsale....");
+			}
 		});
-		log.info("updated inventory for textile from newsale successfully..");
-		return "updated inventory for textile from newsale successfully..";
+
+		log.info("updated inventory from newsale successfully..");
 	}
 
 	@Override

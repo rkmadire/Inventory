@@ -83,9 +83,9 @@ public class ProductTextileController {
 		return new GateWayResponse<>("fetching all barcode textile details sucessfully", allBarcodes);
 	}
 
-	@RabbitListener(queues = MQConfig.inventory_queue_textile)
-	public void inventoryUpdateForTextile(@RequestBody List<InventoryUpdateVo> request) {
-		productTextileService.inventoryUpdateForTextile(request);
+	@RabbitListener(queues = MQConfig.inventory_queue)
+	public void inventoryUpdate(@RequestBody List<InventoryUpdateVo> request) {
+		productTextileService.inventoryUpdate(request);
 	}
 
 	@PostMapping("/getAllAdjustments")
@@ -124,4 +124,5 @@ public class ProductTextileController {
 		return new GateWayResponse<>("fetching all Column details", columns);
 
 	}
+
 }

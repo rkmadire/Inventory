@@ -28,9 +28,4 @@ public interface ProductItemService {
 
 	String saveProductList(List<ProductItemVo> productItemVos);
 
-
-	String fromNewSaleForRetail(Map<String, Integer> map);
-
-	
-
 }

@@ -25,8 +25,6 @@ public interface ProductTextileService {
 
 	String incrementQty(BarcodeTextileVo vo);
 
-	String inventoryUpdateForTextile(List<InventoryUpdateVo> request);
-
 	List<AdjustmentsVo> getAllAdjustments(AdjustmentsVo vo);
 
 	String saveProductTextileList(List<BarcodeTextileVo> barcodeTextileVos);
@@ -36,5 +34,7 @@ public interface ProductTextileService {
 	List<String> getValuesFromProductTextileColumns(String enumName);
 
 	List<String> getValuesFromBarcodeTextileColumns(String enumName);
+
+	void inventoryUpdate(List<InventoryUpdateVo> request);
 
 }
