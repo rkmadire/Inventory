@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +89,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		log.debug("debugging saveProductTextile:" + textileVo);
 		Random ran = new Random();
 		BarcodeTextile barTextile = new BarcodeTextile();
-		barTextile.setBarcodeTextileId(textileVo.getBarcodeTextileId());
+		//barTextile.setBarcodeTextileId(textileVo.getBarcodeTextileId());
 		barTextile.setBarcode("BAR" + ran.nextInt());
 		barTextile.setCreationDate(LocalDate.now());
 		barTextile.setLastModified(LocalDate.now());
@@ -96,8 +100,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		barTextile.setBatchNo(textileVo.getBatchNo());
 		barTextile.setColour(textileVo.getColour());
 		BarcodeTextile barTextileSave = barcodeTextileRepo.save(barTextile);
+
 		ProductTextile textile = new ProductTextile();
-		textile.setProductTextileId(textileVo.getProductTextile().getProductTextileId());
+		//textile.setProductTextileId(textileVo.getProductTextile().getProductTextileId());
 		textile.setBarcodeTextile(barTextileSave);
 		textile.setCostPrice(textileVo.getProductTextile().getCostPrice());
 		textile.setUom(textileVo.getProductTextile().getUom());
@@ -126,9 +131,11 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		prodTrans.setComment("newly inserted table");
 		prodTrans.setEffectingTable("product textile table");
 		ProductTransaction saveTrans = productTransactionRepo.save(prodTrans);
+
 		log.warn("we are checking if textile is saved...");
 		log.info("after saving textile details");
 		return "barcode textile saved successfully:" + barTextileSave.getBarcodeTextileId();
+
 	}
 
 	@Override
