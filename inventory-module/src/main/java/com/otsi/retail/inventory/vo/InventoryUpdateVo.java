@@ -10,8 +10,9 @@ public class InventoryUpdateVo {
 	private Long lineItemId;
 
 	private String barCode;
-	
+
 	private Long storeId;
+	
+	private Long domainId;
 
 }
-

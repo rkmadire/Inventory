@@ -15,13 +15,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MQConfig {
 
-	public static final String inventory_queue_textile = "inventory_queue_textile";
+	public static final String inventory_queue = "inventory_queue";
 	public static final String inventory_exchange = "inventory_exchange";
 	public static final String inventory_rk = "inventory_rk ";
 
 	@Bean
 	public Queue queue() {
-		return new Queue(inventory_queue_textile);
+		return new Queue(inventory_queue);
 	}
 
 	@Bean

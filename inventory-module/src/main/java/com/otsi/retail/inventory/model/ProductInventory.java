@@ -34,25 +34,11 @@ public class ProductInventory {
 	@OneToOne(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "productItemId")
 	private ProductItem productItem;
-	
-	private int stockvalue;
-	
-	private Long storeId;
-	
-	private String barcodeId;
 
-	private String natureOfTransaction;
-	
-	private String effectingTable;
-	
-	private Long effectingTableID;
-	
-	private boolean masterFlag;
-	
-	private String comment;
-	
+	private int stockvalue;
+
 	private LocalDate creationDate;
-	
+
 	private LocalDate lastModified;
 
 }

@@ -1,7 +1,8 @@
 package com.otsi.retail.inventory.controller;
 
 import java.util.List;
-import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.service.ProductItemService;
 import com.otsi.retail.inventory.vo.ProductItemVo;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * @author vasavi
@@ -94,13 +93,6 @@ public class ProductItemController {
 		log.info("Recieved request to getAllBarcodes");
 		List<ProductItemVo> allBarcodes = productItemService.getAllBarcodes(vo);
 		return new GateWayResponse<>("fetching all barcode details sucessfully", allBarcodes);
-	}
-
-	// @RabbitListener(queues = MQConfig.INVENTORYQUEUE)
-	public GateWayResponse<?> fromNewsaleForRetail(@RequestBody Map<String, Integer> map) {
-		String allNewsale = productItemService.fromNewSaleForRetail(map);
-
-		return new GateWayResponse<>("fetching all barcode details sucessfully", allNewsale);
 	}
 
 	@PostMapping("/saveProductList")

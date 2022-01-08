@@ -13,20 +13,6 @@ public class ProductInventoryVo {
 
 	private int stockvalue;
 
-	private Long storeId;
-
-	private String barcodeId;
-
-	private String natureOfTransaction;
-
-	private String effectingTable;
-
-	private Long effectingTableID;
-
-	private boolean masterFlag;
-
-	private String comment;
-
 	private LocalDate creationDate;
 
 	private LocalDate lastModified;
