@@ -262,6 +262,10 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 	@Override
 	public BarcodeTextileVo getBarcodeTextile(String barcode, Long storeId) {
+		if (storeId == null) {
+			log.error("textile record is not found with storeId:" + storeId);
+			throw new RecordNotFoundException("textile record is not found with storeId:" + storeId);
+		}
 		log.debug("debugging createInventory:" + barcode);
 		List<BarcodeTextile> barStore = barcodeTextileRepo.findAllByProductTextileStoreId(storeId);
 		BarcodeTextile textileParent = barcodeTextileRepo.findByProductTextileParentBarcode(barcode);
@@ -276,9 +280,13 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 				throw new RecordNotFoundException("textile record is not found");
 			}
 			BarcodeTextileVo vo = barcodeTextileMapper.EntityToVo(textile);
-			String effectingTable = "product textile table";
-			ProductTransaction transact = productTransactionRepo
-					.findByBarcodeIdAndEffectingTable(vo.getBarcodeTextileId(), effectingTable);
+
+			ProductTransaction transact = productTransactionRepo.findTopByBarcodeIdAndStoreId(
+					textile.getBarcodeTextileId(), textile.getProductTextile().getStoreId());
+			if (transact == null) {
+				log.error("textile record is not found");
+				throw new RecordNotFoundException("textile record is not found");
+			}
 			vo.getProductTextile().setQty(transact.getQuantity());
 			vo.getProductTextile().setValue(transact.getQuantity() * vo.getProductTextile().getCostPrice());
 			return vo;
@@ -292,6 +300,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	@Override
 	public List<BarcodeTextileVo> getAllBarcodes(SearchFilterVo vo) {
 		log.debug("debugging getAllBarcodes()");
+
 		List<BarcodeTextile> barcodeDetails = new ArrayList<>();
 		/*
 		 * using dates and storeId
@@ -407,9 +416,13 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 				barcodeDetails.add(textile);
 				List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeDetails);
 				barcodeList.stream().forEach(v -> {
-					String effectingTable = "product textile table";
+					
 					ProductTransaction transact = productTransactionRepo
-							.findByBarcodeIdAndEffectingTable(v.getBarcodeTextileId(), effectingTable);
+							.findTopByBarcodeIdAndStoreId(v.getBarcodeTextileId(), v.getProductTextile().getStoreId());
+					if (transact == null) {
+						log.error("textile record is not found");
+						throw new RecordNotFoundException("textile record is not found");
+					}
 					v.getProductTextile().setQty(transact.getQuantity());
 					v.getProductTextile().setValue(transact.getQuantity() * v.getProductTextile().getCostPrice());
 				});
@@ -423,12 +436,15 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		else if (vo.getStoreId() != null) {
 			ProductStatus status = ProductStatus.ENABLE;
 			List<ProductTextile> prodOpt = productTextileRepo.findAllByStoreId(vo.getStoreId());
+
+			if (prodOpt.isEmpty()) {
+				log.error("textile record is not found with storeId:" + vo.getStoreId());
+				throw new RecordNotFoundException("textile record is not found with storeId:" + vo.getStoreId());
+			}
+
 			if (prodOpt != null) {
 				barcodeDetails = barcodeTextileRepo.findByProductTextileStoreIdAndProductTextileStatus(vo.getStoreId(),
 						status);
-			} else {
-				log.error("No record found with given information");
-				throw new RecordNotFoundException("No record found with given information");
 			}
 		}
 
@@ -443,9 +459,13 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 			List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeTextileList);
 			barcodeList.stream().forEach(v -> {
-				String effectingTable = "product textile table";
+				
 				ProductTransaction transact = productTransactionRepo
-						.findByBarcodeIdAndEffectingTable(v.getBarcodeTextileId(), effectingTable);
+						.findTopByBarcodeIdAndStoreId(v.getBarcodeTextileId(), v.getProductTextile().getStoreId());
+				if (transact == null) {
+					log.error("textile record is not found");
+					throw new RecordNotFoundException("textile record is not found");
+				}
 				v.getProductTextile().setQty(transact.getQuantity());
 				v.getProductTextile().setValue(transact.getQuantity() * v.getProductTextile().getCostPrice());
 			});
@@ -469,9 +489,13 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeDetails);
 		barcodeList.stream().forEach(v -> {
 
-			String effectingTable = "product textile table";
-			ProductTransaction transact = productTransactionRepo
-					.findByBarcodeIdAndEffectingTable(v.getBarcodeTextileId(), effectingTable);
+			
+			ProductTransaction transact = productTransactionRepo.findTopByBarcodeIdAndStoreId(v.getBarcodeTextileId(),
+					v.getProductTextile().getStoreId());
+			if (transact == null) {
+				log.error("textile record is not found");
+				throw new RecordNotFoundException("textile record is not found");
+			}
 			v.getProductTextile().setQty(transact.getQuantity());
 
 			v.getProductTextile().setValue(transact.getQuantity() * v.getProductTextile().getCostPrice());

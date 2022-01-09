@@ -27,6 +27,8 @@ public interface ProductTransactionRepo extends JpaRepository<ProductTransaction
 
 	ProductTransaction findTopByBarcodeId(Long barcodeTextileId);
 
-	ProductTransaction findByBarcodeIdAndEffectingTable(Long barcodeTextileId, String effectingTable);
+	ProductTransaction findByBarcodeIdAndStoreId(Long barcodeTextileId, Long storeId);
+
+	ProductTransaction findTopByBarcodeIdAndStoreId(Long barcodeTextileId, Long storeId);
 
 }
