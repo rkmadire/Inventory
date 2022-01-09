@@ -89,7 +89,6 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		log.debug("debugging saveProductTextile:" + textileVo);
 		Random ran = new Random();
 		BarcodeTextile barTextile = new BarcodeTextile();
-		//barTextile.setBarcodeTextileId(textileVo.getBarcodeTextileId());
 		barTextile.setBarcode("BAR" + ran.nextInt());
 		barTextile.setCreationDate(LocalDate.now());
 		barTextile.setLastModified(LocalDate.now());
@@ -102,7 +101,6 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		BarcodeTextile barTextileSave = barcodeTextileRepo.save(barTextile);
 
 		ProductTextile textile = new ProductTextile();
-		//textile.setProductTextileId(textileVo.getProductTextile().getProductTextileId());
 		textile.setBarcodeTextile(barTextileSave);
 		textile.setCostPrice(textileVo.getProductTextile().getCostPrice());
 		textile.setUom(textileVo.getProductTextile().getUom());
@@ -278,7 +276,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 				throw new RecordNotFoundException("textile record is not found");
 			}
 			BarcodeTextileVo vo = barcodeTextileMapper.EntityToVo(textile);
-			ProductTransaction transact = productTransactionRepo.findByBarcodeId(vo.getBarcodeTextileId());
+			String effectingTable = "product textile table";
+			ProductTransaction transact = productTransactionRepo
+					.findByBarcodeIdAndEffectingTable(vo.getBarcodeTextileId(), effectingTable);
 			vo.getProductTextile().setQty(transact.getQuantity());
 			vo.getProductTextile().setValue(transact.getQuantity() * vo.getProductTextile().getCostPrice());
 			return vo;
@@ -407,7 +407,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 				barcodeDetails.add(textile);
 				List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeDetails);
 				barcodeList.stream().forEach(v -> {
-					ProductTransaction transact = productTransactionRepo.findByBarcodeId(v.getBarcodeTextileId());
+					String effectingTable = "product textile table";
+					ProductTransaction transact = productTransactionRepo
+							.findByBarcodeIdAndEffectingTable(v.getBarcodeTextileId(), effectingTable);
 					v.getProductTextile().setQty(transact.getQuantity());
 					v.getProductTextile().setValue(transact.getQuantity() * v.getProductTextile().getCostPrice());
 				});
@@ -441,7 +443,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 			List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeTextileList);
 			barcodeList.stream().forEach(v -> {
-				ProductTransaction transact = productTransactionRepo.findByBarcodeId(v.getBarcodeTextileId());
+				String effectingTable = "product textile table";
+				ProductTransaction transact = productTransactionRepo
+						.findByBarcodeIdAndEffectingTable(v.getBarcodeTextileId(), effectingTable);
 				v.getProductTextile().setQty(transact.getQuantity());
 				v.getProductTextile().setValue(transact.getQuantity() * v.getProductTextile().getCostPrice());
 			});
@@ -465,7 +469,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		List<BarcodeTextileVo> barcodeList = barcodeTextileMapper.EntityToVo(barcodeDetails);
 		barcodeList.stream().forEach(v -> {
 
-			ProductTransaction transact = productTransactionRepo.findByBarcodeId(v.getBarcodeTextileId());
+			String effectingTable = "product textile table";
+			ProductTransaction transact = productTransactionRepo
+					.findByBarcodeIdAndEffectingTable(v.getBarcodeTextileId(), effectingTable);
 			v.getProductTextile().setQty(transact.getQuantity());
 
 			v.getProductTextile().setValue(transact.getQuantity() * v.getProductTextile().getCostPrice());
@@ -489,7 +495,6 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 				}
 				ProductTransaction transact = productTransactionRepo
 						.findByBarcodeId(barcodeDetails.getBarcodeTextileId());
-				transact.setMasterFlag(false);
 				transact.setQuantity(Math.abs(x.getQuantity() - transact.getQuantity()));
 				productTransactionRepo.save(transact);
 				ProductTransaction prodTrans = new ProductTransaction();
