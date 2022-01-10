@@ -237,10 +237,11 @@ public class ProductItemServiceImpl implements ProductItemService {
 		 */
 		else if (vo.getFromDate() == null && vo.getToDate() == null && vo.getProductItemId() == null
 				&& vo.getStoreId() != null) {
-
-			if (storeOpt != null) {
-				// List<ProductItem> prodItemDetails1 =
-				// productItemRepo.findByStoreIdIn(vo.getStoreId());
+			if (storeOpt.isEmpty()) {
+				log.error("retail record is not found with storeId:" + vo.getStoreId());
+				throw new RecordNotFoundException("retail record is not found with storeId:" + vo.getStoreId());
+			}
+			if (vo.getStoreId() != null) {
 				List<ProductItemVo> productList = productItemMapper.EntityToVo(storeOpt);
 				return productList;
 			} else {
@@ -369,12 +370,14 @@ public class ProductItemServiceImpl implements ProductItemService {
 		else if (vo.getFromDate() == null && vo.getToDate() == null && vo.getBarcodeId() == ""
 				&& vo.getStoreId() != null) {
 			List<ProductItem> storeOpt = productItemRepo.findAllByStoreId(vo.getStoreId());
-			if (storeOpt != null) {
+			if (storeOpt.isEmpty()) {
+				log.error("retail record is not found with storeId:" + vo.getStoreId());
+				throw new RecordNotFoundException("retail record is not found with storeId:" + vo.getStoreId());
+			}
+			if (vo.getStoreId() != null) {
 				List<ProductItem> barcodeDetails1 = productItemRepo.findAllByStoreId(vo.getStoreId());
 				List<ProductItemVo> barcodeList = productItemMapper.EntityToVo(barcodeDetails1);
 				return barcodeList;
-			} else {
-				throw new RecordNotFoundException("No record found with storeId");
 			}
 		}
 		/*
