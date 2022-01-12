@@ -400,9 +400,7 @@ public class ProductItemServiceImpl implements ProductItemService {
 		} else if (vo.getStoreId() != null) {
 			List<ProductItem> storeOpt = productItemRepo.findAllByStoreId(vo.getStoreId());
 			if (storeOpt != null) {
-				List<ProductItem> barcodeDetails1 = productItemRepo.findAll();
-				;
-				List<ProductItemVo> barcodeList = productItemMapper.EntityToVo(barcodeDetails1);
+				List<ProductItemVo> barcodeList = productItemMapper.EntityToVo(storeOpt);
 				return barcodeList;
 			} else {
 				throw new RecordNotFoundException("No record found with storeId");
