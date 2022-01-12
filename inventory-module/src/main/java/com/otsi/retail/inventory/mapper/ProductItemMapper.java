@@ -41,7 +41,7 @@ public class ProductItemMapper {
 		vo.setEmpId(dto.getEmpId());
 		vo.setCostPrice(dto.getCostPrice());
 		vo.setBatchNo(dto.getBatchNo());
-		float stockIncrementValue = dto.getProductInventory().getStockvalue() * dto.getCostPrice();
+		float stockIncrementValue = dto.getProductInventory().getStockvalue() * dto.getListPrice();
 		vo.setValue(stockIncrementValue);
 		vo.setListPrice(dto.getListPrice());
 		vo.setUom(dto.getUom());

@@ -6,16 +6,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.otsi.retail.inventory.commons.NatureOfTransaction;
 import com.otsi.retail.inventory.commons.ProductStatus;
+import com.otsi.retail.inventory.exceptions.InvalidDataException;
 import com.otsi.retail.inventory.exceptions.ParentBarcodeFoundException;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
 import com.otsi.retail.inventory.mapper.AdjustmentMapper;
@@ -30,11 +29,9 @@ import com.otsi.retail.inventory.model.ProductTransaction;
 import com.otsi.retail.inventory.model.ProductTransactionRe;
 import com.otsi.retail.inventory.repo.AdjustmentRepo;
 import com.otsi.retail.inventory.repo.BarcodeTextileRepo;
-import com.otsi.retail.inventory.repo.BarcodeTextileRepoImpl;
 import com.otsi.retail.inventory.repo.ProductInventoryRepo;
 import com.otsi.retail.inventory.repo.ProductItemRepo;
 import com.otsi.retail.inventory.repo.ProductTextileRepo;
-import com.otsi.retail.inventory.repo.ProductTextileRepoImpl;
 import com.otsi.retail.inventory.repo.ProductTransactionReRepo;
 import com.otsi.retail.inventory.repo.ProductTransactionRepo;
 import com.otsi.retail.inventory.vo.AdjustmentsVo;
@@ -70,12 +67,6 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	private AdjustmentMapper adjustmentMapper;
 
 	@Autowired
-	private ProductTextileRepoImpl productTextileRepoImpl;
-
-	@Autowired
-	private BarcodeTextileRepoImpl barcodeTextileRepoImpl;
-
-	@Autowired
 	private ProductItemRepo productItemRepo;
 
 	@Autowired
@@ -83,6 +74,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 	@Autowired
 	private ProductTransactionReRepo productTransactionReRepo;
+
+	@PersistenceContext
+	EntityManager em;
 
 	@Override
 	public String addBarcodeTextile(BarcodeTextileVo textileVo) {
@@ -704,16 +698,42 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 	@Override
 	public List<String> getValuesFromProductTextileColumns(String enumName) {
-		List<String> prod = productTextileRepoImpl.getUniqueColumn(enumName);
-		log.info("after fetching ValuesFromProductTextileColumns:" + prod);
-		return prod;
+		String query = "select p." + enumName + " from  product_textile p group by  p." + enumName;
+		try {
+			log.info("fetching values from product textile" + enumName + "is",
+					em.createNativeQuery(query).getResultList());
+			return em.createNativeQuery(query).getResultList();
+
+		} catch (Exception ex) {
+			log.error("data is not correct");
+			throw new InvalidDataException("data is not correct");
+		} finally {
+
+			if (em.isOpen()) {
+				em.close();
+			}
+
+		}
 	}
 
 	@Override
 	public List<String> getValuesFromBarcodeTextileColumns(String enumName) {
-		List<String> bar = barcodeTextileRepoImpl.getUniqueColumn(enumName);
-		log.info("after fetching ValuesFromBarcodeTextileColumns:" + bar);
-		return bar;
+		String query = "select p." + enumName + " from  barcode_textile p group by  p." + enumName;
+		try {
+			log.info("fetching values from barcode textile" + enumName + "is",
+					em.createNativeQuery(query).getResultList());
+			return em.createNativeQuery(query).getResultList();
+
+		} catch (Exception ex) {
+			log.error("data is not correct");
+			throw new InvalidDataException("data is not correct");
+		} finally {
+
+			if (em.isOpen()) {
+				em.close();
+			}
+
+		}
 	}
 
 	@Override
