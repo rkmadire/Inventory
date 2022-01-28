@@ -3,10 +3,15 @@ on:
   push:
     branches:
       - DevOps
-      
+    paths:
+      - "catalog-service/**/*"
+      - ".github/workflows/catalog-service.yml"
   pull_request:
     branches: 
       - DevOps
+    paths:
+      - "catalog-service/**/*"
+      - ".github/workflows/catalog-service.yml"
 jobs:
   build:
     runs-on: ubuntu-latest
