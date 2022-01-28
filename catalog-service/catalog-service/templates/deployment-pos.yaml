@@ -72,7 +72,7 @@ spec:
         - name: catalog-service-data
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ include "catalog-service.fullname" . }}-pos
+            claimName: {{ include "catalog-service.fullname" . }}
         {{- else }}
           emptyDir: {}
         {{- end -}}
