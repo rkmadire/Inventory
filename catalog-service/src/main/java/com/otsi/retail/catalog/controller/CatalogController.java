@@ -58,7 +58,7 @@ public class CatalogController {
 
 	}
 
-	@GetMapping("/getcategoriesByid")
+	@GetMapping("/getcategoriesByid/{id}")
 	public GateWayResponse<?> getCategories(@PathVariable("id") Long id) {
 		List<CatalogVo> vo = catalogService.getCategories(id);
 		LOGGER.info("Received request to getcategories:" + vo);
