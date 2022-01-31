@@ -2,9 +2,7 @@ package com.otsi.retail.inventory.service;
 
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.stereotype.Service;
-
 import com.otsi.retail.inventory.vo.ProductItemVo;
 
 @Service
@@ -29,10 +27,5 @@ public interface ProductItemService {
 	String deleteBarcode(String barcodeId);
 
 	String saveProductList(List<ProductItemVo> productItemVos);
-
-
-	String fromNewSaleForRetail(Map<String, Integer> map);
-
-	
 
 }

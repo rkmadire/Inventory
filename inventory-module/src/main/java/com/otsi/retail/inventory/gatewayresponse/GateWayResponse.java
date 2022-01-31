@@ -16,10 +16,6 @@ public class GateWayResponse<T> {
 	private String message;
 	private T result;
 
-	/*
-	 * private List<String> errors; private List<FieldError> fieldErrors;
-	 */
-	// public final int HttpStatus_OK = 200;
 	public GateWayResponse() {
 
 	}

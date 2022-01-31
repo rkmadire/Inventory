@@ -2,11 +2,8 @@ package com.otsi.retail.inventory.repo;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import com.otsi.retail.inventory.model.BarcodeTextile;
 import com.otsi.retail.inventory.model.ProductTransaction;
 
 @Repository
@@ -27,5 +24,11 @@ public interface ProductTransactionRepo extends JpaRepository<ProductTransaction
 	ProductTransaction findByEffectingTableId(Long adjustmentId);
 
 	ProductTransaction findByStoreId(Long storeId);
+
+	ProductTransaction findTopByBarcodeId(Long barcodeTextileId);
+
+	ProductTransaction findByBarcodeIdAndStoreId(Long barcodeTextileId, Long storeId);
+
+	ProductTransaction findTopByBarcodeIdAndStoreId(Long barcodeTextileId, Long storeId);
 
 }

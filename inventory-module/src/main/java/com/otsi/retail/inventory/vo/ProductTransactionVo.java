@@ -1,7 +1,6 @@
 package com.otsi.retail.inventory.vo;
 
 import java.time.LocalDate;
-import com.otsi.retail.inventory.commons.NatureOfTransaction;
 import lombok.Data;
 
 @Data

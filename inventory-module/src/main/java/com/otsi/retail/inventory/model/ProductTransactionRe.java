@@ -10,17 +10,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "product_transaction")
+@Table(name = "product_transaction_re")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductTransaction {
+public class ProductTransactionRe {
 
 	@Id
 	@GeneratedValue
-	private Long productTransactionId;
+	private Long productTransactionReId;
 	private Long storeId;
-	private Long barcodeId;
+	private String barcodeId;
 	private int quantity;
 	private String natureOfTransaction;
 	private String effectingTable;

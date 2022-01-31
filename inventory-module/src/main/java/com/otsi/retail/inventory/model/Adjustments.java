@@ -1,7 +1,9 @@
 package com.otsi.retail.inventory.model;
-
+/**
+ * @author vasavi
+ *
+ */
 import java.time.LocalDate;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

@@ -42,4 +42,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(value = ParentBarcodeFoundException.class)
+	public ResponseEntity<Object> handleParentBarcodeFoundException(
+			ParentBarcodeFoundException parentBarcodeFoundException) {
+		ErrorResponse<?> error = new ErrorResponse<>(404,"parent barcode record is no more...please enter current barcode");
+		log.error("error response is:" + error);
+		return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
+	}
+
 }
