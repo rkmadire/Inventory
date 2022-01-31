@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.otsi.retail.catalog.gateway.GateWayResponse;
@@ -58,8 +59,8 @@ public class CatalogController {
 
 	}
 
-	@GetMapping("/getcategoriesByid/{id}")
-	public GateWayResponse<?> getCategories(@PathVariable("id") Long id) {
+	@GetMapping("/getcategoriesByid")
+	public GateWayResponse<?> getCategories(@RequestParam Long id) {
 		List<CatalogVo> vo = catalogService.getCategories(id);
 		LOGGER.info("Received request to getcategories:" + vo);
 
