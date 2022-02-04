@@ -27,9 +27,9 @@ public interface BarcodeTextileRepo extends JpaRepository<BarcodeTextile, Long> 
 
 	boolean existsByBarcode(String barcode);
 
-	List<BarcodeTextile> findByProductTextileEmpId(String empId);
+	List<BarcodeTextile> findByBarcodeTextileIdInAndProductTextileStatus(List<Long> bars, ProductStatus status);
 
-	List<BarcodeTextile> findByBarcodeTextileIdIn(List<Long> bars);
+	List<BarcodeTextile> findByProductTextileEmpIdAndProductTextileStatus(String empId, ProductStatus status);
 
 	List<BarcodeTextile> findByProductTextileStoreId(Long storeId);
 

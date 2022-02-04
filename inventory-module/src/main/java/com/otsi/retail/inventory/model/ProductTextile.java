@@ -35,6 +35,7 @@ public class ProductTextile {
 	private float itemRsp;
 	private String empId;
 	private Long storeId;
+	private Long domainId;
 	private String promoLabel;
 	private LocalDate createdAt;
 	private LocalDate updatedAt;

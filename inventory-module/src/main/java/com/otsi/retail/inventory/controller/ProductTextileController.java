@@ -118,11 +118,19 @@ public class ProductTextileController {
 	}
 
 	@GetMapping("/getAllColumns")
-	public GateWayResponse<?> getAllColumns() {
+	public GateWayResponse<?> getAllColumns(@RequestParam Long domainId) {
 		log.info("Received Request to getAllColumns...");
-		List<String> columns = productTextileService.getAllColumns();
+		List<String> columns = productTextileService.getAllColumns(domainId);
 		return new GateWayResponse<>("fetching all Column details", columns);
 
 	}
+	
+	@PostMapping("/getBarcodeTextileReports")
+	public GateWayResponse<?> getBarcodeTextileReports(@RequestBody SearchFilterVo vo) {
+		log.info("Recieved request to getBarcodeTextileReports:"+vo);
+		List<BarcodeTextileVo> allBarcodes = productTextileService.getBarcodeTextileReports(vo);
+		return new GateWayResponse<>("fetching all barcode textile details sucessfully", allBarcodes);
+	}
+
 
 }

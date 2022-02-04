@@ -12,7 +12,7 @@ public interface ProductTextileRepo extends JpaRepository<ProductTextile, Long> 
 
 	Optional<ProductTextile> findByProductTextileId(Long productTextileId);
 
-	Optional<ProductTextile> findByEmpId(String empId);
+	List<ProductTextile> findByEmpId(String empId);
 
 	List<ProductTextile> findByItemMrpBetween(float itemMrpLessThan, float itemMrpGreaterThan);
 

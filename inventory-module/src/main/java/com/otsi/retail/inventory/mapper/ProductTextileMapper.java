@@ -34,6 +34,7 @@ public class ProductTextileMapper {
 		vo.setUpdatedAt(dto.getUpdatedAt());
 		vo.setOriginalBarcodeCreatedAt(dto.getOriginalBarcodeCreatedAt());
 		vo.setStoreId(dto.getStoreId());
+		vo.setDomainId(dto.getDomainId());
 
 		return vo;
 
@@ -63,6 +64,7 @@ public class ProductTextileMapper {
 		dto.setUpdatedAt(LocalDate.now());
 		dto.setOriginalBarcodeCreatedAt(LocalDate.now());
 		dto.setStoreId(vo.getStoreId());
+		dto.setDomainId(vo.getDomainId());
 		return dto;
 
 	}

@@ -16,6 +16,7 @@ public class ProductTextileVo {
 	private float itemMrp;
 	private float itemRsp;
 	private Long storeId;
+	private Long domainId;
 	private String empId;
 	private int qty;
 	private String promoLabel;

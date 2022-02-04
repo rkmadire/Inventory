@@ -29,12 +29,14 @@ public interface ProductTextileService {
 
 	String saveProductTextileList(List<BarcodeTextileVo> barcodeTextileVos);
 
-	List<String> getAllColumns();
+	List<String> getAllColumns(Long domainId);
 
 	List<String> getValuesFromProductTextileColumns(String enumName);
 
 	List<String> getValuesFromBarcodeTextileColumns(String enumName);
 
 	void inventoryUpdate(List<InventoryUpdateVo> request);
+
+	List<BarcodeTextileVo> getBarcodeTextileReports(SearchFilterVo vo);
 
 }
