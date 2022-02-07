@@ -14,12 +14,14 @@ public interface ProductTextileRepo extends JpaRepository<ProductTextile, Long> 
 
 	List<ProductTextile> findByEmpId(String empId);
 
-	List<ProductTextile> findByItemMrpBetween(float itemMrpLessThan, float itemMrpGreaterThan);
+	List<ProductTextile> findByItemMrpBetweenAndStoreId(float itemMrpLessThan, float itemMrpGreaterThan, Long storeId);
 
 	Optional<ProductTextile> findByStoreId(Long storeId);
 
 	ProductTextile findByStatus(ProductStatus status);
 
 	List<ProductTextile> findAllByStoreId(Long storeId);
+
+	
 
 }

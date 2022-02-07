@@ -775,9 +775,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		/*
 		 * using itemMrp< and itemMrp>
 		 */
-		else if (vo.getItemMrpLessThan() != 0 && vo.getItemMrpGreaterThan() != 0) {
-			List<ProductTextile> prodOpt = productTextileRepo.findByItemMrpBetween(vo.getItemMrpLessThan(),
-					vo.getItemMrpGreaterThan());
+		else if (vo.getItemMrpLessThan() != 0 && vo.getItemMrpGreaterThan() != 0 && vo.getStoreId()!=null) {
+			List<ProductTextile> prodOpt = productTextileRepo.findByItemMrpBetweenAndStoreId(vo.getItemMrpLessThan(),
+					vo.getItemMrpGreaterThan(),vo.getStoreId());
 			List<Long> bars = prodOpt.stream().map(s -> s.getBarcodeTextile().getBarcodeTextileId())
 					.collect(Collectors.toList());
 
