@@ -81,9 +81,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	@Override
 	public String addBarcodeTextile(BarcodeTextileVo textileVo) {
 		log.debug("debugging saveProductTextile:" + textileVo);
-		Random ran = new Random();
+		
 		BarcodeTextile barTextile = new BarcodeTextile();
-		barTextile.setBarcode("BAR" + ran.nextInt());
+		barTextile.setBarcode("BAR" + getSaltString());
 		barTextile.setCreationDate(LocalDate.now());
 		barTextile.setLastModified(LocalDate.now());
 		barTextile.setDivision(textileVo.getDivision());
@@ -130,16 +130,18 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		return "barcode textile saved successfully:" + barTextileSave.getBarcodeTextileId();
 
 	}
-
-	@Override
-	public String incrementQty(BarcodeTextileVo vo) {
-		int qty = vo.getProductTextile().getQty();
-		for (int i = 1; i <= qty; i++) {
-			addBarcodeTextile(vo);
+	protected String getSaltString() {
+		String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+		StringBuilder salt = new StringBuilder();
+		Random rnd = new Random();
+		while (salt.length() < 7) { // length of the random string.
+			int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+			salt.append(SALTCHARS.charAt(index));
 		}
-		return "barcode textile saved successfully";
-	}
+		String saltStr = salt.toString();
+		return saltStr;
 
+	}
 	@Override
 	public ProductTextileVo getProductTextile(Long productTextileId) {
 		log.debug("debugging createInventory:" + productTextileId);
@@ -174,11 +176,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		ProductTextile textile1 = barTextile1.getProductTextile();
 		textile1.setStatus(ProductStatus.DISABLE);
 		productTextileRepo.save(textile1);
-
-		Random ran = new Random();
 		BarcodeTextile barTextile = new BarcodeTextile();
 		barTextile.setBarcode(
-				"REBAR/" + LocalDate.now().getYear() + LocalDate.now().getDayOfMonth() + "/" + ran.nextInt());
+				"REBAR/" + LocalDate.now().getYear() + LocalDate.now().getDayOfMonth() + "/" + getSaltString());
 		barTextile.setCreationDate(LocalDate.now());
 		barTextile.setLastModified(LocalDate.now());
 		barTextile.setBatchNo(vo.getBatchNo());
@@ -653,8 +653,8 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			});
 
 		});
-		log.warn("we are checking if barcode textile is fetching...");
-		log.info("fetching all barcode textile details");
+		log.warn("we are checking if adjustment details is fetching...");
+		log.info("fetching all adjustment details..");
 		return adjustmentList;
 
 	}
@@ -807,7 +807,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		/*
 		 * using barcode and storeId
 		 */
-		else if (vo.getFromDate() == null && vo.getToDate() == null && (!vo.getBarcode().isEmpty())
+		else if (vo.getFromDate() == null && vo.getToDate() == null && (vo.getBarcode()!=null)
 				&& vo.getStoreId() != null) {
 			List<BarcodeTextile> barStore = barcodeTextileRepo.findAllByProductTextileStoreId(vo.getStoreId());
 			if (barStore != null) {

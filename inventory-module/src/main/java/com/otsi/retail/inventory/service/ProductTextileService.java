@@ -23,8 +23,6 @@ public interface ProductTextileService {
 
 	List<BarcodeTextileVo> getAllBarcodes(SearchFilterVo vo);
 
-	String incrementQty(BarcodeTextileVo vo);
-
 	List<AdjustmentsVo> getAllAdjustments(AdjustmentsVo vo);
 
 	String saveProductTextileList(List<BarcodeTextileVo> barcodeTextileVos);
