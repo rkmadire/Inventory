@@ -20,6 +20,16 @@ spring:
       port: 5672
       username: user
       password: piV7lSjh6q
+  
+ httpclient:
+	  pool:
+		   type: fixed
+		   max-connections: 10000
+		   acquire-timeout: 800000
+		   max-life-time: 3000s
+		   max-idle-time: 600s
+	  connect-timeout: 80000
+	  response-timeout: 600s
  
 eureka:
   client:
