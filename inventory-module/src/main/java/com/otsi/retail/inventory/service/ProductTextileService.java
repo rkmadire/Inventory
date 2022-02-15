@@ -37,4 +37,6 @@ public interface ProductTextileService {
 
 	List<BarcodeTextileVo> getBarcodeTextileReports(SearchFilterVo vo);
 
+	List<BarcodeTextileVo> getBarcodes(List<String> barcode);
+
 }

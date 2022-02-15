@@ -58,4 +58,6 @@ public interface BarcodeTextileRepo extends JpaRepository<BarcodeTextile, Long> 
 	@Query(value = "select column_name from information_schema.columns where table_name In ('barcode_textile','product_textile')", nativeQuery = true)
 	List<String> findAllColumnNames();
 
+	List<BarcodeTextile> findByBarcodeIn(List<String> barcode);
+
 }

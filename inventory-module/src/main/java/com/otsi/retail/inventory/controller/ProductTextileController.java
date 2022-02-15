@@ -124,13 +124,23 @@ public class ProductTextileController {
 		return new GateWayResponse<>("fetching all Column details", columns);
 
 	}
-	
+
 	@PostMapping("/getBarcodeTextileReports")
 	public GateWayResponse<?> getBarcodeTextileReports(@RequestBody SearchFilterVo vo) {
-		log.info("Recieved request to getBarcodeTextileReports:"+vo);
+		log.info("Recieved request to getBarcodeTextileReports:" + vo);
 		List<BarcodeTextileVo> allBarcodes = productTextileService.getBarcodeTextileReports(vo);
 		return new GateWayResponse<>("fetching all barcode textile details sucessfully", allBarcodes);
 	}
 
+	@PostMapping("/getbarcodes")
+	public GateWayResponse<?> getBarcodes(@RequestBody List<String> barcode) {
+		log.info("Received Request to getBarcodeDetails:" + barcode);
+		System.out.println("Received Request to getBarcodeDetails:" + barcode);
+
+		List<BarcodeTextileVo> barcodeDetails = productTextileService.getBarcodes(barcode);
+
+		return new GateWayResponse<>("fetching all barcode details", barcodeDetails);
+
+	}
 
 }
