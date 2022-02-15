@@ -25,7 +25,7 @@ public interface ProductTextileService {
 
 	List<AdjustmentsVo> getAllAdjustments(AdjustmentsVo vo);
 
-	String saveProductTextileList(List<BarcodeTextileVo> barcodeTextileVos);
+	String saveProductTextileList(List<BarcodeTextileVo> barcodeTextileVos, Long storeId);
 
 	List<String> getAllColumns(Long domainId);
 

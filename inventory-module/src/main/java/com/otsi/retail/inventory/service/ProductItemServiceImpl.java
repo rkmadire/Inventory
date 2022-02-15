@@ -532,8 +532,9 @@ public class ProductItemServiceImpl implements ProductItemService {
 	}
 
 	@Override
-	public String saveProductList(List<ProductItemVo> productItemVos) {
+	public String saveProductList(List<ProductItemVo> productItemVos, Long storeId) {
 		productItemVos.stream().forEach(v -> {
+			v.setStoreId(storeId);
 			createBarcode(v);
 		});
 		log.info("after saving all debitnotes:" + productItemVos.toString());

@@ -26,6 +26,6 @@ public interface ProductItemService {
 
 	String deleteBarcode(String barcodeId);
 
-	String saveProductList(List<ProductItemVo> productItemVos);
+	String saveProductList(List<ProductItemVo> productItemVos, Long storeId);
 
 }

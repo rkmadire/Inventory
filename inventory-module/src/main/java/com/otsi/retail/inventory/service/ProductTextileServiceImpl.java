@@ -654,8 +654,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	}
 
 	@Override
-	public String saveProductTextileList(List<BarcodeTextileVo> barcodeTextileVos) {
+	public String saveProductTextileList(List<BarcodeTextileVo> barcodeTextileVos, Long storeId) {
 		barcodeTextileVos.stream().forEach(v -> {
+			v.getProductTextile().setStoreId(storeId);
 			addBarcodeTextile(v);
 		});
 		log.info("after saving all product textiles...");

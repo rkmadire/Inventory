@@ -96,9 +96,9 @@ public class ProductItemController {
 	}
 
 	@PostMapping("/saveProductList")
-	public GateWayResponse<?> saveProductList(@RequestBody List<ProductItemVo> productItemVos) {
+	public GateWayResponse<?> saveProductList(@RequestBody List<ProductItemVo> productItemVos,@RequestParam("storeId") Long storeId) {
 		log.info("Received Request to saveProductList:" + productItemVos);
-		String saveVoList = productItemService.saveProductList(productItemVos);
+		String saveVoList = productItemService.saveProductList(productItemVos,storeId);
 		return new GateWayResponse<>("saving list of product", saveVoList);
 
 	}

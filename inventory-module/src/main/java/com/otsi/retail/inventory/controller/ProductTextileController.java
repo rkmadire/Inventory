@@ -96,9 +96,9 @@ public class ProductTextileController {
 	}
 
 	@PostMapping("/saveProductTextileList")
-	public GateWayResponse<?> saveProductTextileList(@RequestBody List<BarcodeTextileVo> barcodeTextileVos) {
+	public GateWayResponse<?> saveProductTextileList(@RequestBody List<BarcodeTextileVo> barcodeTextileVos,Long storeId) {
 		log.info("Received Request to saveProductTextileList:" + barcodeTextileVos);
-		String saveVoList = productTextileService.saveProductTextileList(barcodeTextileVos);
+		String saveVoList = productTextileService.saveProductTextileList(barcodeTextileVos,storeId);
 		return new GateWayResponse<>("saving list of product textile", saveVoList);
 
 	}
