@@ -4,6 +4,17 @@ server:
 spring:
  application:
     name: catalog-service
+ 
+ httpclient:
+     pool:
+       type: fixed
+       max-connections: 10000
+       acquire-timeout: 800000
+       max-life-time: 3000s
+       max-idle-time: 600s
+     connect-timeout: 80000
+     response-timeout: 600s
+ 
  datasource:
     platform: postgres
     url: jdbc:postgresql://10.100.198.141:5432/catalog-categories
