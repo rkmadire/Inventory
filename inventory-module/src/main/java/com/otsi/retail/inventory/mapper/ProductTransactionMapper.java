@@ -3,16 +3,14 @@ package com.otsi.retail.inventory.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.otsi.retail.inventory.model.ProductTransaction;
 import com.otsi.retail.inventory.vo.ProductTransactionVo;
 
 @Component
 public class ProductTransactionMapper {
 
-	@Autowired
-	private BarcodeTextileMapper barcodeTextileMapper;
 
 	/*
 	 * EntityToVo converts dto to vo

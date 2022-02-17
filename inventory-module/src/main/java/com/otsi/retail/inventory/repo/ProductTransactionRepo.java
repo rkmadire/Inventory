@@ -9,7 +9,6 @@ import com.otsi.retail.inventory.model.ProductTransaction;
 @Repository
 public interface ProductTransactionRepo extends JpaRepository<ProductTransaction, Long> {
 
-	ProductTransaction findByBarcodeId(Long barcodeTextileId);
 
 	List<ProductTransaction> findByCreationDateBetweenAndBarcodeIdAndMasterFlagOrderByLastModifiedAsc(
 			LocalDate fromDate, LocalDate toDate, Long barcodeTextileId, boolean masterFlag);
@@ -30,5 +29,13 @@ public interface ProductTransactionRepo extends JpaRepository<ProductTransaction
 	ProductTransaction findByBarcodeIdAndStoreId(Long barcodeTextileId, Long storeId);
 
 	ProductTransaction findTopByBarcodeIdAndStoreId(Long barcodeTextileId, Long storeId);
+
+	ProductTransaction findByBarcodeId(String barcode);
+	
+	ProductTransaction findTopByBarcodeIdAndStoreId(String barcode, Long storeId);
+
+	ProductTransaction findByBarcodeIdAndStoreId(String barcode, Long storeId);
+
+	
 
 }
