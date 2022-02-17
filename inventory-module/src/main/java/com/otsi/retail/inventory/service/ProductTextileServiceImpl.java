@@ -172,7 +172,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		if (prodOpt == null) {
 			log.error("product textile details not found with id");
 			throw new RecordNotFoundException(
-					"product textile details not found with id: " + prodOpt.getProductTextileId());
+					"product textile details not found with id: " + barcode);
 		}
 		productTextileRepo.delete(prodOpt);
 		saveAndUpdateProductTransaction(prodOpt.getBarcode());
@@ -223,6 +223,10 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		}
 		if (prodTextileStore != null) {
 			ProductTextile textile = productTextileRepo.findByBarcode(barcode);
+			if (textile == null) {
+				log.error("barcode record was not found");
+				throw new RecordNotFoundException("barcode record was not found:"+barcode);
+			}
 
 			ProductTextileVo vo = productTextileMapper.EntityToVo(textile);
 
@@ -235,8 +239,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			vo.setQty(transact.getQuantity());
 			vo.setValue(transact.getQuantity() * vo.getItemMrp());
 			return vo;
-		} else
+		} else {
 			throw new RecordNotFoundException("No record found with storeId:" + prodTextileStore);
+		}
 	}
 
 	@Override
