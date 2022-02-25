@@ -20,11 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.service.CatalogService;
 import com.otsi.retail.inventory.vo.CatalogVo;
+import com.otsi.retail.inventory.vo.UomVo;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 /**
  * @author Sudheer.Swamy
  *
  */
+@Api(value = "CatalogController", description = "REST APIs related to CatalogEntity !!!!")
 @RestController
 @RequestMapping("/catalog")
 public class CatalogController {
@@ -34,6 +41,10 @@ public class CatalogController {
 
 	private final Logger LOGGER = LogManager.getLogger(CatalogController.class);
 
+	@ApiOperation(value = "saveCatalog", notes = "saving catlog", response = CatalogVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval", 
+			response = CatalogVo.class, responseContainer = "Object") })
 	@PostMapping("/saveCatalog")
 	public GateWayResponse<?> saveCatalog(@RequestBody CatalogVo catalog) throws Exception {
 
@@ -43,6 +54,10 @@ public class CatalogController {
 
 	}
 
+	@ApiOperation(value = "getCatalogByName", notes = "fetching catalog using name", response = CatalogVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval", 
+			response = UomVo.class, responseContainer = "Object") })
 	@GetMapping("/getCatalogByName/{name}")
 	public GateWayResponse<?> getCatalogbyName(@PathVariable("name") String name) throws Exception {
 		CatalogVo vo = catalogService.getCatalogByName(name);
@@ -50,6 +65,10 @@ public class CatalogController {
 		return new GateWayResponse<>(vo);
 	}
 
+	@ApiOperation(value = "ListOfDivisions", notes = "fetching list of divisions", response = CatalogVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval", 
+			response = CatalogVo.class, responseContainer = "List") })
 	@GetMapping("/ListOfDivisions")
 	public GateWayResponse<?> getListOfMainCatagories() {
 
@@ -59,6 +78,10 @@ public class CatalogController {
 
 	}
 
+	@ApiOperation(value = "getcategoriesByid", notes = "fetching categories using id", response = CatalogVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval", 
+			response = CatalogVo.class, responseContainer = "List") })
 	@GetMapping("/getcategoriesByid")
 	public GateWayResponse<?> getCategories(@RequestParam Long id) {
 		List<CatalogVo> vo = catalogService.getCategories(id);
@@ -68,6 +91,10 @@ public class CatalogController {
 
 	}
 
+	@ApiOperation(value = "deleteCategory", notes = "delete category using id", response = CatalogVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval", 
+			response = CatalogVo.class, responseContainer = "String") })
 	@DeleteMapping("/deleteCategory/{id}")
 	public GateWayResponse<?> deleteCategory(@PathVariable("id") Long id) throws Exception {
 
@@ -77,6 +104,10 @@ public class CatalogController {
 
 	}
 	
+	@ApiOperation(value = "getListOfCategories", notes = "fetching list of categories", response = CatalogVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval", 
+			response = CatalogVo.class, responseContainer = "List") })
 	@GetMapping("/ListOfAllCategories")
 	public GateWayResponse<?> getListOfCategories() {
 

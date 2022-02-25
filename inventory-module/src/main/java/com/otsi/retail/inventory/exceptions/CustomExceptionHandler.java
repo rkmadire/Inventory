@@ -7,7 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 import com.otsi.retail.inventory.errors.ErrorResponse;
+
+import io.netty.channel.unix.Errors.NativeIoException;
+import reactor.netty.http.client.PrematureCloseException;
 
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
@@ -45,9 +49,22 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(value = ParentBarcodeFoundException.class)
 	public ResponseEntity<Object> handleParentBarcodeFoundException(
 			ParentBarcodeFoundException parentBarcodeFoundException) {
-		ErrorResponse<?> error = new ErrorResponse<>(404,"parent barcode record is no more...please enter current barcode");
+		ErrorResponse<?> error = new ErrorResponse<>(404,
+				"parent barcode record is no more...please enter current barcode");
 		log.error("error response is:" + error);
 		return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(value = PrematureCloseException.class)
+	public ResponseEntity<Object> handlePrematureCloseException(PrematureCloseException prematureCloseException) {
+		ErrorResponse<?> error = new ErrorResponse<>(500, prematureCloseException.getMessage());
+		return new ResponseEntity<Object>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler(value = NativeIoException.class)
+	public ResponseEntity<Object> handleNativeIoException(NativeIoException nativeIoException) {
+		ErrorResponse<?> error = new ErrorResponse<>(500, nativeIoException.getMessage());
+		return new ResponseEntity<Object>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
