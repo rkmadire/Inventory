@@ -15,11 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.otsi.retail.inventory.gatewayresponse.GateWayResponse;
 import com.otsi.retail.inventory.service.ProductItemService;
 import com.otsi.retail.inventory.vo.ProductItemVo;
+import com.otsi.retail.inventory.vo.ProductTextileVo;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 /**
  * @author vasavi
  *
  */
+@Api(value = "ProductItemController", description = "REST APIs related to ProductItem Entity!!!!")
 @RestController
 @RequestMapping("/inventoryRetail")
 public class ProductItemController {
@@ -29,6 +36,10 @@ public class ProductItemController {
 	@Autowired
 	private ProductItemService productItemService;
 
+	@ApiOperation(value = "createBarcode", notes = "add product for the retail ", response = ProductItemVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval", 
+			response = ProductItemVo.class, responseContainer = "String") })
 	@PostMapping("/createBarcode")
 	public GateWayResponse<?> createBarcode(@RequestBody ProductItemVo vo) {
 		log.info("Recieved request to createBarcode:" + vo);
@@ -36,6 +47,10 @@ public class ProductItemController {
 		return new GateWayResponse<>("Barcode created successfully", inventorySave);
 	}
 
+	@ApiOperation(value = "getProductItemId", notes = "fetch product using id for the retail ", response = ProductItemVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval", 
+			response = ProductItemVo.class, responseContainer = "Object") })
 	@GetMapping("/getProductId")
 	public GateWayResponse<?> getProductItemId(@RequestParam("productItemId") Long productItemId,
 			@RequestParam("storeId") Long storeId) {
@@ -44,6 +59,10 @@ public class ProductItemController {
 		return new GateWayResponse<>("fetching product details successfully with productId", inventory);
 	}
 
+	@ApiOperation(value = "updateBarcode", notes = "update product for the retail ", response = ProductItemVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval",
+			response = ProductItemVo.class, responseContainer = "String") })
 	@PutMapping(value = "/updateBarcode")
 	public GateWayResponse<?> updateBarcode(@RequestBody ProductItemVo vo) {
 		log.info("Received Request to updateBarcode :" + vo.toString());
@@ -51,6 +70,10 @@ public class ProductItemController {
 		return new GateWayResponse<>("Barcode updated successfully", updateBarcode);
 	}
 
+	@ApiOperation(value = "deleteBarcode", notes = "delete product for the retail ", response = ProductItemVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval", 
+			response = ProductItemVo.class, responseContainer = "String") })
 	@DeleteMapping("/deleteBarcode")
 	public GateWayResponse<?> deleteBarcode(@RequestParam("barcodeId") String barcodeId) {
 		log.info("Received Request to deleteBarcode :" + barcodeId);
@@ -59,6 +82,10 @@ public class ProductItemController {
 
 	}
 
+	@ApiOperation(value = "updateInventory", notes = "update only qty for the retail ", response = ProductItemVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval",
+			response = ProductItemVo.class, responseContainer = "String") })
 	@PutMapping("/updateInventory")
 	public GateWayResponse<?> updateInventory(@RequestBody ProductItemVo vo) {
 		log.info("Recieved request to updateProduct:" + vo);
@@ -66,13 +93,22 @@ public class ProductItemController {
 		return new GateWayResponse<>("updating inventory details successfully", inventory);
 	}
 
+	@ApiOperation(value = "getProductByName", notes = "fetch product using name for the retail ", response = ProductItemVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval", 
+			response = ProductItemVo.class, responseContainer = "Object") })
 	@GetMapping("/getProductName")
-	public GateWayResponse<?> getProductByName(@RequestParam("name") String name,@RequestParam("storeId") Long storeId) {
-		log.info("Recieved request to getProductByName:" + name+"and storeId is:"+storeId);
-		ProductItemVo inventoryName = productItemService.getProductByName(name,storeId);
+	public GateWayResponse<?> getProductByName(@RequestParam("name") String name,
+			@RequestParam("storeId") Long storeId) {
+		log.info("Recieved request to getProductByName:" + name + "and storeId is:" + storeId);
+		ProductItemVo inventoryName = productItemService.getProductByName(name, storeId);
 		return new GateWayResponse<>("fetching product details successfully with product name", inventoryName);
 	}
 
+	@ApiOperation(value = "getAllProducts", notes = "fetching all products for the retail ", response = ProductItemVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval",
+			response = ProductItemVo.class, responseContainer = "List") })
 	@PostMapping("/getAllProducts")
 	public GateWayResponse<?> getAllProducts(@RequestBody ProductItemVo vo) {
 		log.info("Recieved request to getAllProducts");
@@ -80,6 +116,10 @@ public class ProductItemController {
 		return new GateWayResponse<>("fetching all product details sucessfully", allProducts);
 	}
 
+	@ApiOperation(value = "getBarcodeId", notes = "fetching product using barcodeId for the retail ", response = ProductItemVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval", 
+			  response = ProductItemVo.class, responseContainer = "Object") })
 	@GetMapping("/getBarcodeId")
 	public GateWayResponse<?> getBarcodeId(@RequestParam("barcodeId") String barcodeId,
 			@RequestParam("storeId") Long storeId) {
@@ -88,6 +128,10 @@ public class ProductItemController {
 		return new GateWayResponse<>("fetching barcode details successfully with barcodeId", inventory);
 	}
 
+	@ApiOperation(value = "getAllBarcodes", notes = "fetching products using barcodes for the retail ", response = ProductItemVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval",
+			  response = ProductItemVo.class, responseContainer = "List") })
 	@PostMapping("/getAllBarcodes")
 	public GateWayResponse<?> getAllBarcodes(@RequestBody ProductItemVo vo) {
 		log.info("Recieved request to getAllBarcodes");
@@ -95,10 +139,15 @@ public class ProductItemController {
 		return new GateWayResponse<>("fetching all barcode details sucessfully", allBarcodes);
 	}
 
+	@ApiOperation(value = "saveProductList", notes = "add bulk product for the retail ", response = ProductItemVo.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Server error"),
+			@ApiResponse(code = 200, message = "Successful retrieval", 
+			response = ProductItemVo.class, responseContainer = "String") })
 	@PostMapping("/saveProductList")
-	public GateWayResponse<?> saveProductList(@RequestBody List<ProductItemVo> productItemVos) {
+	public GateWayResponse<?> saveProductList(@RequestBody List<ProductItemVo> productItemVos,
+			@RequestParam("storeId") Long storeId) {
 		log.info("Received Request to saveProductList:" + productItemVos);
-		String saveVoList = productItemService.saveProductList(productItemVos);
+		String saveVoList = productItemService.saveProductList(productItemVos, storeId);
 		return new GateWayResponse<>("saving list of product", saveVoList);
 
 	}

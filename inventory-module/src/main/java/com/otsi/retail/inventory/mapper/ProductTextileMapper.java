@@ -4,16 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.otsi.retail.inventory.commons.ProductStatus;
-import com.otsi.retail.inventory.model.BarcodeTextile;
 import com.otsi.retail.inventory.model.ProductTextile;
-import com.otsi.retail.inventory.model.ProductTransaction;
-import com.otsi.retail.inventory.repo.ProductTransactionRepo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
-import com.otsi.retail.inventory.vo.ProductTransactionVo;
 
 @Component
 public class ProductTextileMapper {
@@ -27,13 +22,21 @@ public class ProductTextileMapper {
 		ProductTextileVo vo = new ProductTextileVo();
 
 		BeanUtils.copyProperties(dto, vo);
-		vo.setCreateForLocation(0);
-		vo.setValueAdditionCp(0);
 		vo.setEmpId(dto.getEmpId());
-		vo.setCreatedAt(dto.getCreatedAt());
-		vo.setUpdatedAt(dto.getUpdatedAt());
+		vo.setFromDate(dto.getCreationDate());
+		vo.setToDate(dto.getLastModifiedDate());
+		vo.setBarcode(dto.getBarcode());
+		vo.setDivision(dto.getDivision());
+		vo.setSection(dto.getSection());
+		vo.setSubSection(dto.getSubSection());
+		vo.setName(dto.getName());
+		vo.setStatus(dto.getStatus());
+		vo.setCategory(dto.getCategory());
+		vo.setBatchNo(dto.getBatchNo());
+		vo.setColour(dto.getColour());
 		vo.setOriginalBarcodeCreatedAt(dto.getOriginalBarcodeCreatedAt());
 		vo.setStoreId(dto.getStoreId());
+		vo.setDomainId(dto.getDomainId());
 
 		return vo;
 
@@ -56,13 +59,21 @@ public class ProductTextileMapper {
 	public ProductTextile VoToEntity(ProductTextileVo vo) {
 		ProductTextile dto = new ProductTextile();
 		BeanUtils.copyProperties(vo, dto);
-		dto.setUom(vo.getUom());
-		dto.setCreateForLocation(0);
-		dto.setValueAdditionCp(0);
-		dto.setCreatedAt(LocalDate.now());
-		dto.setUpdatedAt(LocalDate.now());
+		dto.setEmpId(vo.getEmpId());
+		dto.setCreationDate(LocalDate.now());
+		dto.setLastModifiedDate(LocalDate.now());
+		dto.setStatus(ProductStatus.ENABLE);
+		dto.setName(vo.getName());
+		dto.setBarcode(vo.getBarcode());
+		dto.setDivision(vo.getDivision());
+		dto.setSection(vo.getSection());
+		dto.setSubSection(vo.getSubSection());
 		dto.setOriginalBarcodeCreatedAt(LocalDate.now());
+		dto.setCategory(vo.getCategory());
+		dto.setBatchNo(vo.getBatchNo());
+		dto.setColour(vo.getColour());
 		dto.setStoreId(vo.getStoreId());
+		dto.setDomainId(vo.getDomainId());
 		return dto;
 
 	}

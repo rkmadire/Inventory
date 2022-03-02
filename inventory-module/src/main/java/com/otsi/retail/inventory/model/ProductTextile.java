@@ -1,16 +1,13 @@
 package com.otsi.retail.inventory.model;
 
 import java.time.LocalDate;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.otsi.retail.inventory.commons.ProductStatus;
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,32 +21,26 @@ public class ProductTextile {
 	@Id
 	@GeneratedValue
 	private Long productTextileId;
-
-	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH })
-	@JoinColumn(name = "barcodeTextileId",unique = true)
-	@JsonManagedReference
-	private BarcodeTextile barcodeTextile;
+	private String name;
+	private String barcode;
+	private Long division;
+	private Long section;
+	private Long subSection;
+	private Long category;
+	private String batchNo;
+	private String colour;
 	private String parentBarcode;
 	private float costPrice;
 	private float itemMrp;
-	private float itemRsp;
 	private String empId;
 	private Long storeId;
-	private String promoLabel;
-	private LocalDate createdAt;
-	private LocalDate updatedAt;
+	private Long domainId;
+	private LocalDate creationDate;
+	private LocalDate lastModifiedDate;
+	@ApiModelProperty(notes = "unit of measures of the product")
 	private String uom;
-	private Long hsnMasterId;
-	private String originalBarcode;
+	private String hsnCode;
 	private LocalDate originalBarcodeCreatedAt;
-	private int createForLocation;
-	private float valueAdditionCp;
-	private String itemCode;
-	private String itemSku;
 	private ProductStatus status;
-	private String attr_22;
-	private String attr_23;
-	private String attr_24;
-	private String attr_25;
 
 }
