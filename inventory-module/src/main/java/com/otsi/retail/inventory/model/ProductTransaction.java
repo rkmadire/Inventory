@@ -20,7 +20,7 @@ public class ProductTransaction {
 	@GeneratedValue
 	private Long productTransactionId;
 	private Long storeId;
-	private Long barcodeId;
+	private String barcodeId;
 	private int quantity;
 	private String natureOfTransaction;
 	private String effectingTable;

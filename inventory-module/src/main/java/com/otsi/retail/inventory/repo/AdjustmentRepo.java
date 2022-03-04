@@ -13,9 +13,7 @@ public interface AdjustmentRepo extends JpaRepository<Adjustments, Long> {
 
 	List<Adjustments> findAllByAdjustmentId(Long adjustmentId);
 
-	List<Adjustments> findByCreationDateBetweenAndCommentsOrderByLastModifiedDateAsc(LocalDate fromDate, String string,
-			LocalDate toDate);
-
+	
 	List<Adjustments> findByCreationDateBetweenAndCurrentBarcodeIdAndCommentsOrderByLastModifiedDateAsc(
 			LocalDate fromDate, LocalDate toDate, String currentBarcodeId, String string);
 
@@ -23,6 +21,9 @@ public interface AdjustmentRepo extends JpaRepository<Adjustments, Long> {
 
 	List<Adjustments> findByCurrentBarcodeIdAndAdjustmentIdInAndComments(String currentBarcodeId,
 			List<Long> effectingId, String string);
+
+	List<Adjustments> findByCreationDateBetweenAndCommentsOrderByLastModifiedDateAsc(LocalDate fromDate,
+			LocalDate toDate, String string);
 
 	
 }
