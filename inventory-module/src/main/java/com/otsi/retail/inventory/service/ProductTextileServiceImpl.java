@@ -35,6 +35,8 @@ import com.otsi.retail.inventory.vo.AdjustmentsVo;
 import com.otsi.retail.inventory.vo.InventoryUpdateVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
 import com.otsi.retail.inventory.vo.SearchFilterVo;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Component
 public class ProductTextileServiceImpl implements ProductTextileService {
@@ -507,8 +509,8 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	@Override
 	public List<ProductTextileVo> getBarcodeTextileReports(SearchFilterVo vo) {
 		List<ProductTextile> barcodeDetails = new ArrayList<>();
-
-		ProductStatus status = ProductStatus.ENABLE;
+		Pageable page = PageRequest.of(vo.getStartRecordNumber(), vo.getNumberOfRecords());
+        ProductStatus status = ProductStatus.ENABLE;
 		List<ProductTextile> barStore = productTextileRepo.findByStoreId(vo.getStoreId());
 		if (barStore != null) {
 			/*
@@ -518,9 +520,14 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			if (vo.getFromDate() != null && vo.getToDate() != null && (vo.getBarcode() == null || vo.getBarcode() == "")
 					&& vo.getStoreId() != null) {
 
+				/*
+				 * barcodeDetails = productTextileRepo
+				 * .findByCreationDateBetweenAndStatusAndStoreIdOrderByLastModifiedDateAsc(vo.
+				 * getFromDate(), vo.getToDate(), status, vo.getStoreId());
+				 */
 				barcodeDetails = productTextileRepo
 						.findByCreationDateBetweenAndStatusAndStoreIdOrderByLastModifiedDateAsc(vo.getFromDate(),
-								vo.getToDate(), status, vo.getStoreId());
+								vo.getToDate(), status, vo.getStoreId(),page);
 
 				if (barcodeDetails.isEmpty()) {
 					log.error("No record found with given information");
@@ -549,8 +556,13 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			 * using itemMrp< and itemMrp>
 			 */
 			else if (vo.getItemMrpLessThan() != 0 && vo.getItemMrpGreaterThan() != 0 && vo.getStoreId() != null) {
+				/*
+				 * barcodeDetails =
+				 * productTextileRepo.findByItemMrpBetweenAndStoreIdAndStatus(vo.
+				 * getItemMrpLessThan(), vo.getItemMrpGreaterThan(), vo.getStoreId(), status);
+				 */
 				barcodeDetails = productTextileRepo.findByItemMrpBetweenAndStoreIdAndStatus(vo.getItemMrpLessThan(),
-						vo.getItemMrpGreaterThan(), vo.getStoreId(), status);
+						vo.getItemMrpGreaterThan(), vo.getStoreId(), status,page);
 				if (barcodeDetails.isEmpty()) {
 					log.error("No record found with given information");
 					throw new RecordNotFoundException("No record found with given information");
@@ -560,7 +572,8 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			 * using empId
 			 */
 			else if (vo.getEmpId() != null) {
-				barcodeDetails = productTextileRepo.findByEmpIdAndStatus(vo.getEmpId(), status);
+				//barcodeDetails = productTextileRepo.findByEmpIdAndStatus(vo.getEmpId(), status);
+				barcodeDetails = productTextileRepo.findByEmpIdAndStatus(vo.getEmpId(), status,page);
 			}
 			/*
 			 * using barcode and storeId
@@ -574,7 +587,8 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			 * using storeId
 			 */
 			else if (vo.getStoreId() != null) {
-				barcodeDetails = productTextileRepo.findByStoreIdAndStatus(vo.getStoreId(), status);
+				//barcodeDetails = productTextileRepo.findByStoreIdAndStatus(vo.getStoreId(), status);
+				barcodeDetails = productTextileRepo.findByStoreIdAndStatus(vo.getStoreId(), status,page);
 			}
 
 			/*

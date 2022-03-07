@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -51,5 +52,15 @@ public interface ProductTextileRepo extends JpaRepository<ProductTextile, Long> 
 	
 	@Query(value = "select column_name from information_schema.columns where table_name ='product_textile'", nativeQuery = true)
 	List<String> findAllColumnNames();
+
+	List<ProductTextile> findByEmpIdAndStatus(String empId, ProductStatus status, Pageable page);
+
+	List<ProductTextile> findByCreationDateBetweenAndStatusAndStoreIdOrderByLastModifiedDateAsc(LocalDate fromDate,
+			LocalDate toDate, ProductStatus status, Long storeId, Pageable page);
+
+	List<ProductTextile> findByItemMrpBetweenAndStoreIdAndStatus(float itemMrpLessThan, float itemMrpGreaterThan,
+			Long storeId, ProductStatus status, Pageable page);
+
+	List<ProductTextile> findByStoreIdAndStatus(Long storeId, ProductStatus status, Pageable page);
 
 }
