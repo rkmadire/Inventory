@@ -173,8 +173,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		ProductTextile prodOpt = productTextileRepo.findByBarcode(barcode);
 		if (prodOpt == null) {
 			log.error("product textile details not found with id");
-			throw new RecordNotFoundException(
-					"product textile details not found with id: " + barcode);
+			throw new RecordNotFoundException("product textile details not found with id: " + barcode);
 		}
 		productTextileRepo.delete(prodOpt);
 		saveAndUpdateProductTransaction(prodOpt.getBarcode());
@@ -227,7 +226,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			ProductTextile textile = productTextileRepo.findByBarcode(barcode);
 			if (textile == null) {
 				log.error("barcode record was not found");
-				throw new RecordNotFoundException("barcode record was not found:"+barcode);
+				throw new RecordNotFoundException("barcode record was not found:" + barcode);
 			}
 
 			ProductTextileVo vo = productTextileMapper.EntityToVo(textile);
@@ -509,8 +508,8 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	@Override
 	public List<ProductTextileVo> getBarcodeTextileReports(SearchFilterVo vo) {
 		List<ProductTextile> barcodeDetails = new ArrayList<>();
-		Pageable page = PageRequest.of(vo.getStartRecordNumber(), vo.getNumberOfRecords());
-        ProductStatus status = ProductStatus.ENABLE;
+
+		ProductStatus status = ProductStatus.ENABLE;
 		List<ProductTextile> barStore = productTextileRepo.findByStoreId(vo.getStoreId());
 		if (barStore != null) {
 			/*
@@ -520,14 +519,9 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			if (vo.getFromDate() != null && vo.getToDate() != null && (vo.getBarcode() == null || vo.getBarcode() == "")
 					&& vo.getStoreId() != null) {
 
-				/*
-				 * barcodeDetails = productTextileRepo
-				 * .findByCreationDateBetweenAndStatusAndStoreIdOrderByLastModifiedDateAsc(vo.
-				 * getFromDate(), vo.getToDate(), status, vo.getStoreId());
-				 */
 				barcodeDetails = productTextileRepo
 						.findByCreationDateBetweenAndStatusAndStoreIdOrderByLastModifiedDateAsc(vo.getFromDate(),
-								vo.getToDate(), status, vo.getStoreId(),page);
+								vo.getToDate(), status, vo.getStoreId());
 
 				if (barcodeDetails.isEmpty()) {
 					log.error("No record found with given information");
@@ -556,13 +550,10 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			 * using itemMrp< and itemMrp>
 			 */
 			else if (vo.getItemMrpLessThan() != 0 && vo.getItemMrpGreaterThan() != 0 && vo.getStoreId() != null) {
-				/*
-				 * barcodeDetails =
-				 * productTextileRepo.findByItemMrpBetweenAndStoreIdAndStatus(vo.
-				 * getItemMrpLessThan(), vo.getItemMrpGreaterThan(), vo.getStoreId(), status);
-				 */
+
 				barcodeDetails = productTextileRepo.findByItemMrpBetweenAndStoreIdAndStatus(vo.getItemMrpLessThan(),
-						vo.getItemMrpGreaterThan(), vo.getStoreId(), status,page);
+						vo.getItemMrpGreaterThan(), vo.getStoreId(), status);
+
 				if (barcodeDetails.isEmpty()) {
 					log.error("No record found with given information");
 					throw new RecordNotFoundException("No record found with given information");
@@ -572,8 +563,7 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			 * using empId
 			 */
 			else if (vo.getEmpId() != null) {
-				//barcodeDetails = productTextileRepo.findByEmpIdAndStatus(vo.getEmpId(), status);
-				barcodeDetails = productTextileRepo.findByEmpIdAndStatus(vo.getEmpId(), status,page);
+				barcodeDetails = productTextileRepo.findByEmpIdAndStatus(vo.getEmpId(), status);
 			}
 			/*
 			 * using barcode and storeId
@@ -587,8 +577,8 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			 * using storeId
 			 */
 			else if (vo.getStoreId() != null) {
-				//barcodeDetails = productTextileRepo.findByStoreIdAndStatus(vo.getStoreId(), status);
-				barcodeDetails = productTextileRepo.findByStoreIdAndStatus(vo.getStoreId(), status,page);
+				barcodeDetails = productTextileRepo.findByStoreIdAndStatus(vo.getStoreId(), status);
+
 			}
 
 			/*
