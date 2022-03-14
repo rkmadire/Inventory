@@ -278,14 +278,23 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 			ProductTextileVo vo = productTextileMapper.EntityToVo(textile);
 
-			ProductTransaction transact = productTransactionRepo.findTopByBarcodeIdAndStoreId(textile.getBarcode(),
-					textile.getStoreId());
-			if (transact == null) {
-				log.error("textile record is not found");
-				throw new RecordNotFoundException("textile record is not found");
-			}
-			vo.setQty(transact.getQuantity());
-			vo.setValue(transact.getQuantity() * vo.getItemMrp());
+			List<ProductTransaction> transact = new ArrayList<>();
+			transact = productTransactionRepo.findAllByBarcodeId(vo.getBarcode());
+			transact.stream().forEach(t -> {
+				if (t.getEffectingTable().equals("product textile table")) {
+					t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(
+							vo.getBarcode(), "product textile table", true);
+					vo.setQty(t.getQuantity());
+
+					vo.setValue(t.getQuantity() * vo.getItemMrp());
+				} else if (t.getEffectingTable().equals("Adjustments")) {
+					t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(
+							vo.getBarcode(), "Adjustments", true);
+					vo.setQty(t.getQuantity());
+
+					vo.setValue(t.getQuantity() * vo.getItemMrp());
+				}
+			});
 			return vo;
 		} else {
 			throw new RecordNotFoundException("No record found with storeId:" + prodTextileStore);
@@ -350,16 +359,25 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 			List<ProductTextileVo> barcodeList = productTextileMapper.EntityToVo(barcodeDetails);
 			barcodeList.stream().forEach(v -> {
-				ProductTransaction transact = productTransactionRepo.findTopByBarcodeIdAndStoreId(v.getBarcode(),
-						v.getStoreId());
-				if (transact == null) {
-					log.error("textile record is not found");
-					throw new RecordNotFoundException("textile record is not found");
-				}
-				v.setQty(transact.getQuantity());
+				List<ProductTransaction> transact = new ArrayList<>();
+				transact = productTransactionRepo.findAllByBarcodeId(v.getBarcode());
+				transact.stream().forEach(t -> {
+					if (t.getEffectingTable().equals("product textile table")) {
+						t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(
+								v.getBarcode(), "product textile table", true);
+						v.setQty(t.getQuantity());
 
-				v.setValue(transact.getQuantity() * v.getItemMrp());
+						v.setValue(t.getQuantity() * v.getItemMrp());
+					} else if (t.getEffectingTable().equals("Adjustments")) {
+						t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(
+								v.getBarcode(), "Adjustments", true);
+						v.setQty(t.getQuantity());
+
+						v.setValue(t.getQuantity() * v.getItemMrp());
+					}
+				});
 			});
+			
 			log.warn("we are checking if barcode textile is fetching...");
 			log.info("fetching all barcode textile details");
 			return barcodeList;
@@ -655,16 +673,23 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		}
 		List<ProductTextileVo> barcodeList = productTextileMapper.EntityToVo(barcodeDetails);
 		barcodeList.stream().forEach(v -> {
+			List<ProductTransaction> transact = new ArrayList<>();
+			transact = productTransactionRepo.findAllByBarcodeId(v.getBarcode());
+			transact.stream().forEach(t -> {
+				if (t.getEffectingTable().equals("product textile table")) {
+					t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(
+							v.getBarcode(), "product textile table", true);
+					v.setQty(t.getQuantity());
 
-			ProductTransaction transact = productTransactionRepo.findTopByBarcodeIdAndStoreId(v.getBarcode(),
-					v.getStoreId());
-			if (transact == null) {
-				log.error("textile record is not found");
-				throw new RecordNotFoundException("textile record is not found");
-			}
-			v.setQty(transact.getQuantity());
+					v.setValue(t.getQuantity() * v.getItemMrp());
+				} else if (t.getEffectingTable().equals("Adjustments")) {
+					t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(
+							v.getBarcode(), "Adjustments", true);
+					v.setQty(t.getQuantity());
 
-			v.setValue(transact.getQuantity() * v.getItemMrp());
+					v.setValue(t.getQuantity() * v.getItemMrp());
+				}
+			});
 		});
 
 		log.warn("we are checking if barcode textile is fetching...");
