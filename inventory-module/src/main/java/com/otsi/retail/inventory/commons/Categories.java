@@ -11,6 +11,8 @@ import lombok.Data;
  */
 
 public enum Categories {
+	
+	
 
 	None(0L,"none"),DIVISION(1L,"division"), SECTION(2L,"section"), SUB_SECTION(3L,"sub_section");
 	

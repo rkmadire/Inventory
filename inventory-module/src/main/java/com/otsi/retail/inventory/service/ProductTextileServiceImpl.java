@@ -187,19 +187,18 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			log.error("product textile details not found with id");
 			throw new RecordNotFoundException("product textile details not found with id: " + barcode);
 		}
-		
+
 		saveAndUpdateAdjustments(prodOpt.getBarcode());
 		saveAndUpdateProductTransaction(prodOpt.getBarcode());
 		List<ProductTransaction> transact = new ArrayList<>();
 		transact = productTransactionRepo.findAllByBarcodeId(barcode);
 		transact.stream().forEach(t -> {
 			if (t.getComment().equals("newly inserted table")) {
-				t = productTransactionRepo.findByBarcodeIdAndCommentAndMasterFlag(barcode,
-						"newly inserted table", true);
+				t = productTransactionRepo.findByBarcodeIdAndCommentAndMasterFlag(barcode, "newly inserted table",
+						true);
 				productTransactionRepo.delete(t);
 			} else if (t.getComment().equals("Adjustments")) {
-				t = productTransactionRepo.findByBarcodeIdAndCommentAndMasterFlag(barcode,
-						"Adjustments", true);
+				t = productTransactionRepo.findByBarcodeIdAndCommentAndMasterFlag(barcode, "Adjustments", true);
 				productTransactionRepo.delete(t);
 			}
 		});
@@ -282,14 +281,14 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			transact = productTransactionRepo.findAllByBarcodeId(vo.getBarcode());
 			transact.stream().forEach(t -> {
 				if (t.getEffectingTable().equals("product textile table")) {
-					t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(
-							vo.getBarcode(), "product textile table", true);
+					t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(vo.getBarcode(),
+							"product textile table", true);
 					vo.setQty(t.getQuantity());
 
 					vo.setValue(t.getQuantity() * vo.getItemMrp());
 				} else if (t.getEffectingTable().equals("Adjustments")) {
-					t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(
-							vo.getBarcode(), "Adjustments", true);
+					t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(vo.getBarcode(),
+							"Adjustments", true);
 					vo.setQty(t.getQuantity());
 
 					vo.setValue(t.getQuantity() * vo.getItemMrp());
@@ -363,21 +362,21 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 				transact = productTransactionRepo.findAllByBarcodeId(v.getBarcode());
 				transact.stream().forEach(t -> {
 					if (t.getEffectingTable().equals("product textile table")) {
-						t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(
-								v.getBarcode(), "product textile table", true);
+						t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(v.getBarcode(),
+								"product textile table", true);
 						v.setQty(t.getQuantity());
 
 						v.setValue(t.getQuantity() * v.getItemMrp());
 					} else if (t.getEffectingTable().equals("Adjustments")) {
-						t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(
-								v.getBarcode(), "Adjustments", true);
+						t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(v.getBarcode(),
+								"Adjustments", true);
 						v.setQty(t.getQuantity());
 
 						v.setValue(t.getQuantity() * v.getItemMrp());
 					}
 				});
 			});
-			
+
 			log.warn("we are checking if barcode textile is fetching...");
 			log.info("fetching all barcode textile details");
 			return barcodeList;
@@ -553,10 +552,15 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 	@Override
 	public List<String> getValuesFromProductTextileColumns(String enumName) {
-		String query = "select p." + enumName + " from  product_textile p group by  p." + enumName;
+
 		try {
-			log.info("fetching values from product textile" + enumName + "is",
-					em.createNativeQuery(query).getResultList());
+			String query;
+
+			if (enumName.equals("SECTION")  || enumName .equals("SUB_SECTION")|| enumName .equals("DIVISION")) {
+				query = "select c.name from  catalog_categories c where c.description= '" +enumName+"'";
+			} else {
+				query = "select p." + enumName + " from  product_textile p group by  p." + enumName;
+			}
 			return em.createNativeQuery(query).getResultList();
 
 		} catch (Exception ex) {
@@ -641,7 +645,8 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			 * using empId
 			 */
 			else if (vo.getEmpId() != null) {
-				barcodeDetails = productTextileRepo.findByEmpIdAndStatus(vo.getEmpId(), status);
+				barcodeDetails = productTextileRepo.findByEmpIdAndStatusAndStoreId(vo.getEmpId(), status,
+						vo.getStoreId());
 			}
 			/*
 			 * using barcode and storeId
@@ -677,14 +682,14 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 			transact = productTransactionRepo.findAllByBarcodeId(v.getBarcode());
 			transact.stream().forEach(t -> {
 				if (t.getEffectingTable().equals("product textile table")) {
-					t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(
-							v.getBarcode(), "product textile table", true);
+					t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(v.getBarcode(),
+							"product textile table", true);
 					v.setQty(t.getQuantity());
 
 					v.setValue(t.getQuantity() * v.getItemMrp());
 				} else if (t.getEffectingTable().equals("Adjustments")) {
-					t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(
-							v.getBarcode(), "Adjustments", true);
+					t = productTransactionRepo.findByBarcodeIdAndEffectingTableAndMasterFlag(v.getBarcode(),
+							"Adjustments", true);
 					v.setQty(t.getQuantity());
 
 					v.setValue(t.getQuantity() * v.getItemMrp());
