@@ -25,5 +25,7 @@ public interface AdjustmentRepo extends JpaRepository<Adjustments, Long> {
 	List<Adjustments> findByCreationDateBetweenAndCommentsOrderByLastModifiedDateAsc(LocalDate fromDate,
 			LocalDate toDate, String string);
 
+	List<Adjustments> findByCreationDateAndComments(LocalDate fromDate, String string);
+
 	
 }

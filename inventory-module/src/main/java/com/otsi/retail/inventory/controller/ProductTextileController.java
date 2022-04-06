@@ -6,8 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +43,7 @@ public class ProductTextileController {
 	@Autowired
 	private ProductTextileService productTextileService;
 	
+	
     @ApiOperation(value = "addBarcode_Textile",notes="add product for the textile ", response = ProductTextileVo.class)
     @ApiResponses(value = {
 	        @ApiResponse(code = 500, message = "Server error"),
@@ -57,6 +56,8 @@ public class ProductTextileController {
 		return new GateWayResponse<>("barcode textile saved successfully", textileSave);
 
 	}
+    
+    
     @ApiResponses(value = {
 	        @ApiResponse(code = 500, message = "Server error"),
 	        @ApiResponse(code = 200, message = "Successful retrieval",
@@ -68,6 +69,7 @@ public class ProductTextileController {
 		String updateBarcode = productTextileService.updateBarcodeTextile(vo);
 		return new GateWayResponse<>("Barcode textile updated successfully", updateBarcode);
 	}
+    
     
     @ApiOperation(value = "deleteBarcode_Textile",notes="delete barcode for the textile ", response = ProductTextileVo.class)
     @ApiResponses(value = {
@@ -81,6 +83,8 @@ public class ProductTextileController {
 		return new GateWayResponse<>("Barcode textile deleted successfully", deleteBarcode);
 
 	}
+    
+    
     @ApiOperation(value = "getBarcodeTextile",notes="fetch barcode using storeId for the textile ", response = ProductTextileVo.class)
     @ApiResponses(value = {
 	        @ApiResponse(code = 500, message = "Server error"),
@@ -93,6 +97,8 @@ public class ProductTextileController {
 		ProductTextileVo textile = productTextileService.getBarcodeTextile(barcode, storeId);
 		return new GateWayResponse<>("fetching barcode textile details successfully with barcode", textile);
 	}
+    
+    
     @ApiOperation(value = "getAllBarcodeTextiles",notes="fetch list of barcodes for the textile ", response = ProductTextileVo.class)
     @ApiResponses(value = {
 	        @ApiResponse(code = 500, message = "Server error"),
@@ -104,11 +110,14 @@ public class ProductTextileController {
 		List<ProductTextileVo> allBarcodes = productTextileService.getAllBarcodes(vo);
 		return new GateWayResponse<>("fetching all barcode textile details sucessfully", allBarcodes);
 	}
+    
 
 	@RabbitListener(queues = MQConfig.inventory_queue)
 	public void inventoryUpdate(@RequestBody List<InventoryUpdateVo> request) {
 		productTextileService.inventoryUpdate(request);
 	}
+	
+	
 	 @ApiOperation(value = "getAllAdjustments",notes="fetch rebarcodes for the textile ", response = ProductTextileVo.class)
 	 @ApiResponses(value = {
 		        @ApiResponse(code = 500, message = "Server error"),
@@ -120,6 +129,8 @@ public class ProductTextileController {
 		List<AdjustmentsVo> allBarcodes = productTextileService.getAllAdjustments(vo);
 		return new GateWayResponse<>("fetching all adjusment details sucessfully", allBarcodes);
 	}
+	 
+	 
 	 @ApiOperation(value = "saveProductTextileList",notes="add bulk products for the textile ", response = ProductTextileVo.class)
 	 @ApiResponses(value = {
 		        @ApiResponse(code = 500, message = "Server error"),
@@ -133,6 +144,8 @@ public class ProductTextileController {
 		return new GateWayResponse<>("saving list of product textile", saveVoList);
 
 	}
+	 
+	 
 	 @ApiOperation(value = "getValuesFromProductTextileColumns",notes="fetch values using column names for the textile ", response = ProductTextileVo.class)
 	 @ApiResponses(value = {
 		        @ApiResponse(code = 500, message = "Server error"),
@@ -144,6 +157,8 @@ public class ProductTextileController {
 		List<String> enumVo = productTextileService.getValuesFromProductTextileColumns(enumName);
 		return new GateWayResponse<>("fetching all " + enumName + " textile details sucessfully", enumVo);
 	}
+	 
+	 
 	 @ApiOperation(value = "getAllColumns",notes="fetch all columns for the textile ", response = ProductTextileVo.class)
 	 @ApiResponses(value = {
 		        @ApiResponse(code = 500, message = "Server error"),
@@ -156,6 +171,8 @@ public class ProductTextileController {
 		return new GateWayResponse<>("fetching all Column details", columns);
 
 	}
+	 
+	 
 	@ApiOperation(value = "getBarcodeTextileReports",notes="fetch barcodes for the textile reports", response = ProductTextileVo.class)
 	 @ApiResponses(value = {
 		        @ApiResponse(code = 500, message = "Server error"),
@@ -167,6 +184,8 @@ public class ProductTextileController {
 		List<ProductTextileVo> allBarcodes = productTextileService.getBarcodeTextileReports(vo);
 		return new GateWayResponse<>("fetching all barcode textile details sucessfully", allBarcodes);
 	}
+	
+	
 	@ApiOperation(value = "getBarcodes",notes="fetch barcodes for the textile ", response = ProductTextileVo.class)
 	 @ApiResponses(value = {
 		        @ApiResponse(code = 500, message = "Server error"),
@@ -179,6 +198,8 @@ public class ProductTextileController {
 		return new GateWayResponse<>("fetching all barcode details", barcodeDetails);
 
 	}
+	
+	
 	@ApiOperation(value = "getTextileParentBarcode",notes="fetch parentBarcode for the textile ", response = ProductTextileVo.class)
 	 @ApiResponses(value = {
 		        @ApiResponse(code = 500, message = "Server error"),

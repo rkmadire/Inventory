@@ -35,4 +35,5 @@ public interface ProductTextileService {
 	String saveProductTextileList(List<ProductTextileVo> productTextileVos, Long storeId);
 
 	ProductTextileVo getTextileParentBarcode(String parentBarcode);
+
 }
