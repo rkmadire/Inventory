@@ -2,6 +2,7 @@ package com.otsi.retail.inventory.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -578,12 +579,35 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 	public List<String> getValuesFromProductTextileColumns(String enumName) {
 
 		try {
-			String query;
+			String query = null;
+			String underscore="_";
 
-			if (enumName.equals("SECTION") || enumName.equals("SUB_SECTION") || enumName.equals("DIVISION")) {
+			if (enumName.equalsIgnoreCase("SECTION") || enumName.equalsIgnoreCase("SUBSECTION") || enumName.equalsIgnoreCase("DIVISION")) {
+				if(enumName.equalsIgnoreCase("SUBSECTION")) {
+					enumName = enumName.isEmpty() ? enumName : enumName.substring(0,3).toUpperCase() + underscore+enumName.substring(3).toUpperCase();    
+				}
+				else if(enumName.equalsIgnoreCase("SECTION") || enumName.equalsIgnoreCase("DIVISION")) {
+					enumName = enumName.isEmpty() ? enumName : Character.toUpperCase(enumName.charAt(0)) + enumName.substring(1).toUpperCase();    
+				}
+				
 				query = "select c.name from  catalog_categories c where c.description= '" + enumName + "'";
-			} else {
+			}
+			
+			else if(enumName.equalsIgnoreCase("batchno")||enumName.equalsIgnoreCase("costprice")||enumName.equalsIgnoreCase("mrp")) {
+				if(enumName.equalsIgnoreCase("batchno")) {
+				enumName = enumName.isEmpty() ? enumName : enumName.substring(0,5).toLowerCase() + underscore+enumName.substring(5).toLowerCase();    
+			}
+			else if(enumName.equalsIgnoreCase("costprice")) {
+				enumName = enumName.isEmpty() ? enumName : enumName.substring(0,4).toLowerCase() + underscore+enumName.substring(4).toLowerCase();    
+			}
+			else if(enumName.equalsIgnoreCase("mrp")) {
+				enumName="itemmrp";
+				enumName = enumName.isEmpty() ? enumName : enumName.substring(0,4).toLowerCase() + underscore+enumName.substring(4).toLowerCase();    
+				}
 				query = "select p." + enumName + " from  product_textile p group by  p." + enumName;
+		}
+			else if(enumName.equalsIgnoreCase("Dcode")||enumName.equalsIgnoreCase("StyleCode")||enumName.equalsIgnoreCase("SubSectionId")||enumName.equalsIgnoreCase("DiscountType")) {
+				return Collections.emptyList();
 			}
 			return em.createNativeQuery(query).getResultList();
 
@@ -598,6 +622,8 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 		}
 	}
+
+
 
 	@Override
 	public List<String> getAllColumns(Long domainId) {
