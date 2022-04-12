@@ -2,9 +2,13 @@ package com.otsi.retail.inventory.model;
 
 import java.time.LocalDate;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.otsi.retail.inventory.commons.ProductEnum;
 import com.otsi.retail.inventory.commons.ProductStatus;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -40,6 +44,8 @@ public class ProductTextile {
 	@ApiModelProperty(notes = "unit of measures of the product")
 	private String uom;
 	private String hsnCode;
+	@Enumerated(EnumType.STRING)
+	private ProductEnum sellingTypeCode;
 	private LocalDate originalBarcodeCreatedAt;
 	private ProductStatus status;
 

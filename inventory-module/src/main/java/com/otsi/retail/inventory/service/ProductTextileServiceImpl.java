@@ -20,6 +20,7 @@ import com.otsi.retail.inventory.commons.NatureOfTransaction;
 import com.otsi.retail.inventory.commons.ProductStatus;
 import com.otsi.retail.inventory.exceptions.InvalidBarcodeException;
 import com.otsi.retail.inventory.exceptions.InvalidDataException;
+import com.otsi.retail.inventory.exceptions.InvalidDateException;
 import com.otsi.retail.inventory.exceptions.InvalidPriceException;
 import com.otsi.retail.inventory.exceptions.ParentBarcodeFoundException;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
@@ -315,11 +316,13 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 	@Override
 	public List<ProductTextileVo> getAllBarcodes(SearchFilterVo vo) {
-		log.debug("debugging getAllBarcodes()");
+		log.debug("debugging getAllBarcodes():"+vo);
 		List<ProductTextile> barcodeDetails = new ArrayList<>();
 		ProductStatus status = ProductStatus.ENABLE;
 		List<ProductTextile> stores = productTextileRepo.findByStoreIdAndStatus(vo.getStoreId(), status);
-
+		if(vo.getToDate().isBefore(vo.getFromDate())){
+			throw new InvalidDateException("To Date is greater than From date");
+		}
 		/*
 		 * using dates and storeId
 		 */
@@ -639,13 +642,23 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 
 	@Override
 	public List<ProductTextileVo> getBarcodeTextileReports(SearchFilterVo vo) {
+		log.debug("debugging getBarcodeTextileReports():"+vo);
 		List<ProductTextile> barcodeDetails = new ArrayList<>();
-
-		ProductStatus status = ProductStatus.ENABLE;
+        ProductStatus status = ProductStatus.ENABLE;
 		List<ProductTextile> barStore = productTextileRepo.findByStoreId(vo.getStoreId());
+		if(vo.getToDate().isBefore(vo.getFromDate())){
+			throw new InvalidDateException("To Date is greater than From date");
+		}
+		
 		if (barStore != null) {
+			
+			if (vo.getFromDate() != null && (vo.getToDate() == null)
+					&& (vo.getBarcode() == null || vo.getBarcode() == "") && vo.getStoreId() != null) {
 
-			if (vo.getFromDate() != null && vo.getToDate() == null && (vo.getBarcode() == null || vo.getBarcode() == "")
+				barcodeDetails = productTextileRepo.findByCreationDateAndStatusAndStoreId(vo.getFromDate(), status,
+						vo.getStoreId());
+			}
+			else if (vo.getFromDate() != null && vo.getToDate() == null && (vo.getBarcode() == null || vo.getBarcode() == "")
 					&& vo.getStoreId() != null) {
 
 				barcodeDetails = productTextileRepo.findByCreationDateAndStatusAndStoreId(vo.getFromDate(), status,
