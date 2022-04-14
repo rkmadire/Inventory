@@ -320,9 +320,12 @@ public class ProductTextileServiceImpl implements ProductTextileService {
 		List<ProductTextile> barcodeDetails = new ArrayList<>();
 		ProductStatus status = ProductStatus.ENABLE;
 		List<ProductTextile> stores = productTextileRepo.findByStoreIdAndStatus(vo.getStoreId(), status);
-		if(vo.getToDate().isBefore(vo.getFromDate())){
-			throw new InvalidDateException("To Date is greater than From date");
-		}
+		
+		/*
+		 * if(vo.getToDate().isBefore(vo.getFromDate())){ throw new
+		 * InvalidDateException("To Date is greater than From date"); }
+		 */
+		
 		/*
 		 * using dates and storeId
 		 */

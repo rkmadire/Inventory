@@ -32,6 +32,8 @@ public class ProductBundle extends BaseEntity {
 
 	private Long domainId;
 	
+	private Long storeId;
+	
 	private Integer bundleQuantity;
 
 	@ManyToMany

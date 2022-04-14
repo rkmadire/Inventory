@@ -61,6 +61,6 @@ public interface ProductTextileRepo extends JpaRepository<ProductTextile, Long> 
 
 	ProductTextile findByBarcodeAndStatus(String barcode, ProductStatus status);
 
-	ProductTextileVo findBySellingTypeCode(ProductEnum productbundle);
+	ProductTextile findByBarcodeAndSellingTypeCode(String barcode, ProductEnum productbundle);
 
 }

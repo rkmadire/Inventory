@@ -16,6 +16,8 @@ public class ProductBundleVo {
 	private Boolean status;
 
 	private Long domainId;
+	
+	private Long storeId;
 
 	private Integer bundleQuantity;
 

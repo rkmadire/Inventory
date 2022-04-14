@@ -1,17 +1,15 @@
 package com.otsi.retail.inventory.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import javax.transaction.Transactional;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.otsi.retail.inventory.commons.ProductEnum;
 import com.otsi.retail.inventory.commons.ProductStatus;
 import com.otsi.retail.inventory.exceptions.RecordNotFoundException;
@@ -21,9 +19,9 @@ import com.otsi.retail.inventory.model.ProductBundle;
 import com.otsi.retail.inventory.model.ProductTextile;
 import com.otsi.retail.inventory.repo.ProductBundleRepo;
 import com.otsi.retail.inventory.repo.ProductTextileRepo;
+import com.otsi.retail.inventory.utils.DateConverters;
 import com.otsi.retail.inventory.vo.ProductBundleVo;
 import com.otsi.retail.inventory.vo.ProductTextileVo;
-import com.otsi.retail.inventory.vo.SearchFilterVo;
 
 @Component
 public class ProductBundleServiceImpl implements ProductBundleService {
@@ -38,7 +36,7 @@ public class ProductBundleServiceImpl implements ProductBundleService {
 
 	@Autowired
 	private ProductTextileRepo productTextileRepo;
-    
+
 	@Autowired
 	private ProductTextileMapper productTextileMapper;
 
@@ -60,21 +58,6 @@ public class ProductBundleServiceImpl implements ProductBundleService {
 		return productBundleVo;
 	}
 
-	
-	/*@Override
-	 * public List<ProductTextileVo> addProductsToBundle(Long id,
-	 * List<ProductTextileVo> productTextileVos) { Optional<ProductBundle> bundle =
-	 * productBundleRepo.findById(id); if (bundle.isPresent()) {
-	 * List<ProductTextile> productTextiles = productTextileRepo.findAll();
-	 * productTextiles.stream().forEach(productTextile -> { if
-	 * (productTextile.getSellingTypeCode().equals(ProductEnum.PRODUCT_BUNDLE)) {
-	 * bundle.get().setProductTextiles(productTextiles);
-	 * 
-	 * } else {
-	 * 
-	 * } }); productTextileVos = productTextileMapper.EntityToVo(productTextiles); }
-	 * return productTextileVos; }
-	 */
 
 	@Override
 	public Optional<ProductBundle> getProductBundle(Long id) {
@@ -89,34 +72,73 @@ public class ProductBundleServiceImpl implements ProductBundleService {
 	}
 
 	@Override
-	public List<ProductBundleVo> getAllProductBundles(LocalDateTime fromDate, LocalDateTime toDate,
-			String barcode) {
-		log.debug("debugging ProductBundleVo");
+	public List<ProductBundleVo> getAllProductBundles(LocalDate fromDate, LocalDate toDate, Long id, Long storeId) {
+		log.debug("debugging getAllProductBundles:" + fromDate + "and to date:" + toDate + "and id:" + id
+				+ "and storeId:" + storeId);
 		List<ProductBundle> bundles = new ArrayList<>();
 		Boolean status = Boolean.TRUE;
-		if(fromDate!=null) {
-			bundles=productBundleRepo.findByCreatedDateAndStatus(fromDate,status);
-		} else if(fromDate!=null &&toDate!=null&&barcode=="") {
-			bundles=productBundleRepo.findByCreatedDateBetweenAndStatusOrderByLastModifiedDate(fromDate,status,toDate);
-		} else if(fromDate!=null && toDate!=null && barcode!=null) {
-			bundles=productBundleRepo.findByCreatedDateBetweenAndStatusAndProductTextiles_BarcodeOrderByLastModifiedDateAsc(fromDate,status,barcode,toDate);
-		} else if((barcode!=null||(barcode.isEmpty()))) {
-			bundles=productBundleRepo.findByProductTextiles_BarcodeAndStatus(barcode,status);
-		} else {
-			bundles= productBundleRepo.findByStatus(status);	
+
+		/*
+		 * using dates with storeId
+		 */
+		if (fromDate != null && toDate != null && id == null && storeId != null) {
+			LocalDateTime fromTime = DateConverters.convertLocalDateToLocalDateTime(fromDate);
+			LocalDateTime toTime = DateConverters.convertToLocalDateTimeMax(toDate);
+
+			bundles = productBundleRepo.findByCreatedDateBetweenAndStatus(fromTime, toTime, status);
+
 		}
-		List<ProductBundleVo> productBundleVo= productBundleMapper.EntityToVo(bundles);
+		/*
+		 * using dates and bundle id and storeId
+		 */
+
+		else if (fromDate != null && toDate != null && id != null && storeId != null) {
+			LocalDateTime fromTime = DateConverters.convertLocalDateToLocalDateTime(fromDate);
+			LocalDateTime toTime = DateConverters.convertToLocalDateTimeMax(toDate);
+			bundles = productBundleRepo.findByCreatedDateBetweenAndIdAndStatusAndStoreIdOrderByLastModifiedDateAsc(
+					fromTime, toTime, id, status, storeId);
+		}
+		/*
+		 * using bundle id and storeId
+		 */
+		else if (fromDate == null && toDate == null && id != null && storeId != null) {
+			bundles = productBundleRepo.findByIdAndStatusAndStoreId(id,status, storeId);
+
+		}
+		/*
+		 * using storeId
+		 */
+		else if (storeId != null) {
+			bundles = productBundleRepo.findAllByStoreIdAndStatus(storeId, status);
+		}
+		
+		/*
+		 * using from date
+		 */
+		if (fromDate != null && toDate==null && id==null && storeId==null) {
+			LocalDateTime fromTime = DateConverters.convertLocalDateToLocalDateTime(fromDate);
+			LocalDateTime toTime = DateConverters.convertToLocalDateTimeMax(fromDate);
+
+			bundles = productBundleRepo.findByCreatedDateBetweenAndStatus(fromTime, toTime, status);
+		}
+
+		
+		List<ProductBundleVo> productBundleVo = productBundleMapper.EntityToVo(bundles);
+
 		productBundleVo.stream().forEach(bundleVo -> {
-			bundleVo.getProductTextiles().stream().forEach(productTextile->{
-				productTextile=productTextileRepo.findBySellingTypeCode(ProductEnum.PRODUCTBUNDLE);
-				bundleVo.setValue(bundleVo.getBundleQuantity()*productTextile.getItemMrp());
+
+			bundleVo.getProductTextiles().stream().forEach(product -> {
+				ProductTextile productTextile = productTextileRepo.findByBarcodeAndSellingTypeCode(product.getBarcode(),
+						ProductEnum.PRODUCTBUNDLE);
+				bundleVo.setValue(bundleVo.getBundleQuantity() * productTextile.getItemMrp());
 			});
+
 		});
-		log.info("after fetching all bundle details:" + bundles.toString());
+		log.info("after fetching all bundle details:" + productBundleVo.toString());
 		return productBundleVo;
 	}
 
-	@Override                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+	@Override
 	public String updateProductBundle(ProductBundleVo productBundleVo) {
 		log.debug("debugging updateProductBundle:" + productBundleVo);
 		Optional<ProductBundle> productBundleOpt = productBundleRepo.findById(productBundleVo.getId());
@@ -138,10 +160,12 @@ public class ProductBundleServiceImpl implements ProductBundleService {
 			throw new RecordNotFoundException("bundle not found with id: " + id);
 		}
 		productBundleOpt.get().setStatus(Boolean.FALSE);
-		
-		//productBundleRepo.delete(productBundleOpt.get());
+
+		// productBundleRepo.delete(productBundleOpt.get());
 		log.info("after deleting bundle details:" + id);
-		ProductBundleVo productBundleVo=productBundleMapper.EntityToVo(productBundleRepo.save(productBundleOpt.get()));
+		ProductBundleVo productBundleVo = productBundleMapper
+				.EntityToVo(productBundleRepo.save(productBundleOpt.get()));
 		return productBundleVo;
 	}
+
 }

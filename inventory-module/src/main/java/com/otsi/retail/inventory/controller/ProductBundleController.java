@@ -1,12 +1,13 @@
 package com.otsi.retail.inventory.controller;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,17 +39,6 @@ public class ProductBundleController {
 
 	}
 
-	/*
-	 * @PostMapping("/addProductsToBundle") public GateWayResponse<?>
-	 * addProductsToBundle(@RequestParam("id") Long id,@RequestBody
-	 * List<ProductTextileVo> productTextileVos) {
-	 * log.info("Recieved request to addProductsToBundle:" + productTextileVos);
-	 * List<ProductTextileVo> bundle =
-	 * productBundleService.addProductsToBundle(id,productTextileVos); return new
-	 * GateWayResponse<>("products added to bundle  successfully:" , bundle);
-	 * 
-	 * }
-	 */
 
 	@GetMapping("/")
 	public GateWayResponse<?> getProductBundle(@RequestParam Long id) {
@@ -58,9 +48,13 @@ public class ProductBundleController {
 	}
 
 	@PostMapping("/all")
-	public GateWayResponse<?> getAllProductBundles(@RequestParam(required = false) LocalDateTime fromDate,@RequestParam(required = false) LocalDateTime toDate,@RequestParam(required = false) String barcode) {
+	public GateWayResponse<?> getAllProductBundles(
+			@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fromDate,
+			@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate toDate,
+			@RequestParam(required = false) Long id, @RequestParam(required = false) Long storeId) {
 		log.info("Recieved request to getAllProductBundles");
-		List<ProductBundleVo> productBundles = productBundleService.getAllProductBundles(fromDate,toDate,barcode);
+		List<ProductBundleVo> productBundles = productBundleService.getAllProductBundles(fromDate, toDate, id,
+				storeId);
 		return new GateWayResponse<>("fetching all product bundle details sucessfully", productBundles);
 
 	}
