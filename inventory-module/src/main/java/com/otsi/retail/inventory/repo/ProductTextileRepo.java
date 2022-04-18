@@ -4,13 +4,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.otsi.retail.inventory.commons.ProductEnum;
 import com.otsi.retail.inventory.commons.ProductStatus;
 import com.otsi.retail.inventory.model.ProductTextile;
+import com.otsi.retail.inventory.vo.ProductTextileVo;
 
 @Repository
 public interface ProductTextileRepo extends JpaRepository<ProductTextile, Long> {
@@ -52,5 +53,14 @@ public interface ProductTextileRepo extends JpaRepository<ProductTextile, Long> 
 
 	@Query(value = "select column_name from information_schema.columns where table_name ='product_textile'", nativeQuery = true)
 	List<String> findAllColumnNames();
+
+	List<ProductTextile> findByEmpIdAndStatusAndStoreId(String empId, ProductStatus status, Long storeId);
+
+	List<ProductTextile> findByCreationDateAndStatusAndStoreId(LocalDate fromDate, ProductStatus status,
+			Long storeId);
+
+	ProductTextile findByBarcodeAndStatus(String barcode, ProductStatus status);
+
+	ProductTextile findByBarcodeAndSellingTypeCode(String barcode, ProductEnum productbundle);
 
 }

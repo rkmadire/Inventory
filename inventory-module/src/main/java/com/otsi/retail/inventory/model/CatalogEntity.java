@@ -5,6 +5,8 @@ package com.otsi.retail.inventory.model;
 
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,6 +37,7 @@ public class CatalogEntity {
 	private Long id;
 	private String name;
     private String catergory;
+    @Enumerated(EnumType.STRING)
 	private Categories description;
 	private int status;
 	@JsonIgnore

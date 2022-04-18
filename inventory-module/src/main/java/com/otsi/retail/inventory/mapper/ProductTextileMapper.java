@@ -59,6 +59,7 @@ public class ProductTextileMapper {
 	public ProductTextile VoToEntity(ProductTextileVo vo) {
 		ProductTextile dto = new ProductTextile();
 		BeanUtils.copyProperties(vo, dto);
+		dto.setCostPrice(vo.getCostPrice());
 		dto.setEmpId(vo.getEmpId());
 		dto.setCreationDate(LocalDate.now());
 		dto.setLastModifiedDate(LocalDate.now());

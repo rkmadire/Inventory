@@ -5,6 +5,8 @@ package com.otsi.retail.inventory.vo;
  *
  */
 import java.time.LocalDate;
+
+import com.otsi.retail.inventory.commons.ProductEnum;
 import com.otsi.retail.inventory.commons.ProductStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -55,6 +57,8 @@ public class ProductTextileVo {
 	private String hsnCode;
 	@ApiModelProperty(value = "original barcode created date of the textile product", name = "originalBarcodeCreatedAt")
 	private LocalDate originalBarcodeCreatedAt;
+	@ApiModelProperty(value = "sellingTypeCode means individual product/bundled product", name = "sellingTypeCode")
+	private ProductEnum sellingTypeCode;
 	@ApiModelProperty(value = "status of the textile product", name = "status")
 	private ProductStatus status;
 	@ApiModelProperty(value = "qty multiply itemMrp of the textile product", name = "value")
